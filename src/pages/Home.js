@@ -82,9 +82,9 @@ const Home = (props) => {
                     <h2>{ user.name }</h2>
                     </div>
                     {
-                    user.Friends.find(u => u.id === "1")
-                    ? <button onClick={ () => handleUnfriend(user) }>unfriend</button>
-                    : (user.Requesters.find(u => u.id === "1") ? <span>Request sent</span> : <button onClick={ () => handleSendRequest(user) }>add as friend</button>)
+                        user.Friends.find(u => u.id === "1")
+                        ? <button onClick={ () => handleUnfriend(user) }>unfriend</button>
+                        : (user.Requesters.find(u => u.id === "1") ? <span>Request sent</span> : <button onClick={ () => handleSendRequest(user) }>add as friend</button>)
                     }
                     <p><strong>email: </strong>{ user.email }</p>
                     <p><strong>location: </strong>{ user.city }, { user.country }</p>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './styles/App.css'
 import { Wrapper, Container } from './styles/layout'
 
@@ -6,21 +6,20 @@ import { Switch, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import Home from './components/Home'
-import Profile from './components/Profile'
-import Scraps from './components/Scraps'
-import Communities from './components/Communities'
-import Breadcrumbs from './components/Breadcrumbs'
+import Home from './pages/Home'
+import Profile from './pages/Profile'
+import Scraps from './pages/Scraps'
+import Communities from './pages/Communities'
 
 import { useQuery } from '@apollo/client'
 import { FIND_USER } from './services/queries'
 
 const App = () => {
     const routes = [
-        { path: "/", name: "Home", showBreadcrumbs: false, Component: Home },
-        { path: "/perfil/:userId", name: "Perfil", showBreadcrumbs: false, Component: Profile },
-        { path: "/perfil/:userId/scraps", name: "Scraps", showBreadcrumbs: true, Component: Scraps },
-        { path: "/comunidades", name: "Comunidades", showBreadcrumbs: true, Component: Communities }
+        { path: "/", name: "Home", Component: Home },
+        { path: "/perfil/:userId", name: "Perfil", Component: Profile },
+        { path: "/perfil/:userId/scraps", name: "Scraps", Component: Scraps },
+        { path: "/comunidades", name: "Comunidades", Component: Communities }
     ]
 
     const { error, loading, data } = useQuery(FIND_USER, {
@@ -54,17 +53,18 @@ const App = () => {
                                             : path,
                                         ...rest
                                     }));
-                                crumbs.map(({ name, path }) => console.log({ name, path }));
 
                                 return (
                                     <div>
-                                        { showBreadcrumbs ? <Breadcrumbs crumbs={ crumbs } /> : null }
-                                        <Component {...props} user={ data.findUser } />
+                                        <Component {...props} user={ data.findUser } crumbs={ crumbs } />
                                     </div>
                                 )
                             }} />
                         ))
                     }
+                    <Route path="*">
+                        <h1>404 - Página não encontrada!</h1>
+                    </Route>
                 </Switch>
             </Container>
             <Footer />

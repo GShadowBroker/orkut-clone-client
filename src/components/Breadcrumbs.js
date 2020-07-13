@@ -6,8 +6,13 @@ const Breadcrumbs = ({ crumbs }) => {
         return null
     }
 
-    const style = {
-        paddingRight: 5
+    const currentRoute = {
+        color: '#afafaf',
+        fontSize: '.9em'
+    }
+    const previousRoute = {
+        paddingRight: 5,
+        fontSize: '.9em'
     }
 
     return (
@@ -15,11 +20,11 @@ const Breadcrumbs = ({ crumbs }) => {
             {/* Link back to any previous steps of the breadcrumb. */}
             {crumbs.map(({ name, path }, key) =>
                 key + 1 === crumbs.length ? (
-                    <span key={key} style={style}>
+                    <span key={key} style={currentRoute}>
                         {name}
                     </span>
                 ) : (
-                    <Link key={key} to={path} style={style}>
+                    <Link key={key} to={path} style={previousRoute}>
                         {name} { '>' }
                     </Link>
                 )

@@ -23,6 +23,21 @@ export const GET_ALL_USERS = gql`
                 title
                 picture
             }
+            Photos {
+                id
+                url
+                description
+            }
+            Updates {
+                id
+                body
+            }
+            Scraps {
+                id
+            }
+            Testimonials {
+                id
+            }
         }
     }
 `
@@ -55,6 +70,21 @@ export const FIND_USER = gql`
                 title
                 picture
             }
+            Photos {
+                id
+                url
+                description
+            }
+            Updates {
+                id
+                body
+            }
+            Scraps {
+                id
+            }
+            Testimonials {
+                id
+            }
         }
     }
 `
@@ -76,6 +106,84 @@ export const GET_ALL_COMMUNITIES = gql`
         }
     }
 `
+
+export const GET_FRIENDS = gql`
+    query getFriends($userId: ID!) {
+        findFriends(userId: $userId) {
+            id
+            name
+            profile_picture
+        }
+    }
+`
+
+export const GET_FRIEND_REQUESTS = gql`
+    query getFriendRequests($userId: ID!) {
+        findRequesters(userId: $userId) {
+            id
+            name
+            profile_picture
+        }
+    }
+`
+
+export const GET_USER_COMMUNITIES = gql`
+    query getUserCommunities($userId: ID!) {
+        findSubscriptions(userId: $userId) {
+            id
+            title
+            picture
+        }
+    }
+`
+
+export const GET_USER_SCRAPS = gql`
+    query getUserScraps($receiverId: ID!) {
+        findScraps(receiverId: $receiverId) {
+            id
+            body
+            Sender {
+                id
+                name
+                profile_picture
+            }
+        }
+    }
+`
+
+export const GET_USER_TESTIMONIALS = gql`
+    query getUserTestimonials($receiverId: ID!) {
+        findTestimonials(receiverId: $receiverId) {
+            id
+            body
+            Sender {
+                id
+                name
+                profile_picture
+            }
+        }
+    }
+`
+
+export const GET_USER_UPDATES = gql`
+    query getUserUpdates($userId: ID!) {
+        findUpdates(userId: $userId) {
+            id
+            body
+        }
+    }
+`
+
+export const GET_USER_PHOTOS = gql`
+    query getUserPhotos($userId: ID!) {
+        findPhotos(userId: $userId) {
+            id
+            url
+            description
+        }
+    }
+`
+
 
 // Mutations
 export const SEND_FRIEND_REQUEST = gql`
@@ -118,6 +226,20 @@ export const UNFRIEND = gql`
         unfriend(
             userId: $userId
             friendId: $friendId
+        ) {
+            id
+        }
+    }
+`
+
+export const REMOVE_SCRAP = gql`
+    mutation removeScrap(
+        $userId: ID!
+        $scrapId: ID!
+    ) {
+        deleteScrap(
+            userId: $userId,
+            scrapId: $scrapId
         ) {
             id
         }

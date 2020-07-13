@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container } from '../styles/layout'
+import { Container, Button, Input } from '../styles/layout'
 import { Nav, MobileNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } from '../styles/nav'
 import { Link, useLocation } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
@@ -55,8 +55,8 @@ const MainNavbar = ({ user }) => {
                     <Link to="/">Temas <TiArrowSortedDown className="icenter" /></Link>
                 </NavMenu>
                 <NavInputContainer>
-                    <input placeholder="buscar" />
-                    <button>buscar</button>
+                    <Input placeholder="buscar" />
+                    <Button><strong>buscar</strong></Button>
                 </NavInputContainer>
             </Container>
         </MainNav>

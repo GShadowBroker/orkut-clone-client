@@ -22,8 +22,26 @@ a {
 .non-extistant {
     color: #34495e;
     background: #eeeeee;
+    color: #e4e4e4;
+    color: #afafaf;
 }
 
 .icenter {
     vertical-align: middle;
   }
+
+
+
+  /* Test */
+.app .rich-editor {
+    
+}
+.rich-editor .rdw-editor-main {
+    
+}
+.rich-editor .DraftEditor-editorContainer {
+    
+}
+.draft-editor-wrapper {
+    
+}
