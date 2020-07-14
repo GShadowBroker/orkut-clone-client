@@ -4,17 +4,18 @@ import { Nav, MobileNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } f
 import { Link, useLocation } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, logout }) => {
     return (
         <Nav>
             <MobileNavbar />
-            <UpperNavbar />
+            <UpperNavbar logout={ logout } />
             <MainNavbar user={ user } />
         </Nav>
     )
 }
 
-const UpperNavbar = () => {
+const UpperNavbar = ({ logout }) => {
+
     return (
         <UpperNav>
             <Container nav>
@@ -31,7 +32,7 @@ const UpperNavbar = () => {
                 </ul>
                 <ul>
                     <li className="left-menu">configurações</li>
-                    <li className="left-menu">sair</li>
+                    <li className="left-menu" onClick={ () => logout() } >sair</li>
                 </ul>
             </Container>
         </UpperNav>

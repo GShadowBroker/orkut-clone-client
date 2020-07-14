@@ -72,6 +72,15 @@ const Scraps = ({ crumbs }) => {
         })
     }
 
+    const timeOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    }
+
     return (
         <Main>
             <ProfileLeft user={ user } />
@@ -123,7 +132,7 @@ const Scraps = ({ crumbs }) => {
                                             <CommentSectionHeader style={{ margin: 0 }}>
                                                 <Link to="/perfil/3">{ scrap.Sender.name }:</Link>
                                                 <div>
-                                                    <Time size="1">20:34 (40 minutos atrás)</Time>
+                                                    <Time size="1">{ new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } ('Usar moment.js' minutos atrás)</Time>
                                                     { user.id === "1" && <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>}
                                                 </div>
                                             </CommentSectionHeader>

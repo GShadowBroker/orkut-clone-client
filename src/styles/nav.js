@@ -18,6 +18,7 @@ export const UpperNav = styled.div`
     }
 
     & ul li {
+        cursor: pointer;
         display: inline;
         padding: 0 .3rem;
     }
@@ -25,6 +26,10 @@ export const UpperNav = styled.div`
     .left-menu {
         border-left: 1px solid white;
         padding: 0 .6rem;
+    }
+
+    & li:hover {
+        color: #eeeeee;
     }
 
     @media (max-width: 675px) {

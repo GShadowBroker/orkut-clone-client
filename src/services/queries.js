@@ -141,6 +141,7 @@ export const GET_USER_SCRAPS = gql`
     query getUserScraps($receiverId: ID!) {
         findScraps(receiverId: $receiverId) {
             id
+            createdAt
             body
             Sender {
                 id
@@ -155,6 +156,7 @@ export const GET_USER_TESTIMONIALS = gql`
     query getUserTestimonials($receiverId: ID!) {
         findTestimonials(receiverId: $receiverId) {
             id
+            createdAt
             body
             Sender {
                 id
@@ -186,6 +188,21 @@ export const GET_USER_PHOTOS = gql`
 
 
 // Mutations
+export const LOGIN = gql`
+    mutation login(
+        $email: EmailAddress!,
+        $password: String!
+    ) {
+        login(
+            email: $email,
+            password: $password
+        ) {
+            id
+            value
+        }
+    }
+`
+
 export const SEND_FRIEND_REQUEST = gql`
     mutation sendFriendRequest(
         $requesterId: ID!,

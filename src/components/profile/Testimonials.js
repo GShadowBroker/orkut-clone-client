@@ -55,7 +55,7 @@ const Testimonials = ({ user }) => {
                             <MessageContent>
                                 <MessageHeader>
                                     <Link to={`/perfil/${t.Sender.id}`}>{ t.Sender.name }</Link>
-                                    <Time>- 14 Nov, 2020</Time>
+                                    <Time>{ new Date(t.createdAt).toLocaleString() }</Time>
                                 </MessageHeader>
                                 <MessageBody>
                                     { t.body }

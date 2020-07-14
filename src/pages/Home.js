@@ -8,9 +8,9 @@ const Home = (props) => {
     const { loading, error, data } = useQuery(GET_ALL_USERS)
     const [ sendFriendRequest ] = useMutation(SEND_FRIEND_REQUEST, {
         onError: (error) => {
-        error.graphQLErrors
-            ? alert(error.graphQLErrors[0].message)
-            : alert('Server timeout')
+            error.graphQLErrors
+                ? alert(error.graphQLErrors[0].message)
+                : alert('Server timeout')
         },
         refetchQueries: [{ query: GET_ALL_USERS }]
     })
