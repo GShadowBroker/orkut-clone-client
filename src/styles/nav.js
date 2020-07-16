@@ -27,9 +27,18 @@ export const UpperNav = styled.div`
         border-left: 1px solid white;
         padding: 0 .6rem;
     }
+    .email-menu {
+        padding: 0 .6rem;
+    }
 
     & li:hover {
         color: #eeeeee;
+    }
+
+    @media (max-width: 860px) {
+        .email-menu {
+            display: none;
+        }
     }
 
     @media (max-width: 675px) {
@@ -115,6 +124,7 @@ export const NavInputContainer = styled.div`
 `
 
 export const MobileNav = styled.nav`
+    z-index: 91;
     position: fixed;
     display: none;
     height: 40px;

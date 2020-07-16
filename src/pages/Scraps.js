@@ -23,9 +23,9 @@ import {
 
 import ProfileLeft from '../components/profile/ProfileLeft'
 import ScrapForm from '../components/ScrapForm'
-import Breadcrumbs from '../components/Breadcrumbs'
+import Breadcrumbs from '../components/utils/Breadcrumbs'
 
-const Scraps = ({ crumbs }) => {
+const Scraps = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
 
     const [ removeScrap ] = useMutation(REMOVE_SCRAP, {
@@ -37,13 +37,13 @@ const Scraps = ({ crumbs }) => {
         refetchQueries: [
             {
                 query: FIND_USER,
-                variables: { userId: "1" }
+                variables: { userId: loggedUser.id }
             },
             {
                 query: GET_USER_SCRAPS,
-                variables: { receiverId: "1" }
+                variables: { receiverId: loggedUser.id }
             }
-        ] // CHANGE ID FROM "1" TO LOGGED IN USER ID
+        ]
     })
 
     const { error, loading, data } = useQuery(FIND_USER, {
@@ -66,7 +66,7 @@ const Scraps = ({ crumbs }) => {
     const deleteScrap = (scrap) => {
         removeScrap({
             variables: {
-                userId: "1",
+                userId: loggedUser.id,
                 scrapId: scrap.id
             }
         })
@@ -83,7 +83,7 @@ const Scraps = ({ crumbs }) => {
 
     return (
         <Main>
-            <ProfileLeft user={ user } />
+            <ProfileLeft user={ user } loggedUser={ loggedUser } />
 
             <MainColumn stretched>
                 <Card>
@@ -94,10 +94,10 @@ const Scraps = ({ crumbs }) => {
 
                 <Card style={{ marginTop: '.6rem' }}>
                     <ProfileInfo>
-                        <h2>{ user.id === "1" ? 'Minha página de scraps' : `Página de scraps de ${user.name}`} ({ user.Scraps.length })</h2>
+                        <h2>{ user.id === loggedUser.id ? 'Minha página de scraps' : `Página de scraps de ${user.name}`} ({ user.Scraps.length })</h2>
                         <Breadcrumbs crumbs={ crumbs } />
                         <CommentSectionHeader>
-                            { user.id === "1" ? <Button>excluir scraps selecionados</Button> : <span></span> }
+                            { user.id === loggedUser.id ? <Button>excluir scraps selecionados</Button> : <span></span> }
                             <Select>
                                 <option value="ver10">Ver 10 scraps</option>
                                 <option value="ver20">Ver 20 scraps</option>
@@ -105,7 +105,7 @@ const Scraps = ({ crumbs }) => {
                         </CommentSectionHeader>
                         <CommentSectionHeader>
                             {
-                                user.id === "1"
+                                user.id === loggedUser.id
                                 ? <span>Selecionar: <FakeLink>Todos</FakeLink>, <FakeLink>Nenhum</FakeLink></span>
                                 : <span></span>
                             }
@@ -121,9 +121,10 @@ const Scraps = ({ crumbs }) => {
                             {
                                 scraps.map(scrap => (
                                     <Comment key={ scrap.id }>
-                                        <CommentCheckbox>
-                                            <input type="checkbox" />
-                                        </CommentCheckbox>
+                                        { loggedUser.id === user.id && (
+                                            <CommentCheckbox>
+                                                <input type="checkbox" />
+                                            </CommentCheckbox>)}
                                         <Image
                                             url={ scrap.Sender.profile_picture } 
                                             size="80"
@@ -133,7 +134,7 @@ const Scraps = ({ crumbs }) => {
                                                 <Link to="/perfil/3">{ scrap.Sender.name }:</Link>
                                                 <div>
                                                     <Time size="1">{ new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } ('Usar moment.js' minutos atrás)</Time>
-                                                    { user.id === "1" && <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>}
+                                                    { user.id === loggedUser.id && <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>}
                                                 </div>
                                             </CommentSectionHeader>
                                             <CommentContent>

@@ -2,6 +2,13 @@ import styled from 'styled-components'
 
 // Main
 
+// profile container breakpoints
+const bigger = 966;
+const big = 866;
+const medium = 766;
+const small = 666;
+const tiny = 566;
+
 export const Main = styled.main`
     font-size: 0.9em;
     display: flex;
@@ -12,20 +19,87 @@ export const LeftColumn = styled.div`
     display: flex;
     margin-right: .6rem;
     flex-direction: column;
-    min-width: ${0.18 * 966}px;
+    min-width: ${0.18 * bigger}px;
+    flex-shrink: 1;
+
+    @media (max-width: 1015px) {
+        & {
+            min-width: ${0.18 * big}px;
+        }
+    }
+    @media (max-width: 920px) {
+        & {
+            min-width: ${0.18 * medium}px;
+        }
+    }
+    @media (max-width: 825px) {
+        & {
+            min-width: ${0.18 * small}px;
+        }
+    }
+    @media (max-width: 785px) {
+        & {
+            min-width: ${0.18 * tiny}px;
+        }
+    }
+    
 `
 
 export const MainColumn = styled.div`
     display: flex;
     flex-direction: column;
-    min-width: ${props => props.stretched ? 0.82 * 966 : 0.52 * 966}px;
+    flex-grow: 1;
+
+    /* min-width: ${props => props.stretched ? 0.82 * bigger : 0.52 * bigger}px; */
+
+    /* @media (max-width: 1015px) {
+        & {
+            min-width: ${props => props.stretched ? 0.82 * big : 0.52 * big}px;
+        }
+    }
+    @media (max-width: 920px) {
+        & {
+            min-width: ${props => props.stretched ? 0.82 * medium : 0.52 * medium}px;
+        }
+    }
+    @media (max-width: 825px) {
+        & {
+            min-width: ${props => props.stretched ? 0.82 * small : 0.52 * small}px;
+        }
+    }
+    @media (max-width: 785px) {
+        & {
+            min-width: ${props => props.stretched ? 0.82 * tiny : 0.52 * tiny}px;
+        }
+    } */
 `
 
 export const RightColumn = styled.div`
     margin-left: .6rem;
     display: flex;
     flex-direction: column;
-    min-width: ${0.3 * 966}px;    
+    min-width: ${0.3 * bigger}px;
+
+    @media (max-width: 1015px) {
+        & {
+            min-width: ${0.3 * big}px;
+        }
+    }
+    @media (max-width: 920px) {
+        & {
+            min-width: ${0.3 * medium}px;
+        }
+    }
+    @media (max-width: 825px) {
+        & {
+            min-width: ${0.3 * small}px;
+        }
+    }
+    @media (max-width: 785px) {
+        & {
+            min-width: ${0.3 * tiny}px;
+        }
+    }
 `
 
 export const ProfileImage = styled.div`
@@ -64,6 +138,17 @@ export const ProfileMenu = styled.div`
             color: black;
             background: #eeeeee;
         }
+    }
+
+    .vibes {
+        display: flex;
+        align-items: center;
+        margin-top: .5rem;
+    }
+
+    & .disabled {
+        cursor: not-allowed;
+        color: grey;
     }
 
     h2 {
@@ -128,6 +213,7 @@ export const ProfileFriends = styled(ProfileInfo)`
 `
 
 export const FriendsList = styled.div`
+    overflow-x: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 100px 100px 100px;
@@ -200,4 +286,54 @@ export const PaginationBlock = styled.div`
     span:not(:last-child) {
         border-right: .5px solid #bebebe;
     }
+`
+
+// Photos
+
+export const PhotoList = styled.div`
+    width: 100%;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: .6rem;
+`
+
+export const PhotoContainer = styled.div`
+    display: flex;
+
+    padding: 0 .6rem 1rem .6rem;
+`
+
+export const ImageArrow = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 2em;
+    color: ${props => props.disabled ? '#e6e6e6' : ''};
+
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+
+    &:hover .arrow-icon {
+        color: ${props => props.disabled ? '#e6e6e6' : 'grey'};;
+    }
+`
+
+export const ImageContain = styled.div`
+    flex-grow: 1;
+    min-height: 66vh;
+
+    background-image: url(${ props => props.url });
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &:hover {
+        cursor: zoom-in;
+    }
+`
+
+export const FullscreenImageModal = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
 `

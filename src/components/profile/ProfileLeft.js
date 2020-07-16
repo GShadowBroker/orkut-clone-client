@@ -12,7 +12,9 @@ import {
 } from '../../styles/profile'
 import { Link, useLocation } from 'react-router-dom'
 
-const ProfileLeft = ({ user }) => {
+import { BsStar } from 'react-icons/bs'
+
+const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) => {
     const location = useLocation()
     return (
         <LeftColumn>
@@ -22,12 +24,16 @@ const ProfileLeft = ({ user }) => {
                     <ProfileMenu>
                         <Subtitle>{ user.name }</Subtitle>
                         <ul>
-                            <li>
-                                <FakeLink>2 vibes</FakeLink><Badge></Badge>
+                            <li className="vibes">
+                                <FakeLink>{user.id === loggedUser.id ? '0 vibes' : 'vibes? 0'}</FakeLink>
+                                <Badge><BsStar style={{ fontSize: '1.2em', marginRight: '.2rem' }} />0</Badge>
                             </li>
                             <Link to={ `/perfil/${user.id}/atualizacoes` }>
                                 <li className={ location.pathname === `/perfil/${user.id}/atualizacoes` ? 'active' : '' }>
-                                    <span>atualizações</span><Badge>{ user.Updates.length > 0 && user.Updates.length }</Badge>
+                                    <span>
+                                        {user.id === loggedUser.id ? 'minhas atualizações' : 'atualizações'}
+                                    </span>
+                                    <Badge>{ user.Updates.length > 0 && user.Updates.length }</Badge>
                                 </li>
                             </Link>
                             <Link to={ `/perfil/${user.id}` }>
@@ -58,7 +64,13 @@ const ProfileLeft = ({ user }) => {
                         </ul>
                         <h3>Actions</h3>
                         <ul>
-                            <li><FakeLink><strong>Adicionar como amigo</strong></FakeLink></li>
+                            {
+                                user.Friends.find(u => u.id === loggedUser.id)
+                                    ? <li onClick={ () => handleUnfriend(user) }><FakeLink><strong>desfazer amizade</strong></FakeLink></li>
+                                    : (user.Requesters.find(u => u.id === loggedUser.id))
+                                        ? <li className="disabled">solicitação enviada</li>
+                                        : <li onClick={ () => handleSendRequest(user) }><FakeLink><strong>Adicionar como amigo</strong></FakeLink></li>
+                            }
                             <li><FakeLink>Ignorar usuário</FakeLink></li>
                             <li><FakeLink>Reportar abuso</FakeLink></li>
                         </ul>

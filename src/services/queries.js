@@ -54,6 +54,8 @@ export const FIND_USER = gql`
             email
             city
             country
+            born
+            gender
             profile_picture
             Friends {
                 id

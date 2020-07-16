@@ -4,17 +4,17 @@ import { Nav, MobileNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } f
 import { Link, useLocation } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
 
-const Navbar = ({ user, logout }) => {
+const Navbar = ({ loggedUser, logout }) => {
     return (
         <Nav>
             <MobileNavbar />
-            <UpperNavbar logout={ logout } />
-            <MainNavbar user={ user } />
+            <UpperNavbar logout={ logout } loggedUser={ loggedUser } />
+            <MainNavbar loggedUser={ loggedUser } />
         </Nav>
     )
 }
 
-const UpperNavbar = ({ logout }) => {
+const UpperNavbar = ({ loggedUser, logout }) => {
 
     return (
         <UpperNav>
@@ -31,6 +31,7 @@ const UpperNavbar = ({ logout }) => {
                     <li>Mais <TiArrowSortedDown className="icenter" /></li>
                 </ul>
                 <ul>
+                    <li className="email-menu">{ loggedUser.email }</li>
                     <li className="left-menu">configurações</li>
                     <li className="left-menu" onClick={ () => logout() } >sair</li>
                 </ul>
@@ -39,7 +40,7 @@ const UpperNavbar = ({ logout }) => {
     )
 }
 
-const MainNavbar = ({ user }) => {
+const MainNavbar = ({ loggedUser }) => {
     const location = useLocation()
     return (
         <MainNav>
@@ -49,8 +50,8 @@ const MainNavbar = ({ user }) => {
                 </Logo>
                 <NavMenu>
                     <Link to="/" className={ location.pathname === '/' ? 'active' : '' }>Home</Link>
-                    <Link to={ `/perfil/${user.id}` } className={ location.pathname === `/perfil/${user.id}` ? 'active' : '' }>Perfil</Link>
-                    <Link to={ `/perfil/${user.id}/scraps` } className={ location.pathname === `/perfil/${user.id}/scraps` ? 'active' : '' }>Scraps</Link>
+                    <Link to={ `/perfil/${loggedUser.id}` } className={ location.pathname === `/perfil/${loggedUser.id}` ? 'active' : '' }>Perfil</Link>
+                    <Link to={ `/perfil/${loggedUser.id}/scraps` } className={ location.pathname === `/perfil/${loggedUser.id}/scraps` ? 'active' : '' }>Scraps</Link>
                     <Link to="/comunidades" className={ location.pathname === '/comunidades' ? 'active' : '' }>Comunidades</Link>
                     <Link to="/">Aplicativos <TiArrowSortedDown className="icenter" /></Link>
                     <Link to="/">Temas <TiArrowSortedDown className="icenter" /></Link>

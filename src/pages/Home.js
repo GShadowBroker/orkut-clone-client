@@ -3,8 +3,7 @@ import {  } from '../styles/layout'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_ALL_USERS, SEND_FRIEND_REQUEST, RESPOND_FRIEND_REQUEST, UNFRIEND } from '../services/queries'
 
-const Home = (props) => {
-    console.log(props)
+const Home = ({ loggedUser }) => {
     const { loading, error, data } = useQuery(GET_ALL_USERS)
     const [ sendFriendRequest ] = useMutation(SEND_FRIEND_REQUEST, {
         onError: (error) => {
@@ -46,7 +45,7 @@ const Home = (props) => {
         console.log('Adding', requestee.name)
         sendFriendRequest({
         variables: {
-            requesterId: "1",
+            requesterId: loggedUser.id,
             requesteeId: requestee.id
         }
         })
@@ -55,7 +54,7 @@ const Home = (props) => {
     const handleRespondRequest = (requestee, accept = false) => {
         respondFriendRequest({
         variables: {
-            requesterId: "1",
+            requesterId: loggedUser.id,
             requesteeId: requestee.id,
             accept: accept
         }
@@ -66,7 +65,7 @@ const Home = (props) => {
         console.log('Tchau tchau,', friend.name)
         unfriend({
         variables: {
-            userId: "1",
+            userId: loggedUser.id,
             friendId: friend.id
         }
         })
@@ -82,9 +81,9 @@ const Home = (props) => {
                     <h2>{ user.name }</h2>
                     </div>
                     {
-                        user.Friends.find(u => u.id === "1")
+                        user.Friends.find(u => u.id === loggedUser.id)
                         ? <button onClick={ () => handleUnfriend(user) }>unfriend</button>
-                        : (user.Requesters.find(u => u.id === "1") ? <span>Request sent</span> : <button onClick={ () => handleSendRequest(user) }>add as friend</button>)
+                        : (user.Requesters.find(u => u.id === loggedUser.id) ? <span>Request sent</span> : <button onClick={ () => handleSendRequest(user) }>add as friend</button>)
                     }
                     <p><strong>email: </strong>{ user.email }</p>
                     <p><strong>location: </strong>{ user.city }, { user.country }</p>

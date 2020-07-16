@@ -4,20 +4,27 @@ import { Wrapper, Container } from './styles/layout'
 
 import { Switch, Route } from 'react-router-dom'
 
-import Login from './components/Login'
+import Login from './components/auth/Login'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import Scraps from './pages/Scraps'
+import Photos from './pages/Photos'
+import Photo from './components/Photo'
 import Communities from './pages/Communities'
+import Error404 from './pages/404Error'
+import Notification from './components/utils/Notification'
 
 import { useApolloClient, useLazyQuery } from '@apollo/client'
 import { FIND_USER } from './services/queries'
 
+import ResponsiveLayout from './components/ResponsiveLayout'
+
 const App = () => {
     const [ token, setToken ] = useState(null)
-    const [ findUser, { error, loading, data } ] = useLazyQuery(FIND_USER) // data needs to be cleaned up after logout
+    const [ findUser, { error, loading, data } ] = useLazyQuery(FIND_USER)
+
     const client = useApolloClient()
     const logout = () => {
         setToken(null)
@@ -40,18 +47,14 @@ const App = () => {
         }
     }, [token, findUser])
 
-    if (!data || !data.findUser) return (
-        <Wrapper>
-            <Container>
-                <h1>Login</h1>
-                <Login setToken={ setToken } findUser={ findUser } />
-            </Container>
-            <Footer />
-        </Wrapper>
+    if (!(token && data)) return (
+        <Login setToken={ setToken } findUser={ findUser } />
     )
 
     if (error) return (
-        <div style={{ textAlign: 'center' }}>Error fetching user</div>
+        <Container>
+            <Notification />
+        </Container>
     )
 
     if (loading) return (
@@ -62,12 +65,14 @@ const App = () => {
         { path: "/", name: "Home", Component: Home },
         { path: "/perfil/:userId", name: "Perfil", Component: Profile },
         { path: "/perfil/:userId/scraps", name: "Scraps", Component: Scraps },
-        { path: "/comunidades", name: "Comunidades", Component: Communities }
+        { path: "/perfil/:userId/fotos", name: "Fotos", Component: Photos },
+        { path: "/perfil/:userId/fotos/:photoId", name: "Foto", Component: Photo },
+        { path: "/comunidades", name: "Comunidades", Component: Communities },
     ]
   
     return (
         <Wrapper>
-            <Navbar user={ data.findUser } logout={ logout } />
+            <Navbar loggedUser={ data.findUser } logout={ logout } />
             <Container main>
                 <Switch>
                     {
@@ -86,13 +91,21 @@ const App = () => {
                                     }));
 
                                 return (
-                                    <Component {...props} user={ data.findUser } crumbs={ crumbs } />
+                                    <ResponsiveLayout
+                                        breakpoint={ 676 }
+                                        renderDesktop={ () => (
+                                            <Component {...props} loggedUser={ data.findUser } crumbs={ crumbs } />
+                                        ) }
+                                        renderMobile={ () => (
+                                            <h1>Mobile view!</h1>
+                                        ) }
+                                    />
                                 )
                             }} />
                         ))
                     }
                     <Route path="*">
-                        <h1>404 - Página não encontrada!</h1>
+                        <Error404 />
                     </Route>
                 </Switch>
             </Container>

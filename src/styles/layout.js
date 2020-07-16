@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: ${props => props.background ? props.background : 'inherit'};
 `
 
 export const Container = styled.div`
@@ -100,11 +101,55 @@ export const Time = styled.span`
     color: grey;
 `
 
+// Modal
+
+export const ModalOverlay = styled.div`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, .8);
+
+    display: ${props => props.open ? 'flex' : 'none'};
+    justify-content: center;
+    align-items: center;
+`
+
+export const ModalContainer = styled.div`
+    margin: auto;
+
+    display: flex;
+    justify-content: center;
+
+    img {
+        cursor: zoom-out;
+        max-height: 80%;
+        max-width: 80%;
+    }
+`
+
+export const CloseModal = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    padding: 1rem;
+    cursor: pointer;
+
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+`
 
 // Elements
 export const Badge = styled.span`
     color: #bebebe;
     font-weight: bold;
+    display: flex;
+    align-items: center;
 `
 export const FakeLink = styled.span`
     cursor: pointer;
@@ -138,6 +183,18 @@ export const Title = styled.h1`
 
 export const Subtitle = styled.h2`
     font-weight: 500;
+    color: ${props => {
+        switch(props.severity) {
+            case 'high':
+                return '#c0392b'
+            case 'medium':
+                return '#f1c40f'
+            case 'low':
+                return 'inherit'
+            default:
+                return 'inherit'
+        }
+    }};
 `
 
 export const Subtitle2 = styled.h3`
@@ -153,6 +210,11 @@ export const Form = styled.form`
 export const InputGroup = styled.div`
     padding: .5rem 0;
     border-bottom: .3px solid #D4DCEF;
+`
+
+export const LoginInputGroup = styled(InputGroup)`
+    padding: .6rem;
+    border: none;
 `
 
 export const ActionGroup = styled(InputGroup)`
@@ -184,3 +246,52 @@ export const TextArea = styled.textarea`
 `
 
 export const Label = styled.label``
+
+export const LoginInputNote = styled(LoginInputGroup)`
+    color: grey;
+    font-size: .9em;
+    padding: .3rem;
+`
+export const InputNote = styled(LoginInputNote)`
+    padding: 0;
+    margin: 0;
+    text-align: center;
+`
+
+// 404 Error Page
+
+export const ErrorContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+`
+
+export const LogoError = styled.div`
+    max-width: 500px;
+    width: 100%;
+    height: 160px;
+    margin: auto;
+
+    background-image: url(${require(`../orkut.png`)});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+`
+
+export const VideoRecommendations = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+
+    iframe {
+        padding: 0 .6rem;
+    }
+`
+
+// Notification
+
+export const NotificationContainer = styled.div`
+    background-color: #FFFFD2;
+    margin-top: .6rem;
+    padding: .5rem 1rem;
+`

@@ -15,47 +15,15 @@ import {
 } from '../../styles/profile'
 import { TiPlusOutline, TiMinusOutline } from 'react-icons/ti'
 import { Link } from 'react-router-dom'
-import { useMutation } from '@apollo/client'
-import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND, GET_ALL_USERS } from '../../services/queries'
 import Testimonials from './Testimonials'
 
-const ProfileMain = ({ user }) => {
+const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) => {
     const [viewFullProfile, setViewFullProfile] = useState(false)
-    const [sendFriendRequest] = useMutation(SEND_FRIEND_REQUEST, {
-        onError: (error) => {
-            error.graphQLErrors
-                ? alert(error.graphQLErrors[0].message)
-                : alert('Server timeout')
-        },
-        refetchQueries: [{ query: FIND_USER, variables: { userId: "1" } }, { query: GET_ALL_USERS }] // CHANGE ID FROM "1" TO LOGGED IN USER ID
-    })
-    const [unfriend] = useMutation(UNFRIEND, {
-        onError: (error) => {
-            error.graphQLErrors
-                ? alert(error.graphQLErrors[0].message)
-                : alert('Server timeout')
-        },
-        refetchQueries: [{ query: FIND_USER, variables: { userId: "1" } }, { query: GET_ALL_USERS }] // CHANGE ID FROM "1" TO LOGGED IN USER ID
-    })
 
-    const handleUnfriend = (friend) => {
-        console.log('Tchau tchau,', friend.name)
-        unfriend({
-            variables: {
-                userId: "1",
-                friendId: friend.id
-            }
-        })
-    }
-
-    const handleSendRequest = (requestee) => {
-        console.log('Adding', requestee.name)
-        sendFriendRequest({
-            variables: {
-                requesterId: "1",
-                requesteeId: requestee.id
-            }
-        })
+    const timeOptions = {
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
     }
 
     return (
@@ -68,9 +36,9 @@ const ProfileMain = ({ user }) => {
                         </div>
                         <div>
                             {
-                                user.Friends.find(u => u.id === "1")
+                                user.Friends.find(u => u.id === loggedUser.id)
                                 ? <Button onClick={ () => handleUnfriend(user) }><TiMinusOutline className="icenter" style={{ color: '#bebebe' }} /> desfazer amizade</Button>
-                                : (user.Requesters.find(u => u.id === "1"))
+                                : (user.Requesters.find(u => u.id === loggedUser.id))
                                     ? <Button disabled>solicitação enviada</Button>
                                     : <Button onClick={ () => handleSendRequest(user) }><TiPlusOutline className="icenter" style={{ color: '#bebebe' }} /> adicionar como amigo</Button>
                             }
@@ -86,8 +54,8 @@ const ProfileMain = ({ user }) => {
                             viewFullProfile ? (
                                 <div>
                                     <p><strong>sexo: </strong>{ user.gender }</p>
-                                    <p><strong>idade: </strong>{ user.born }</p>
-                                    <p><strong>aniversário: </strong>{ user.born }</p>
+                                    <p><strong>idade: </strong>{ new Date().getFullYear() - new Date(user.born).getFullYear() }</p>
+                                    <p><strong>aniversário: </strong>{ new Date(user.born).toLocaleString('pt-BR', timeOptions) }</p>
                                     <p><strong>e-mail: </strong>{ user.email }</p>
                                     <p><strong>interesses em: </strong>{ user.interests }</p>
                                 </div>

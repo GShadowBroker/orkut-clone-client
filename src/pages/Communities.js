@@ -6,7 +6,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import Moment from 'react-moment'
 import 'moment/locale/pt-br'
 
-const Communities = () => {
+const Communities = ({ loggedUser }) => {
     const { loading, error, data } = useQuery(GET_ALL_COMMUNITIES)
     const [joinCommunity] = useMutation(JOIN_COMMUNITY, {
         onError: error => {
@@ -46,7 +46,7 @@ const Communities = () => {
         console.log('entrando na comunidade', community.title)
         joinCommunity({
             variables: {
-                userId: "1",
+                userId: loggedUser.id,
                 communityId: community.id
             }
         })
@@ -56,7 +56,7 @@ const Communities = () => {
         console.log('entrando na comunidade', community.title)
         leaveCommunity({
             variables: {
-                userId: "1",
+                userId: loggedUser.id,
                 communityId: community.id
             }
         })
@@ -73,7 +73,7 @@ const Communities = () => {
                             <strong>{ c.title } </strong>({ c.Members.length })
                         </h3>
                         {
-                            c.Members.find(m => m.id.toString() === "1")
+                            c.Members.find(m => m.id.toString() === loggedUser.id)
                             ? <button onClick={ () => handleLeaveCommunity(c) }>deixar comunidade</button>
                             : <button onClick={ () => handleJoinCommunity(c) }>participar da comunidade</button>
                         }
