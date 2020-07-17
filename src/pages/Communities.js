@@ -3,7 +3,6 @@ import { Container, Card } from '../styles/layout'
 import { GET_ALL_COMMUNITIES, GET_ALL_USERS, JOIN_COMMUNITY, LEAVE_COMMUNITY } from '../services/queries'
 import { useQuery, useMutation } from '@apollo/client'
 
-import Moment from 'react-moment'
 import 'moment/locale/pt-br'
 
 const Communities = ({ loggedUser }) => {
@@ -79,7 +78,7 @@ const Communities = ({ loggedUser }) => {
                         }
                         <p>{ c.description }</p>
                         <ul>
-                            <li><strong>criada em: </strong><Moment unix >{ c.createdAt }</Moment></li>
+                            <li><strong>criada em: </strong>{ c.createdAt }</li>
                             <li><strong>categoria: </strong>{ c.category }</li>
                             <li><strong>idioma: </strong>{ c.language }</li>
                             <li><strong>tipo: </strong>público</li>

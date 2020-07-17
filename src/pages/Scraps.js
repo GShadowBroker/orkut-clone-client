@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
@@ -24,11 +25,17 @@ import {
 import ProfileLeft from '../components/profile/ProfileLeft'
 import ScrapForm from '../components/ScrapForm'
 import Breadcrumbs from '../components/utils/Breadcrumbs'
+import Notification from '../components/utils/Notification'
+
+// import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
+import draftToHtml from 'draftjs-to-html';
 
 const Scraps = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
+    const [selected, setSelected] = useState([])
+    const [offset, setOffset] = useState(0)
 
-    const [ removeScrap ] = useMutation(REMOVE_SCRAP, {
+    const [ removeScrap, { loading: removeLoading } ] = useMutation(REMOVE_SCRAP, {
         onError: (error) => {
             error.graphQLErrors
                 ? alert(error.graphQLErrors[0].message)
@@ -37,11 +44,11 @@ const Scraps = ({ crumbs, loggedUser }) => {
         refetchQueries: [
             {
                 query: FIND_USER,
-                variables: { userId: loggedUser.id }
+                variables: { userId }
             },
             {
                 query: GET_USER_SCRAPS,
-                variables: { receiverId: loggedUser.id }
+                variables: { receiverId: userId }
             }
         ]
     })
@@ -49,13 +56,20 @@ const Scraps = ({ crumbs, loggedUser }) => {
     const { error, loading, data } = useQuery(FIND_USER, {
         variables: { userId }
     })
-    const { error: errorScraps, loading: loadingScraps, data: dataScraps } = useQuery(GET_USER_SCRAPS, {
-        variables: { receiverId: userId }
+    // const { error: errorScraps, loading: loadingScraps, data: dataScraps } = useQuery(GET_USER_SCRAPS, {
+    //     variables: { receiverId: userId }
+    // })
+    const { error: errorScraps, loading: loadingScraps, data: dataScraps, fetchMore } = useQuery(GET_USER_SCRAPS, {
+        variables: {
+            receiverId: userId,
+            limit: 10,
+            offset
+        },
+        fetchPolicy: "cache-and-network"
     })
 
-    if (error || errorScraps) return (
-        <h1>Woops! There was an error.</h1>
-    )
+    if (error || errorScraps) return <Notification />
+
     if (loading || loadingScraps) return (
         <h1>loading...</h1>
     )
@@ -72,11 +86,50 @@ const Scraps = ({ crumbs, loggedUser }) => {
         })
     }
 
+    const selectAll = () => {
+        let newSelected = [...selected]
+        scraps.forEach(s => newSelected.push(s.id))
+        console.log('new selected', newSelected)
+
+        const checkboxes = document.querySelectorAll('.comment-checkbox')
+        checkboxes.forEach(c => c.checked = true)
+
+        setSelected(newSelected)
+    }
+
+    const resetSelect = () => {
+        const checkboxes = document.querySelectorAll('.comment-checkbox')
+        checkboxes.forEach(c => c.checked = false)
+
+        setSelected([])
+    }
+
+    const toggleSelected = (scrapId) => {
+        if (selected.find(s => s === scrapId)) {
+            let newSelected = [...selected]
+            let updatedSelected = newSelected.filter(s => s !== scrapId)
+            setSelected(updatedSelected)
+            return
+        }
+        let newSelected = [...selected]
+        newSelected.push(scrapId)
+        setSelected(newSelected)
+    }
+
+    const removeSelected = () => {
+        if (!selected.length) return
+
+        selected.forEach(i => {
+            removeScrap({
+                variables: {
+                    userId: loggedUser.id,
+                    scrapId: i
+                }
+            })
+        })
+    }
+
     const timeOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
         hour: 'numeric',
         minute: 'numeric'
     }
@@ -88,7 +141,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
             <MainColumn stretched>
                 <Card>
                     <ProfileInfo>
-                        <ScrapForm user={ user } />
+                        <ScrapForm user={ user } loggedUser={ loggedUser } />
                     </ProfileInfo>
                 </Card>
 
@@ -97,7 +150,13 @@ const Scraps = ({ crumbs, loggedUser }) => {
                         <h2>{ user.id === loggedUser.id ? 'Minha página de scraps' : `Página de scraps de ${user.name}`} ({ user.Scraps.length })</h2>
                         <Breadcrumbs crumbs={ crumbs } />
                         <CommentSectionHeader>
-                            { user.id === loggedUser.id ? <Button>excluir scraps selecionados</Button> : <span></span> }
+                            {
+                                user.id === loggedUser.id
+                                ? <Button onClick={ removeSelected } disabled={ removeLoading }>
+                                    { removeLoading ? 'excluindo scraps ...' : 'excluir scraps selecionados' }
+                                </Button>
+                                : <span></span>
+                            }
                             <Select>
                                 <option value="ver10">Ver 10 scraps</option>
                                 <option value="ver20">Ver 20 scraps</option>
@@ -106,13 +165,30 @@ const Scraps = ({ crumbs, loggedUser }) => {
                         <CommentSectionHeader>
                             {
                                 user.id === loggedUser.id
-                                ? <span>Selecionar: <FakeLink>Todos</FakeLink>, <FakeLink>Nenhum</FakeLink></span>
+                                ? <span>Selecionar: <FakeLink onClick={ selectAll }>Todos</FakeLink>, <FakeLink onClick={ resetSelect } >Nenhum</FakeLink></span>
                                 : <span></span>
                             }
                             <PaginationBlock>
-                                <span>primeira</span>
+                                <span 
+                                    onClick={ () => fetchMore({
+                                        variables: {
+                                            offset: 0
+                                        }
+                                    }) }
+                                ><FakeLink>primeira</FakeLink></span>
                                 <span>&lt; anterior</span>
-                                <span>próxima &gt;</span>
+                                <span
+                                    onClick={() => {
+                                        fetchMore({
+                                            variables: {
+                                                offset: offset + 10,
+                                            },
+                                            // No need for an updateQuery function, since the
+                                            // field policy handles all Query.search updates.
+                                        })
+                                        setOffset(10)
+                                    }}
+                                ><FakeLink>próxima &gt;</FakeLink></span>
                                 <span>última</span>
                             </PaginationBlock>
                         </CommentSectionHeader>
@@ -123,22 +199,35 @@ const Scraps = ({ crumbs, loggedUser }) => {
                                     <Comment key={ scrap.id }>
                                         { loggedUser.id === user.id && (
                                             <CommentCheckbox>
-                                                <input type="checkbox" />
+                                                <input 
+                                                    className="comment-checkbox" 
+                                                    id={`scrapid_${scrap.id}`} 
+                                                    type="checkbox" onChange={ ({ target }) => toggleSelected(scrap.id) } 
+                                                />
                                             </CommentCheckbox>)}
-                                        <Image
-                                            url={ scrap.Sender.profile_picture } 
-                                            size="80"
-                                        />
+                                        <Link to={`/perfil/${scrap.Sender.id}`}>
+                                            <Image
+                                                url={ scrap.Sender.profile_picture } 
+                                                size="80"
+                                            />
+                                        </Link>
                                         <CommentBody>
                                             <CommentSectionHeader style={{ margin: 0 }}>
-                                                <Link to="/perfil/3">{ scrap.Sender.name }:</Link>
+                                                <Link to={`/perfil/${scrap.Sender.id}`}>{ scrap.Sender.name }:</Link>
                                                 <div>
-                                                    <Time size="1">{ new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } ('Usar moment.js' minutos atrás)</Time>
-                                                    { user.id === loggedUser.id && <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>}
+                                                    <Time size="1">
+                                                        { new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } (
+                                                            { moment(scrap.createdAt).fromNow() })
+                                                    </Time>
+                                                    {
+                                                        user.id === loggedUser.id || scrap.Sender.id === loggedUser.id
+                                                            ? <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>
+                                                            : null
+                                                    }
                                                 </div>
                                             </CommentSectionHeader>
                                             <CommentContent>
-                                                { scrap.body }
+                                                <div dangerouslySetInnerHTML={{ __html: draftToHtml(scrap.body) }} />
                                             </CommentContent>
                                             <FakeLink>Responder</FakeLink>
                                         </CommentBody>

@@ -15,6 +15,7 @@ import {
 
 import ProfileLeft from '../components/profile/ProfileLeft'
 import Breadcrumbs from '../components/utils/Breadcrumbs'
+import Notification from '../components/utils/Notification'
 
 const Photos = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
@@ -24,9 +25,7 @@ const Photos = ({ crumbs, loggedUser }) => {
         variables: { userId }
     })
 
-    if (error) return (
-        <h1>Woops! There was an error.</h1>
-    )
+    if (error) return <Notification />
     if (loading) return (
         <h1>loading...</h1>
     )

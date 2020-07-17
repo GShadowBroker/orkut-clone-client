@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-    Main
-} from '../styles/profile'
+import { Main } from '../styles/profile'
 import { useParams } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
@@ -10,8 +8,7 @@ import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND, GET_ALL_USERS } from '../serv
 import ProfileLeft from '../components/profile/ProfileLeft'
 import ProfileMain from '../components/profile/ProfileMain'
 import ProfileRight from '../components/profile/ProfileRight'
-
-
+import Notification from '../components/utils/Notification'
 
 const Profile = ({ loggedUser }) => {
     const { userId } = useParams()
@@ -58,7 +55,7 @@ const Profile = ({ loggedUser }) => {
     }
 
     if (error) return (
-        <h1>Woops! There was an error.</h1>
+        <Notification />
     )
     if (loading) return (
         <h1>loading...</h1>

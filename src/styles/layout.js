@@ -272,7 +272,7 @@ export const LogoError = styled.div`
     height: 160px;
     margin: auto;
 
-    background-image: url(${require(`../orkut.png`)});
+    background-image: url(${require(`../assets/orkut.png`)});
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;

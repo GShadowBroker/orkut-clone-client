@@ -140,8 +140,12 @@ export const GET_USER_COMMUNITIES = gql`
 `
 
 export const GET_USER_SCRAPS = gql`
-    query getUserScraps($receiverId: ID!) {
-        findScraps(receiverId: $receiverId) {
+    query getUserScraps($receiverId: ID!, $limit: Int, $offset: Int) {
+        findScraps(
+            receiverId: $receiverId
+            limit: $limit
+            offset: $offset
+        ) {
             id
             createdAt
             body
@@ -247,6 +251,23 @@ export const UNFRIEND = gql`
             friendId: $friendId
         ) {
             id
+        }
+    }
+`
+
+export const SEND_SCRAP = gql`
+    mutation sendScrap(
+        $body: JSON!
+        $senderId: ID!
+        $userId: ID!
+    ) {
+        sendScrap(
+            body: $body
+            senderId: $senderId
+            userId: $userId
+        ) {
+            id
+            body
         }
     }
 `

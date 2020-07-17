@@ -48,11 +48,11 @@ export const LeftColumn = styled.div`
 export const MainColumn = styled.div`
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1;
 
-    /* min-width: ${props => props.stretched ? 0.82 * bigger : 0.52 * bigger}px; */
+    min-width: ${props => props.stretched ? 0.82 * bigger : 0.52 * bigger}px;
 
-    /* @media (max-width: 1015px) {
+    @media (max-width: 1015px) {
         & {
             min-width: ${props => props.stretched ? 0.82 * big : 0.52 * big}px;
         }
@@ -71,7 +71,7 @@ export const MainColumn = styled.div`
         & {
             min-width: ${props => props.stretched ? 0.82 * tiny : 0.52 * tiny}px;
         }
-    } */
+    }
 `
 
 export const RightColumn = styled.div`

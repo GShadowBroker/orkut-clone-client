@@ -1,7 +1,9 @@
 import React from 'react'
-import {  } from '../styles/layout'
+
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_ALL_USERS, SEND_FRIEND_REQUEST, RESPOND_FRIEND_REQUEST, UNFRIEND } from '../services/queries'
+
+import Notification from '../components/utils/Notification'
 
 const Home = ({ loggedUser }) => {
     const { loading, error, data } = useQuery(GET_ALL_USERS)
@@ -30,12 +32,7 @@ const Home = ({ loggedUser }) => {
         refetchQueries: [{ query: GET_ALL_USERS }]
     })
 
-    if (error) return (
-        <div>
-            <h2>There was an ERROR</h2>
-            <p>Please refresh page or try again later</p>
-        </div>
-    )
+    if (error) return <Notification />
 
     if (loading) return (
         <h2>loading...</h2>
