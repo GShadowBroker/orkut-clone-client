@@ -1,19 +1,20 @@
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
+import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const RichEditor = ({ scrap, setEditorState, user }) => {
+const RichEditor = ({ message, setEditorState, user }) => {
     return (
         <Editor
             placeholder="digite o texto"
-            editorState={ scrap }
+            editorState={ message }
             onEditorStateChange={ setEditorState }
 
             localization={{
                 locale: 'pt',
             }}
 
-            wrapperClassName="rich-editor demo-wrapper"
-            editorClassName="demo-editor"
+            wrapperClassName="rich-editor editor-wrapper"
+            editorClassName="rich-editor-input"
 
             toolbar={{
                 inline: { inDropdown: true },

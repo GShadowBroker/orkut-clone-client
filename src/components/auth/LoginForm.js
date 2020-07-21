@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+import { useHistory } from 'react-router-dom'
+
 import { 
     Form, 
     LoginInputGroup, 
@@ -20,11 +22,12 @@ import { useMutation } from '@apollo/client'
 import { LOGIN } from '../../services/queries'
 
 const Login = ({ setToken }) => {
+    const history = useHistory()
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ remember, setRemember ] = useState(false)
 
-    const [ login, result ] = useMutation(LOGIN, {
+    const [ login, { loading, data } ] = useMutation(LOGIN, {
         onError: (error) => {
             error.graphQLErrors.length
                 ? alert(error.graphQLErrors[0].message)
@@ -33,12 +36,13 @@ const Login = ({ setToken }) => {
     })
 
     useEffect(() => {
-        if (result.data) {
-            const token = result.data.login
+        if (data) {
+            const token = data.login
             window.localStorage.setItem('token', JSON.stringify(token))
+            history.push('/')
             setToken(token)
         }
-    }, [result.data]) // eslint-disable-line
+    }, [data]) // eslint-disable-line
 
     useEffect(() => {
         const credentials = JSON.parse(window.localStorage.getItem('autocomplete'))
@@ -78,7 +82,8 @@ const Login = ({ setToken }) => {
                         <Input 
                             id="email"
                             name="email" 
-                            value={ email } 
+                            value={ email }
+                            type="text"
                             onChange={ ({ target }) => setEmail(target.value) }    
                         />
                         <InputNote nopad>ex: pat@exemplo.com</InputNote>
@@ -88,7 +93,8 @@ const Login = ({ setToken }) => {
                         <Input 
                             id="password"
                             name="password" 
-                            value={ password } 
+                            value={ password }
+                            type="password"
                             onChange={ ({ target }) => setPassword(target.value) }    
                         />
                     </LoginInputGroup>
@@ -104,7 +110,7 @@ const Login = ({ setToken }) => {
                         <LoginInputNote>Não use em computadores públicos [?]</LoginInputNote>
                     </LoginInputGroup>
                     <LoginInputGroup>
-                        <Button type="submit">entrar</Button>
+                        <Button type="submit" disabled={ loading }>{ loading ? 'entrando...' : 'entrar'}</Button>
                     </LoginInputGroup>
                     <LoginInputNote style={{ textAlign: 'center', padding: '.8rem 0' }}>
                         <FakeLinkLogin>Não consegue acessar sua conta?</FakeLinkLogin>

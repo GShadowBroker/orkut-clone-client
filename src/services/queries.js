@@ -23,28 +23,13 @@ export const GET_ALL_USERS = gql`
                 title
                 picture
             }
-            Photos {
-                id
-                url
-                description
-            }
-            Updates {
-                id
-                body
-            }
-            Scraps {
-                id
-            }
-            Testimonials {
-                id
-            }
         }
     }
 `
 
 export const FIND_USER = gql`
     query findUser(
-        $userId: ID!
+        $userId: ID
     ) {
         findUser(
             userId: $userId
@@ -102,7 +87,6 @@ export const GET_ALL_COMMUNITIES = gql`
             language
             Members {
                 id
-                name
             }
             createdAt
         }
@@ -146,13 +130,16 @@ export const GET_USER_SCRAPS = gql`
             limit: $limit
             offset: $offset
         ) {
-            id
-            createdAt
-            body
-            Sender {
+            count,
+            rows {
                 id
-                name
-                profile_picture
+                createdAt
+                body
+                Sender {
+                    id
+                    name
+                    profile_picture
+                }
             }
         }
     }
@@ -183,11 +170,14 @@ export const GET_USER_UPDATES = gql`
 `
 
 export const GET_USER_PHOTOS = gql`
-    query getUserPhotos($userId: ID!) {
-        findPhotos(userId: $userId) {
-            id
-            url
-            description
+    query getUserPhotos($userId: ID!, $limit: Int, $offset: Int) {
+        findPhotos(userId: $userId, limit: $limit, offset: $offset) {
+            count,
+            rows {
+                id
+                url
+                description
+            }
         }
     }
 `
@@ -257,7 +247,7 @@ export const UNFRIEND = gql`
 
 export const SEND_SCRAP = gql`
     mutation sendScrap(
-        $body: JSON!
+        $body: String!
         $senderId: ID!
         $userId: ID!
     ) {
@@ -267,7 +257,6 @@ export const SEND_SCRAP = gql`
             userId: $userId
         ) {
             id
-            body
         }
     }
 `
@@ -280,6 +269,36 @@ export const REMOVE_SCRAP = gql`
         deleteScrap(
             userId: $userId,
             scrapId: $scrapId
+        ) {
+            id
+        }
+    }
+`
+
+export const SEND_TESTIMONIAL = gql`
+    mutation sendTestimonial(
+        $body: String!
+        $senderId: ID!
+        $userId: ID!
+    ) {
+        sendTestimonial(
+            body: $body
+            senderId: $senderId
+            userId: $userId
+        ) {
+            id
+        }
+    }
+`
+
+export const REMOVE_TESTIMONIAL = gql`
+    mutation removeTestimonial(
+        $userId: ID!
+        $testimonialId: ID!
+    ) {
+        deleteTestimonial(
+            userId: $userId
+            testimonialId: $testimonialId
         ) {
             id
         }

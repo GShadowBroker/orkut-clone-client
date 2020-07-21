@@ -8,7 +8,9 @@ import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND, GET_ALL_USERS } from '../serv
 import ProfileLeft from '../components/profile/ProfileLeft'
 import ProfileMain from '../components/profile/ProfileMain'
 import ProfileRight from '../components/profile/ProfileRight'
+
 import Notification from '../components/utils/Notification'
+import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
 
 const Profile = ({ loggedUser }) => {
     const { userId } = useParams()
@@ -54,29 +56,32 @@ const Profile = ({ loggedUser }) => {
         })
     }
 
+    if (loading) return <ProfileSkeleton />
+
     if (error) return (
         <Notification />
     )
-    if (loading) return (
-        <h1>loading...</h1>
-    )
 
     const user = data ? data.findUser : null;
+
     return (
         <Main>
-            <ProfileLeft 
+            <ProfileLeft
                 user={ user } 
                 loggedUser={ loggedUser } 
                 handleSendRequest={ handleSendRequest }
                 handleUnfriend={ handleUnfriend }
             />
-            <ProfileMain 
+            <ProfileMain
                 user={ user } 
                 loggedUser={ loggedUser } 
                 handleSendRequest={ handleSendRequest }
                 handleUnfriend={ handleUnfriend } 
             />
-            <ProfileRight user={ user } loggedUser={ loggedUser } />
+            <ProfileRight
+                user={ user } 
+                loggedUser={ loggedUser }
+            />
         </Main>
     )
 }

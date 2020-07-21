@@ -1,123 +1,226 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Main } from '../styles/profile'
+import { useParams } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_ALL_USERS, SEND_FRIEND_REQUEST, RESPOND_FRIEND_REQUEST, UNFRIEND } from '../services/queries'
+import { 
+    SEND_FRIEND_REQUEST, 
+    FIND_USER, UNFRIEND, 
+    GET_ALL_USERS,
+    RESPOND_FRIEND_REQUEST
+} from '../services/queries'
+
+import ProfileLeft from '../components/profile/ProfileLeft'
+import ProfileRight from '../components/profile/ProfileRight'
 
 import Notification from '../components/utils/Notification'
 
+import {
+    Card,
+    FakeLink,
+    Button,
+    Subtitle,
+    Subtitle2,
+    Image,
+    FormUpdate,
+    TextArea,
+    InputGroupUpdate,
+    ActionGroupUpdate,
+    Select,
+    Message,
+    MessageContent,
+    MessageHeader,
+    MessageBody,
+    MessageActions,
+    FortuneLogo
+} from '../styles/layout'
+import {
+    MainColumn,
+    ProfileInfo,
+    InlineHeader,
+    ProfileSection,
+    LastImages,
+    OrkutStyles
+} from '../styles/profile'
+import { TiPlusOutline, TiMinusOutline } from 'react-icons/ti'
+import { FaThList } from 'react-icons/fa'
+import { AiFillLayout } from 'react-icons/ai'
+
+import { Link } from 'react-router-dom'
+import Testimonials from '../components/profile/Testimonials'
+import { findAllByDisplayValue } from '@testing-library/react'
+
+import todaysFortune from '../utils/todaysFortune'
+
 const Home = ({ loggedUser }) => {
-    const { loading, error, data } = useQuery(GET_ALL_USERS)
-    const [ sendFriendRequest ] = useMutation(SEND_FRIEND_REQUEST, {
+    const [sendFriendRequest] = useMutation(SEND_FRIEND_REQUEST, {
         onError: (error) => {
             error.graphQLErrors
                 ? alert(error.graphQLErrors[0].message)
                 : alert('Server timeout')
         },
-        refetchQueries: [{ query: GET_ALL_USERS }]
+        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }]
     })
-    const [ respondFriendRequest ] = useMutation(RESPOND_FRIEND_REQUEST, {
+    const [unfriend] = useMutation(UNFRIEND, {
         onError: (error) => {
-        error.graphQLErrors
-            ? alert(error.graphQLErrors[0].message)
-            : alert('Server timeout')
+            error.graphQLErrors
+                ? alert(error.graphQLErrors[0].message)
+                : alert('Server timeout')
         },
-        refetchQueries: [{ query: GET_ALL_USERS }]
+        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }]
     })
-    const [ unfriend ] = useMutation(UNFRIEND, {
+    const [respondFriendRequest] = useMutation(RESPOND_FRIEND_REQUEST, {
         onError: (error) => {
-        error.graphQLErrors
-            ? alert(error.graphQLErrors[0].message)
-            : alert('Server timeout')
+            error.graphQLErrors
+                ? alert(error.graphQLErrors[0].message)
+                : alert('Server timeout')
         },
-        refetchQueries: [{ query: GET_ALL_USERS }]
+        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }]
     })
-
-    if (error) return <Notification />
-
-    if (loading) return (
-        <h2>loading...</h2>
-    )
-
-    const handleSendRequest = (requestee) => {
-        console.log('Adding', requestee.name)
-        sendFriendRequest({
-        variables: {
-            requesterId: loggedUser.id,
-            requesteeId: requestee.id
-        }
-        })
-    }
-
-    const handleRespondRequest = (requestee, accept = false) => {
-        respondFriendRequest({
-        variables: {
-            requesterId: loggedUser.id,
-            requesteeId: requestee.id,
-            accept: accept
-        }
-        })
-    }
 
     const handleUnfriend = (friend) => {
-        console.log('Tchau tchau,', friend.name)
         unfriend({
-        variables: {
-            userId: loggedUser.id,
-            friendId: friend.id
-        }
+            variables: {
+                userId: loggedUser.id,
+                friendId: friend.id
+            }
+        })
+    }
+
+    const handleSendRequest = (requestee) => {
+        sendFriendRequest({
+            variables: {
+                requesterId: loggedUser.id,
+                requesteeId: requestee.id
+            }
+        })
+    }
+
+    const handleRespondFriendRequest = (requester, accept) => {
+        respondFriendRequest({
+            variables: {
+                requesterId: requester.id,
+                requesteeId: loggedUser.id,
+                accept
+            }
         })
     }
 
     return (
-        <div>
-            {
-                data.allUsers.map(user =>(
-                <div key={ user.id } style={{ marginTop: 15 }}>
-                    <div style={{ display: 'flex' }}>
-                    <img src={ user.profile_picture } alt={ user.name } width="50" height="50" />
-                    <h2>{ user.name }</h2>
-                    </div>
-                    {
-                        user.Friends.find(u => u.id === loggedUser.id)
-                        ? <button onClick={ () => handleUnfriend(user) }>unfriend</button>
-                        : (user.Requesters.find(u => u.id === loggedUser.id) ? <span>Request sent</span> : <button onClick={ () => handleSendRequest(user) }>add as friend</button>)
-                    }
-                    <p><strong>email: </strong>{ user.email }</p>
-                    <p><strong>location: </strong>{ user.city }, { user.country }</p>
-                    <a href="/">view full profile</a>
-                    <h3>Friends:</h3>
-                    <ul>
-                    { user.Friends.length === 0 ? <li>No friends :'(</li> : user.Friends.map(friend => (
-                        <li key={friend.id}>{ friend.name }</li>
-                    )) }
-                    </ul>
-                    <h3>Friend requests:</h3>
-                    <ul>
-                    { user.Requesters.length === 0 ? <li>No friend requests</li> : user.Requesters.map(friend => (
-                        <li key={friend.id}>
-                        { friend.name }
-                        <button onClick={ () => handleRespondRequest(user, true) }>accept</button>
-                        <button onClick={ () => handleRespondRequest(user, false) }>reject</button>
-                        </li>
-                    )) }
-                    </ul>
-                    <h3>Friend requests:</h3>
-                    <h3>Comunidades:</h3>
-                    <ul>
-                        {
-                            user.Subscriptions.map(c => (
-                                <li key={ c.id }>
-                                    <img src={ c.picture } alt={ c.title } width="40" height="40" />
-                                    <span>{ c.title }</span>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                    <hr />
-                </div>
-                ))
-            }
-        </div>
+        <Main>
+            <ProfileLeft
+                user={ loggedUser } 
+                loggedUser={ loggedUser } 
+                handleSendRequest={ handleSendRequest }
+                handleUnfriend={ handleUnfriend }
+            />
+
+            <HomeMain 
+                user={ loggedUser } 
+                handleRespondFriendRequest={ handleRespondFriendRequest }
+            />
+
+            <ProfileRight
+                user={ loggedUser } 
+                loggedUser={ loggedUser }
+            />
+        </Main>
+    )
+}
+
+const HomeMain = ({ user, handleRespondFriendRequest }) => {
+
+    const timeOptions = {
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+    }
+
+    console.log('user', user)
+    return (
+        <MainColumn>
+            <Notification
+                title="Importante" 
+                message="Este site é apenas um clone do orkut.com original e não tem qualquer vínculo com o Google." 
+                severity="low"
+                margin={ '0 0 .6rem 0' }
+            />
+            <Card>
+                <ProfileInfo style={{ marginTop: '.6rem' }}>
+                    <FormUpdate>
+                        <InputGroupUpdate>
+                            <TextArea
+                                placeholder="Diga algo a seus amigos ou poste uma foto, vídeo ou outro link aqui."
+                            />
+                        </InputGroupUpdate>
+                        <ActionGroupUpdate>
+                            <Button><strong>post</strong></Button>
+                            <Button>cancel</Button>
+                        </ActionGroupUpdate>
+                    </FormUpdate>
+                </ProfileInfo>
+                <ProfileInfo>
+                    <InlineHeader>
+                        <div style={{
+                            display: 'flex',
+                            maxHeight: 30,
+                            alignItems: 'center',
+                            margin: '1rem 0'
+                        }}>
+                            <Subtitle2 style={{ marginRight: '.3rem' }}>Atualizações de:</Subtitle2>
+                            <Select>
+                                <option value="all">todo mundo</option>
+                                <option value="me">só amigos</option>
+                            </Select>
+                        </div>
+                        <OrkutStyles>
+                            Estilo Orkut:
+                            <Button><AiFillLayout /></Button>
+                            <Button><FaThList /></Button>
+                        </OrkutStyles>
+                    </InlineHeader>
+                </ProfileInfo>
+                <ProfileInfo borderbottom>
+                    <Message>
+                        <FortuneLogo />
+                        <MessageContent>
+                            <MessageHeader>
+                                <Subtitle2><strong>Sua sorte do dia ({ new Date().toLocaleString('pt-BR', timeOptions) })</strong></Subtitle2>
+                            </MessageHeader>
+                            <MessageBody>
+                                <p>{ todaysFortune[Math.floor(Math.random() * todaysFortune.length)] }</p>
+                            </MessageBody>
+                        </MessageContent>
+                    </Message>
+                </ProfileInfo>
+                
+                { user.Requesters.map(u => (
+                    <ProfileInfo key={ u.id } style={{ margin: '.5rem 0' }}>
+                        <Message>
+                            <Link to={`/perfil/${u.id}`}>
+                                <Image size="50" url={ u.profile_picture } />
+                            </Link>
+                            <MessageContent>
+                                <MessageHeader>
+                                    <Subtitle2 style={{ marginTop: 0 }}><strong>Novo pedido de amizade</strong></Subtitle2>
+                                </MessageHeader>
+                                <MessageBody>
+                                    <Link to={`/perfil/${u.id}`}>{ u.name } </Link>quer ser seu amigo no orkut.
+                                </MessageBody>
+                                <MessageActions below>
+                                    <Button
+                                        onClick={ () => handleRespondFriendRequest(u, true) }
+                                    ><strong>aceitar</strong></Button>
+                                    <Button
+                                        onClick={ () => handleRespondFriendRequest(u, false) }
+                                    >rejeitar</Button>
+                                </MessageActions>
+                            </MessageContent>
+                        </Message>
+                    </ProfileInfo>
+                ))}
+            </Card>
+        </MainColumn>
     )
 }
 

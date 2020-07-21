@@ -84,9 +84,9 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                             </InlineHeader>
                             <LastImages>
                                 {
-                                    user.Photos.slice(0, 5).map(p => (
+                                    [...user.Photos].reverse().slice(0, 5).map(p => (
                                         <Link key={ p.id } to={`/perfil/${user.id}/fotos/${p.id}`} >
-                                            <Image url={ p.url } size="100" />
+                                            <Image url={ p.url } size="85" />
                                         </Link>
                                     ))
                                 }
@@ -102,7 +102,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                     </ProfileSection>
                 </ProfileInfo>
             </Card>
-            <Testimonials user={ user } />
+            <Testimonials user={ user } loggedUser={ loggedUser } />
         </MainColumn>
     )
 }

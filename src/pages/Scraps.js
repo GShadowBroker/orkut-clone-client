@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 import moment from 'moment'
@@ -26,14 +26,22 @@ import ProfileLeft from '../components/profile/ProfileLeft'
 import ScrapForm from '../components/ScrapForm'
 import Breadcrumbs from '../components/utils/Breadcrumbs'
 import Notification from '../components/utils/Notification'
-
-// import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
-import draftToHtml from 'draftjs-to-html';
+import ProfileLeftSkeleton from '../components/skeletons/ProfileLeftSkeleton'
+import ProfileMainSkeleton from '../components/skeletons/ProfileMainSkeleton'
+import ScrapsSkeleton from '../components/skeletons/ScrapsSkeleton'
 
 const Scraps = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
     const [selected, setSelected] = useState([])
     const [offset, setOffset] = useState(0)
+    const [limit, setLimit] = useState(10)
+
+    useEffect(() => {
+        const savedLimit = JSON.parse(window.localStorage.getItem('userPreferences'))
+        if (savedLimit) {
+            setLimit(Number(savedLimit.scrapLimit))
+        }
+    }, [])
 
     const [ removeScrap, { loading: removeLoading } ] = useMutation(REMOVE_SCRAP, {
         onError: (error) => {
@@ -48,7 +56,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
             },
             {
                 query: GET_USER_SCRAPS,
-                variables: { receiverId: userId }
+                variables: { receiverId: userId, limit, offset }
             }
         ]
     })
@@ -62,20 +70,31 @@ const Scraps = ({ crumbs, loggedUser }) => {
     const { error: errorScraps, loading: loadingScraps, data: dataScraps, fetchMore } = useQuery(GET_USER_SCRAPS, {
         variables: {
             receiverId: userId,
-            limit: 10,
+            limit,
             offset
-        },
-        fetchPolicy: "cache-and-network"
+        }
     })
 
     if (error || errorScraps) return <Notification />
 
-    if (loading || loadingScraps) return (
-        <h1>loading...</h1>
+    if (loading) return (
+        <Main>
+            <ProfileLeftSkeleton />
+            <ProfileMainSkeleton />
+        </Main>
     )
 
     const user = data && data.findUser
-    const scraps = dataScraps && dataScraps.findScraps
+
+    if (loadingScraps) return (
+        <Main>
+            <ProfileLeft user={ user } loggedUser={ loggedUser } />
+            <ScrapsSkeleton />
+        </Main>
+    )
+
+    const scraps = dataScraps && dataScraps.findScraps.rows
+    const scrapCount = dataScraps && dataScraps.findScraps.count
 
     const deleteScrap = (scrap) => {
         removeScrap({
@@ -129,6 +148,63 @@ const Scraps = ({ crumbs, loggedUser }) => {
         })
     }
 
+    // Pagination Methods
+    const pages = Math.ceil(scrapCount / limit)
+
+    const nextPage = () => {
+        fetchMore({
+            variables: {
+                offset: offset + limit
+            }
+        })
+        setOffset(offset + limit)
+    }
+    const prevPage = () => {
+        fetchMore({
+            variables: {
+                offset: offset - limit
+            }
+        })
+        setOffset(offset - limit)
+    }
+    const firstPage = () => {
+        fetchMore({
+            variables: {
+                offset: 0
+            }
+        })
+        setOffset(0)
+    }
+    const lastPage = () => {
+        fetchMore({
+            variables: {
+                offset: (pages - 1) * limit
+            }
+        })
+        setOffset((pages - 1) * limit)
+    }
+
+    const hasNextPage = limit < scrapCount && offset !== (pages - 1) * limit
+    const hasPrevPage = offset >= limit
+
+    // Limit
+    const handleLimitChange = ({ target }) => {
+        const savedPreferences = JSON.parse(window.localStorage.getItem('userPreferences'))
+        let preferences
+        if (savedPreferences) {
+            preferences = {
+                ...savedPreferences,
+                scrapLimit: Number(target.value)
+            }
+        } else {
+            preferences = {
+                scrapLimit: Number(target.value)
+            }
+        }
+        window.localStorage.setItem('userPreferences', JSON.stringify(preferences))
+        setLimit(Number(target.value))
+    }
+
     const timeOptions = {
         hour: 'numeric',
         minute: 'numeric'
@@ -141,7 +217,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
             <MainColumn stretched>
                 <Card>
                     <ProfileInfo>
-                        <ScrapForm user={ user } loggedUser={ loggedUser } />
+                        <ScrapForm user={ user } loggedUser={ loggedUser } limit={ limit } offset={ offset } />
                     </ProfileInfo>
                 </Card>
 
@@ -157,9 +233,9 @@ const Scraps = ({ crumbs, loggedUser }) => {
                                 </Button>
                                 : <span></span>
                             }
-                            <Select>
-                                <option value="ver10">Ver 10 scraps</option>
-                                <option value="ver20">Ver 20 scraps</option>
+                            <Select onChange={ handleLimitChange } value={ limit.toString() } >
+                                <option value="10">Ver 10 scraps</option>
+                                <option value="20">Ver 20 scraps</option>
                             </Select>
                         </CommentSectionHeader>
                         <CommentSectionHeader>
@@ -169,27 +245,26 @@ const Scraps = ({ crumbs, loggedUser }) => {
                                 : <span></span>
                             }
                             <PaginationBlock>
-                                <span 
-                                    onClick={ () => fetchMore({
-                                        variables: {
-                                            offset: 0
-                                        }
-                                    }) }
-                                ><FakeLink>primeira</FakeLink></span>
-                                <span>&lt; anterior</span>
-                                <span
-                                    onClick={() => {
-                                        fetchMore({
-                                            variables: {
-                                                offset: offset + 10,
-                                            },
-                                            // No need for an updateQuery function, since the
-                                            // field policy handles all Query.search updates.
-                                        })
-                                        setOffset(10)
-                                    }}
-                                ><FakeLink>próxima &gt;</FakeLink></span>
-                                <span>última</span>
+                                {
+                                    hasPrevPage
+                                    ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
+                                    : <span>primeira</span>
+                                }
+                                {
+                                    hasPrevPage
+                                    ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
+                                    : <span>&lt; anterior</span>
+                                }
+                                {
+                                    hasNextPage
+                                    ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
+                                    : <span>próxima &gt;</span>
+                                }
+                                {
+                                    hasNextPage
+                                    ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
+                                    : <span>última</span>
+                                }
                             </PaginationBlock>
                         </CommentSectionHeader>
 
@@ -227,7 +302,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
                                                 </div>
                                             </CommentSectionHeader>
                                             <CommentContent>
-                                                <div dangerouslySetInnerHTML={{ __html: draftToHtml(scrap.body) }} />
+                                                <div dangerouslySetInnerHTML={{ __html: scrap.body }} />
                                             </CommentContent>
                                             <FakeLink>Responder</FakeLink>
                                         </CommentBody>
@@ -238,10 +313,26 @@ const Scraps = ({ crumbs, loggedUser }) => {
                         <CommentSectionFooter>
                             { scraps.length > 0 && (
                                 <PaginationBlock>
-                                    <span>primeira</span>
-                                    <span>&lt; anterior</span>
-                                    <span>próxima &gt;</span>
-                                    <span>última</span>
+                                    {
+                                        hasPrevPage
+                                        ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
+                                        : <span>primeira</span>
+                                    }
+                                    {
+                                        hasPrevPage
+                                        ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
+                                        : <span>&lt; anterior</span>
+                                    }
+                                    {
+                                        hasNextPage
+                                        ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
+                                        : <span>próxima &gt;</span>
+                                    }
+                                    {
+                                        hasNextPage
+                                        ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
+                                        : <span>última</span>
+                                    }
                                 </PaginationBlock>
                             )}
                         </CommentSectionFooter>

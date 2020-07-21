@@ -176,6 +176,8 @@ export const ProfileInfo = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 0 .8rem;
+    border-top: ${ props => props.bordertop ? '.3px solid #D4DCEF' : '' };
+    border-bottom: ${ props => props.borderbottom ? '.3px solid #D4DCEF' : '' };
 `
 
 export const InlineHeader = styled.div`
@@ -228,6 +230,7 @@ export const FriendsList = styled.div`
 `
 
 export const LastImages = styled.div`
+    overflow-x: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-gap: .5rem;
@@ -292,6 +295,7 @@ export const PaginationBlock = styled.div`
 
 export const PhotoList = styled.div`
     width: 100%;
+    overflow-x: auto;
     padding: 1rem 0;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -336,4 +340,20 @@ export const FullscreenImageModal = styled.div`
     width: 100%;
     height: 100%;
     background: black;
+`
+
+export const OrkutStyles = styled.div`
+    button {
+        margin: 0;
+        border-radius: 0;
+    }
+    button:first-of-type {
+        margin-left: .3rem;
+        border-top-left-radius: .2rem;
+        border-bottom-left-radius: .2rem;
+    }
+    button:last-of-type {
+        border-top-right-radius: .2rem;
+        border-bottom-right-radius: .2rem;
+    }
 `

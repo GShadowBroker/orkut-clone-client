@@ -39,9 +39,10 @@ const Photo = ({ crumbs, loggedUser }) => {
     )
 
     const user = data && data.findUser
-    const photo = user && user.Photos.find(p => p.id === photoId)
-    const prevPhoto = user && user.Photos[user.Photos.indexOf(photo) - 1]
-    const nextPhoto = user && user.Photos[user.Photos.indexOf(photo) + 1]
+    const photos = [...user.Photos].reverse()
+    const photo = user && photos.find(p => p.id === photoId)
+    const prevPhoto = user && photos[photos.indexOf(photo) - 1]
+    const nextPhoto = user && photos[photos.indexOf(photo) + 1]
 
     if (!photo) return <Error404 />
 
@@ -67,7 +68,7 @@ const Photo = ({ crumbs, loggedUser }) => {
                     <ProfileInfo>
                         <h2>{ user.id === loggedUser.id ? 'Minhas fotos' : `Fotos de ${user.name}`} ({ user.Photos.length })</h2>
                         <Breadcrumbs crumbs={ crumbs } />
-                        <p>Mostrando <strong>{ user.Photos.indexOf(photo) + 1 }</strong> de <strong>{ user.Photos.length }</strong> fotos</p>
+                        <p>Mostrando <strong>{ [...user.Photos].reverse().indexOf(photo) + 1 }</strong> de <strong>{ user.Photos.length }</strong> fotos</p>
                     </ProfileInfo>
                     <PhotoContainer>
                         { prevPhoto ? (

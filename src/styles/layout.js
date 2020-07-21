@@ -63,8 +63,7 @@ export const Card = styled.div`
 `
 
 export const Message = styled.div`
-    padding: 0 1.5em 2em 1.5em;
-
+    padding: .6rem 0;
     display: flex;
     justify-content: space-between;
 `
@@ -92,7 +91,15 @@ export const MessageHeader = styled.div`
     }
 `
 
-export const MessageBody = styled.p``
+export const MessageActions = styled.div`
+    font-size: .9em;
+    padding: ${props => props.below ? '1rem 0 0 0' : ''};
+    button {
+        margin-right: ${props => props.below ? '.6rem' : ''};
+    }
+`
+
+export const MessageBody = styled.div``
 
 export const Time = styled.span`
     font-size: ${props => props.size ? props.size : '.9'}em;
@@ -201,6 +208,11 @@ export const Subtitle2 = styled.h3`
     font-weight: 500;
 `
 
+export const ShowMore = styled.div`
+    padding: .6rem;
+    text-align: center;
+`
+
 // Forms
 
 export const Form = styled.form`
@@ -218,7 +230,6 @@ export const LoginInputGroup = styled(InputGroup)`
 `
 
 export const ActionGroup = styled(InputGroup)`
-    border: none;
     button {
         margin-right: .5rem;
     }
@@ -238,13 +249,6 @@ export const Select = styled.select`
     font-family: inherit;
 `
 
-export const TextArea = styled.textarea`
-    border: 1px solid #bebebe;
-    padding: .3em .6em;
-    font-family: inherit;
-    resize: vertical;
-`
-
 export const Label = styled.label``
 
 export const LoginInputNote = styled(LoginInputGroup)`
@@ -257,6 +261,37 @@ export const InputNote = styled(LoginInputNote)`
     margin: 0;
     text-align: center;
 `
+
+export const FormUpdate = styled.form`
+    border: none;
+    padding: .6rem;
+    border: 1px solid #bebebe;
+`
+
+export const InputGroupUpdate = styled.div``
+
+export const ActionGroupUpdate = styled.div`
+    button {
+        margin-right: .6em !important;
+    }
+`
+
+export const TextArea = styled.textarea`
+    border: none;
+    width: 100%;
+    resize: vertical;
+    max-height: 200px;
+    padding: .3em .6em;
+    font-family: inherit;
+
+    &::placeholder {
+        font-size: .9em;
+    }
+    &:focus {
+        outline: none;
+    }
+`
+
 
 // 404 Error Page
 
@@ -292,6 +327,17 @@ export const VideoRecommendations = styled.div`
 
 export const NotificationContainer = styled.div`
     background-color: #FFFFD2;
-    margin-top: .6rem;
-    padding: .5rem 1rem;
+    padding: .2rem 1rem;
+    margin: ${props => props.margin};
+`
+
+// Home
+
+export const FortuneLogo = styled.div`
+    background-image: url(${require('../assets/todays-fortune.png')});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    min-width: 40px;
+    min-height: 40px;
 `

@@ -30,3 +30,6 @@ a {
     vertical-align: middle;
   }
 
+.rich-editor-input {
+    min-height: 77px;
+}

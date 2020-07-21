@@ -86,7 +86,7 @@ const Communities = ({ loggedUser }) => {
                         <p><strong>membros ({ c.Members.length })</strong></p>
                         <ul>
                             { c.Members.map(m => (
-                                <li key={ m.id }>{ m.name }</li>
+                                <li key={ m.id }>{ m.id }</li>
                             )) }
                         </ul>
                         <hr />

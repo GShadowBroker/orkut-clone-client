@@ -7,12 +7,13 @@ import { Form, InputGroup, ActionGroup, Button, FakeLink } from '../styles/layou
 
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw } from 'draft-js'
+import draftToHtml from 'draftjs-to-html';
 
 import RichEditor from './RichEditor'
 
 // scrap.getCurrentContent() já é contentState
 
-const ScrapForm = ({ user, loggedUser }) => {
+const ScrapForm = ({ user, loggedUser, limit, offset }) => {
 
     const [sendScrap, { loading }] = useMutation(SEND_SCRAP, {
         onError: error => {
@@ -27,9 +28,23 @@ const ScrapForm = ({ user, loggedUser }) => {
             },
             {
                 query: GET_USER_SCRAPS,
-                variables: { receiverId: user.id, limit: 10, offset: 0 }
-            }
-        ]
+                variables: { receiverId: user.id, limit, offset }
+            },
+        ],
+        onCompleted: () => setScrap(EditorState.createEmpty()), // Clears input after submission
+        // update: (store, response) => {
+        //     const userInStore = store.readQuery({ query: FIND_USER, variables: { userId: user.id } })
+        //     store.writeQuery({
+        //         query: FIND_USER,
+        //         data: {
+        //             ...userInStore,
+        //             findUser: { ...userInStore.findUser, Scraps: [
+        //                 ...userInStore.findUser.Scraps,
+        //                 response.data.sendScrap
+        //             ]}
+        //         }
+        //     })
+        // }
     })
 
     let editorState = EditorState.createEmpty()
@@ -44,25 +59,24 @@ const ScrapForm = ({ user, loggedUser }) => {
         e.preventDefault()
         sendScrap({
             variables: {
-                body: convertToRaw(scrap.getCurrentContent()),
+                body: draftToHtml(convertToRaw(scrap.getCurrentContent())),
                 senderId: loggedUser.id,
                 userId: user.id
             }
         })
-        setScrap(EditorState.createEmpty())
     }
 
     return (
         <Form onSubmit={ handleSubmit }>
             <InputGroup>
                 <RichEditor
-                    scrap={ scrap }
+                    message={ scrap }
                     setEditorState={ setEditorState }
-                    user={ loggedUser } // PASSAR O USUÁRIO ATUAL DA SESSÃO, E NÃO O USUÁRIO DO PERFIL
+                    user={ loggedUser }
                 />
             </InputGroup>
             <ActionGroup>
-                <Button type="submit">{ loading ? 'enviando...' : 'enviar scrap' }</Button>
+                <Button type="submit" disabled={ loading }>{ loading ? 'enviando...' : 'enviar scrap' }</Button>
                 <Button>visualizar</Button>
                 <FakeLink>dicas de recados</FakeLink>
             </ActionGroup>
