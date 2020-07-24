@@ -73,7 +73,6 @@ const Testimonials = ({ user, loggedUser }) => {
         sendTestimonial({
             variables: {
                 userId: user.id,
-                senderId: loggedUser.id,
                 body: draftToHtml(convertToRaw(testimonial.getCurrentContent()))
             }
         })

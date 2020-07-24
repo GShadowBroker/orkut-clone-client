@@ -60,7 +60,6 @@ const ScrapForm = ({ user, loggedUser, limit, offset }) => {
         sendScrap({
             variables: {
                 body: draftToHtml(convertToRaw(scrap.getCurrentContent())),
-                senderId: loggedUser.id,
                 userId: user.id
             }
         })

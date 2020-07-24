@@ -29,7 +29,7 @@ export const GET_ALL_USERS = gql`
 
 export const FIND_USER = gql`
     query findUser(
-        $userId: ID
+        $userId: ID!
     ) {
         findUser(
             userId: $userId
@@ -40,6 +40,7 @@ export const FIND_USER = gql`
             city
             country
             born
+            age
             gender
             profile_picture
             Friends {
@@ -75,20 +76,62 @@ export const FIND_USER = gql`
         }
     }
 `
+export const GET_FEED = gql`
+    query getFeed($limit: Int, $offset: Int) {
+        getFeed(limit: $limit, offset: $offset) {
+            id
+            createdAt
+            body
+            picture
+            verb
+            object
+            User {
+                id
+                name
+                profile_picture
+            }
+        }
+    }
+`
 
+// Remove Topics altogether
 export const GET_ALL_COMMUNITIES = gql`
     query allCommunities {
         allCommunities {
             id
+            createdAt
             title
             picture
             description
-            category
             language
+            type
+            Creator {
+                id
+                name
+            }
             Members {
                 id
             }
-            createdAt
+            Category {
+                title
+            },
+            Topics {
+                id,
+                title,
+                body,
+                TopicCreator {
+                    id
+                    name
+                },
+                Comments {
+                    id
+                    body
+                    Sender {
+                        id
+                        name
+                    }
+                }
+            }
         }
     }
 `
@@ -113,6 +156,7 @@ export const GET_FRIEND_REQUESTS = gql`
     }
 `
 
+// WIP
 export const GET_USER_COMMUNITIES = gql`
     query getUserCommunities($userId: ID!) {
         findSubscriptions(userId: $userId) {
@@ -201,11 +245,9 @@ export const LOGIN = gql`
 
 export const SEND_FRIEND_REQUEST = gql`
     mutation sendFriendRequest(
-        $requesterId: ID!,
         $requesteeId: ID!
     ) {
         sendFriendRequest(
-            requesterId: $requesterId,
             requesteeId: $requesteeId
         ) {
             requesterId
@@ -217,12 +259,10 @@ export const SEND_FRIEND_REQUEST = gql`
 export const RESPOND_FRIEND_REQUEST = gql`
     mutation respondFriendRequest(
         $requesterId: ID!,
-        $requesteeId: ID!,
         $accept: Boolean!
     ) {
         respondFriendRequest(
             requesterId: $requesterId,
-            requesteeId: $requesteeId,
             accept: $accept
         ) {
             id
@@ -233,11 +273,9 @@ export const RESPOND_FRIEND_REQUEST = gql`
 
 export const UNFRIEND = gql`
     mutation unfriend(
-        $userId: ID!
         $friendId: ID!
     ) {
         unfriend(
-            userId: $userId
             friendId: $friendId
         ) {
             id
@@ -248,12 +286,10 @@ export const UNFRIEND = gql`
 export const SEND_SCRAP = gql`
     mutation sendScrap(
         $body: String!
-        $senderId: ID!
         $userId: ID!
     ) {
         sendScrap(
             body: $body
-            senderId: $senderId
             userId: $userId
         ) {
             id
@@ -278,12 +314,10 @@ export const REMOVE_SCRAP = gql`
 export const SEND_TESTIMONIAL = gql`
     mutation sendTestimonial(
         $body: String!
-        $senderId: ID!
         $userId: ID!
     ) {
         sendTestimonial(
             body: $body
-            senderId: $senderId
             userId: $userId
         ) {
             id
@@ -307,11 +341,9 @@ export const REMOVE_TESTIMONIAL = gql`
 
 export const JOIN_COMMUNITY = gql`
     mutation joinCommunity(
-        $userId: ID!
         $communityId: ID!
     ) {
         joinCommunity(
-            userId: $userId
             communityId: $communityId
         ) {
             id
@@ -321,11 +353,9 @@ export const JOIN_COMMUNITY = gql`
 
 export const LEAVE_COMMUNITY = gql`
     mutation leaveCommunity(
-        $userId: ID!
         $communityId: ID!
     ) {
         leaveCommunity(
-            userId: $userId
             communityId: $communityId
         ) {
             id

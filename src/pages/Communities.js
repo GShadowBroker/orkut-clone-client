@@ -45,7 +45,6 @@ const Communities = ({ loggedUser }) => {
         console.log('entrando na comunidade', community.title)
         joinCommunity({
             variables: {
-                userId: loggedUser.id,
                 communityId: community.id
             }
         })
@@ -55,7 +54,6 @@ const Communities = ({ loggedUser }) => {
         console.log('entrando na comunidade', community.title)
         leaveCommunity({
             variables: {
-                userId: loggedUser.id,
                 communityId: community.id
             }
         })
@@ -79,9 +77,32 @@ const Communities = ({ loggedUser }) => {
                         <p>{ c.description }</p>
                         <ul>
                             <li><strong>criada em: </strong>{ c.createdAt }</li>
-                            <li><strong>categoria: </strong>{ c.category }</li>
+                            <li><strong>criada por: </strong>{ c.Creator.name }</li>
+                            <li><strong>categoria: </strong>{ c.Category.title }</li>
                             <li><strong>idioma: </strong>{ c.language }</li>
-                            <li><strong>tipo: </strong>público</li>
+                            <li><strong>tipo: </strong>{ c.type }</li>
+                        </ul>
+                        <p><strong>tópicos</strong></p>
+                        <ul>
+                            {
+                                c.Topics.map(t => (
+                                    <li key={ t.id }>
+                                        <h3>{ t.title }</h3>
+                                        <p>por { t.TopicCreator.name }</p>
+                                        <p>{ t.body }</p>
+                                        <ul>
+                                            {
+                                                t.Comments.map(comment => (
+                                                    <li key={ comment.id }>
+                                                        <p>por { comment.Sender.name }</p>
+                                                        <p>{ comment.body }</p>
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </li>
+                                ))
+                            }
                         </ul>
                         <p><strong>membros ({ c.Members.length })</strong></p>
                         <ul>

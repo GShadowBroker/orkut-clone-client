@@ -133,8 +133,8 @@ export const ModalContainer = styled.div`
 
     img {
         cursor: zoom-out;
-        max-height: 80%;
-        max-width: 80%;
+        max-height: 100vh;
+        max-width: 100vw;
     }
 `
 

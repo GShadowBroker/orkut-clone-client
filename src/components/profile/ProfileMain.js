@@ -54,7 +54,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                             viewFullProfile ? (
                                 <div>
                                     <p><strong>sexo: </strong>{ user.gender }</p>
-                                    <p><strong>idade: </strong>{ new Date().getFullYear() - new Date(user.born).getFullYear() }</p>
+                                    <p><strong>idade: </strong>{ user.age }</p>
                                     <p><strong>aniversário: </strong>{ new Date(user.born).toLocaleString('pt-BR', timeOptions) }</p>
                                     <p><strong>e-mail: </strong>{ user.email }</p>
                                     <p><strong>interesses em: </strong>{ user.interests }</p>

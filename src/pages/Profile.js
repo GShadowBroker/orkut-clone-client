@@ -40,7 +40,6 @@ const Profile = ({ loggedUser }) => {
         console.log('Tchau tchau,', friend.name)
         unfriend({
             variables: {
-                userId: loggedUser.id,
                 friendId: friend.id
             }
         })
@@ -50,7 +49,6 @@ const Profile = ({ loggedUser }) => {
         console.log('Adding', requestee.name)
         sendFriendRequest({
             variables: {
-                requesterId: loggedUser.id,
                 requesteeId: requestee.id
             }
         })

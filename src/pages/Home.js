@@ -7,7 +7,8 @@ import {
     SEND_FRIEND_REQUEST, 
     FIND_USER, UNFRIEND, 
     GET_ALL_USERS,
-    RESPOND_FRIEND_REQUEST
+    RESPOND_FRIEND_REQUEST,
+    GET_FEED
 } from '../services/queries'
 
 import ProfileLeft from '../components/profile/ProfileLeft'
@@ -53,6 +54,7 @@ import { findAllByDisplayValue } from '@testing-library/react'
 import todaysFortune from '../utils/todaysFortune'
 
 const Home = ({ loggedUser }) => {
+
     const [sendFriendRequest] = useMutation(SEND_FRIEND_REQUEST, {
         onError: (error) => {
             error.graphQLErrors
@@ -90,7 +92,6 @@ const Home = ({ loggedUser }) => {
     const handleSendRequest = (requestee) => {
         sendFriendRequest({
             variables: {
-                requesterId: loggedUser.id,
                 requesteeId: requestee.id
             }
         })
@@ -100,7 +101,6 @@ const Home = ({ loggedUser }) => {
         respondFriendRequest({
             variables: {
                 requesterId: requester.id,
-                requesteeId: loggedUser.id,
                 accept
             }
         })
@@ -115,7 +115,7 @@ const Home = ({ loggedUser }) => {
                 handleUnfriend={ handleUnfriend }
             />
 
-            <HomeMain 
+            <HomeMain
                 user={ loggedUser } 
                 handleRespondFriendRequest={ handleRespondFriendRequest }
             />
@@ -130,13 +130,26 @@ const Home = ({ loggedUser }) => {
 
 const HomeMain = ({ user, handleRespondFriendRequest }) => {
 
+    const { error, loading, data } = useQuery(GET_FEED, {
+        onError: (error) => {
+            error.graphQLErrors
+                ? alert(error.graphQLErrors[0].message)
+                : alert('Server timeout')
+        }
+    })
+
+    if (error) return <Notification />
+
+    if (loading) return <h1>LOADING...</h1>
+
+    const feed = data && data.getFeed
+
     const timeOptions = {
         month: 'long',
         day: 'numeric',
         timeZone: 'UTC'
     }
 
-    console.log('user', user)
     return (
         <MainColumn>
             <Notification
@@ -195,7 +208,7 @@ const HomeMain = ({ user, handleRespondFriendRequest }) => {
                 </ProfileInfo>
                 
                 { user.Requesters.map(u => (
-                    <ProfileInfo key={ u.id } style={{ margin: '.5rem 0' }}>
+                    <ProfileInfo key={ u.id } style={{ margin: '.5rem 0' }} borderbottom>
                         <Message>
                             <Link to={`/perfil/${u.id}`}>
                                 <Image size="50" url={ u.profile_picture } />
@@ -215,6 +228,23 @@ const HomeMain = ({ user, handleRespondFriendRequest }) => {
                                         onClick={ () => handleRespondFriendRequest(u, false) }
                                     >rejeitar</Button>
                                 </MessageActions>
+                            </MessageContent>
+                        </Message>
+                    </ProfileInfo>
+                ))}
+                { feed.map(f => (
+                    <ProfileInfo key={ f.id } style={{ padding: '1rem .8rem' }} borderbottom>
+                        <Message>
+                            <Link to={`/perfil/${f.User.id}`}>
+                                <Image size="50" url={ f.User.profile_picture } />
+                            </Link>
+                            <MessageContent>
+                                <MessageHeader>
+                                    <Subtitle2 style={{ marginTop: 0 }}><strong>{ f.body }</strong></Subtitle2>
+                                </MessageHeader>
+                                <MessageBody>
+                                    <Link to={`/perfil/${f.User.id}`}>{ f.User.name } </Link>{ f.body }
+                                </MessageBody>
                             </MessageContent>
                         </Message>
                     </ProfileInfo>
