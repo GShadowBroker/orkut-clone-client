@@ -37,7 +37,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
     const [limit, setLimit] = useState(10)
 
     useEffect(() => {
-        const savedLimit = JSON.parse(window.localStorage.getItem('userPreferences'))
+        const savedLimit = JSON.parse(window.localStorage.getItem('config'))
         if (savedLimit) {
             setLimit(Number(savedLimit.scrapLimit))
         }
@@ -64,9 +64,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
     const { error, loading, data } = useQuery(FIND_USER, {
         variables: { userId }
     })
-    // const { error: errorScraps, loading: loadingScraps, data: dataScraps } = useQuery(GET_USER_SCRAPS, {
-    //     variables: { receiverId: userId }
-    // })
+    
     const { error: errorScraps, loading: loadingScraps, data: dataScraps, fetchMore } = useQuery(GET_USER_SCRAPS, {
         variables: {
             receiverId: userId,
@@ -189,7 +187,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
 
     // Limit
     const handleLimitChange = ({ target }) => {
-        const savedPreferences = JSON.parse(window.localStorage.getItem('userPreferences'))
+        const savedPreferences = JSON.parse(window.localStorage.getItem('config'))
         let preferences
         if (savedPreferences) {
             preferences = {
@@ -201,7 +199,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
                 scrapLimit: Number(target.value)
             }
         }
-        window.localStorage.setItem('userPreferences', JSON.stringify(preferences))
+        window.localStorage.setItem('config', JSON.stringify(preferences))
         setLimit(Number(target.value))
     }
 

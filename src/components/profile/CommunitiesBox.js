@@ -3,23 +3,31 @@ import {
     Card,
     Input,
     Subtitle2,
-    Image
+    Image,
+    SearchInputContainer,
+    SearchInputIcon
 } from '../../styles/layout'
 import {
     ProfileFriends,
     FriendsList
 } from '../../styles/profile'
 import { Link } from 'react-router-dom'
+import { BsSearch } from 'react-icons/bs'
 
 const CommunitiesBox = ({ user }) => {
     return (
-        <Card style={{ marginTop: '.6em' }}>
+        <Card>
             <ProfileFriends>
-                <div>
+                <div style={{paddingBottom: '1rem'}}>
                     <Subtitle2>Comunidades ({ user.Subscriptions.length })</Subtitle2>
-                    <Input placeholder="buscar comunidades" />
-                </div> 
-                <FriendsList>
+                    <SearchInputContainer noborderright>
+                        <Input placeholder="buscar comunidades" />
+                        <SearchInputIcon noborderleft>
+                            <BsSearch />
+                        </SearchInputIcon>
+                    </SearchInputContainer>
+                </div>  
+                <FriendsList style={{paddingBottom: '1rem'}}>
                     {
                         user.Subscriptions.map(c => (
                             <Link to={ `/comunidades/${c.id}` } key={ c.id }>

@@ -64,7 +64,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                         <FakeLink onClick={ () => setViewFullProfile(!viewFullProfile) }>
                                 { viewFullProfile
                                     ? 'esconder perfil completo'
-                                    : 'visualizar perfil completo'
+                                    : 'ver perfil completo'
                                 }
                         </FakeLink>
                     </ProfileSection>
@@ -91,6 +91,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                     ))
                                 }
                             </LastImages>
+                            { user.Photos.length > 0 && <Link to={`/perfil/${user.id}/fotos`}><p>ver todas as fotos</p></Link>}
                         </div>
                     </ProfileSection>
                     <ProfileSection>

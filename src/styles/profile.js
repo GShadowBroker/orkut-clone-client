@@ -19,7 +19,7 @@ export const LeftColumn = styled.div`
     display: flex;
     margin-right: .6rem;
     flex-direction: column;
-    min-width: ${0.18 * bigger}px;
+    min-width: ${0.17 * bigger}px;
     flex-shrink: 1;
 
     @media (max-width: 1015px) {
@@ -50,26 +50,26 @@ export const MainColumn = styled.div`
     flex-direction: column;
     flex: 1;
 
-    min-width: ${props => props.stretched ? 0.82 * bigger : 0.52 * bigger}px;
+    min-width: ${props => props.stretched ? 0.72 * bigger : 0.52 * bigger}px;
 
     @media (max-width: 1015px) {
         & {
-            min-width: ${props => props.stretched ? 0.82 * big : 0.52 * big}px;
+            min-width: ${props => props.stretched ? 0.72 * big : 0.52 * big}px;
         }
     }
     @media (max-width: 920px) {
         & {
-            min-width: ${props => props.stretched ? 0.82 * medium : 0.52 * medium}px;
+            min-width: ${props => props.stretched ? 0.72 * medium : 0.52 * medium}px;
         }
     }
     @media (max-width: 825px) {
         & {
-            min-width: ${props => props.stretched ? 0.82 * small : 0.52 * small}px;
+            min-width: ${props => props.stretched ? 0.72 * small : 0.52 * small}px;
         }
     }
     @media (max-width: 785px) {
         & {
-            min-width: ${props => props.stretched ? 0.82 * tiny : 0.52 * tiny}px;
+            min-width: ${props => props.stretched ? 0.72 * tiny : 0.52 * tiny}px;
         }
     }
 `
@@ -78,28 +78,40 @@ export const RightColumn = styled.div`
     margin-left: .6rem;
     display: flex;
     flex-direction: column;
-    min-width: ${0.3 * bigger}px;
+    width: 280px;
+    flex-shrink: 10;
 
-    @media (max-width: 1015px) {
+    @media (max-width: 920px) {
         & {
-            min-width: ${0.3 * big}px;
+            width: 250px;
+        }
+    }
+    @media (max-width: 850px) {
+        & {
+            width: 220px;
+        }
+    }
+
+    /* @media (max-width: 1015px) {
+        & {
+            min-width: ${0.2 * big}px;
         }
     }
     @media (max-width: 920px) {
         & {
-            min-width: ${0.3 * medium}px;
+            min-width: ${0.2 * medium}px;
         }
     }
     @media (max-width: 825px) {
         & {
-            min-width: ${0.3 * small}px;
+            min-width: ${0.2 * small}px;
         }
     }
     @media (max-width: 785px) {
         & {
-            min-width: ${0.3 * tiny}px;
+            min-width: ${0.2 * tiny}px;
         }
-    }
+    } */
 `
 
 export const ProfileImage = styled.div`
@@ -108,9 +120,28 @@ export const ProfileImage = styled.div`
     background-position: center;
     background-size: cover;
     display: block;
+    position: relative;
     width: 100%;
     height: 200px;
     margin-bottom: .6rem;
+
+    cursor: ${props => props.pointer ? 'pointer': ''};
+    &:hover div {
+        opacity: .9;
+    }
+`
+
+export const ChangeImageTag = styled.div`
+    opacity: 0;
+
+    background: #ffff;
+    padding: .5rem;
+    text-align: center;
+
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    transition: opacity .2s linear;
 `
 
 export const ProfileMenu = styled.div`
@@ -203,14 +234,42 @@ export const ProfileSection = styled.div`
     border-bottom: ${props => props.border ? '.3px solid #D4DCEF' : ''};
 `
 
+export const FriendSuggestionGrid = styled.div`
+    overflow-x: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: .5rem;
+`
+
+export const SuggestionContainer = styled.div`
+    display: flex;
+    /* overflow-x: hidden; */
+    margin-bottom: .6rem;
+`
+
+export const SuggestionImageContainer = styled.div`
+    margin-right: .3rem;
+`
+
+export const SuggestionBody = styled.div`
+    display: flex;
+    flex: 1;
+
+    position: relative;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    justify-content: space-between;
+`
+
 export const ProfileFriends = styled(ProfileInfo)`
-    padding-bottom: 1rem;
+    /* padding-bottom: 1rem; */
     input {
         width: 100%;
     }
 
     div:first-of-type {
-        padding-bottom: 1em;
+        /* padding-bottom: 1rem; */
     }
 `
 
@@ -218,8 +277,8 @@ export const FriendsList = styled.div`
     overflow-x: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 100px 100px 100px;
-    grid-gap: .5rem;
+    /* grid-template-rows: 100px 100px 100px; */
+    grid-gap: 1rem;
 
     & div {
         display: flex;

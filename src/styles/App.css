@@ -6,7 +6,7 @@ body {
     background: #D4DCEF;
     color: #34495e;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 *, *::before, *::after {
@@ -14,7 +14,7 @@ body {
 }
 
 a {
-    color: #6999c5;
+    color: #3c88cf;
     text-decoration: none;
     font-weight: 500;
 }

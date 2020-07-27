@@ -48,7 +48,7 @@ const PrivateRoutes = ({ data, logout }) => {
 
                                 return (
                                     <ResponsiveLayout
-                                        breakpoint={ 676 }
+                                        breakpoint={ 776 }
                                         renderDesktop={ () => (
                                             <Component {...props} loggedUser={ data.findUser } crumbs={ crumbs } />
                                         ) }

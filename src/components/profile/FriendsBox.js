@@ -3,23 +3,31 @@ import {
     Card,
     Input,
     Subtitle2,
-    Image
+    Image,
+    SearchInputContainer,
+    SearchInputIcon
 } from '../../styles/layout'
 import {
     ProfileFriends,
     FriendsList
 } from '../../styles/profile'
 import { Link } from 'react-router-dom'
+import { BsSearch } from 'react-icons/bs'
 
 const FriendsBox = ({ user }) => {
     return (
-        <Card>
+        <Card style={{ marginBottom: '.6em' }}>
             <ProfileFriends>
-                <div>
+                <div style={{paddingBottom: '1rem'}}>
                     <Subtitle2>Amigos ({ user.Friends.length })</Subtitle2>
-                    <Input placeholder="buscar amigos" />
+                    <SearchInputContainer noborderright>
+                        <Input placeholder="buscar amigos" />
+                        <SearchInputIcon noborderleft>
+                            <BsSearch />
+                        </SearchInputIcon>
+                    </SearchInputContainer>
                 </div> 
-                <FriendsList>
+                <FriendsList style={{paddingBottom: '1rem'}}>
                     {
                         user.Friends.map(f => (
                             <Link to={ `/perfil/${f.id}` } key={ f.id }>

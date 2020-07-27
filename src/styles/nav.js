@@ -35,13 +35,13 @@ export const UpperNav = styled.div`
         color: #eeeeee;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 776px) {
         .email-menu {
             display: none;
         }
     }
 
-    @media (max-width: 675px) {
+    @media (max-width: 776px) {
         & {
             display: none;
         }
@@ -92,9 +92,10 @@ export const NavMenu = styled.div`
     @media (max-width: 950px) {
         & {
             width: auto;
+            padding: .4rem 0;
         }
     }
-    @media (max-width: 675px) {
+    @media (max-width: 776px) {
         width: 100%;
         justify-content: center;
     }
@@ -133,7 +134,7 @@ export const MobileNav = styled.nav`
     background: #89B1D6;
     color: white;
 
-    @media (max-width: 675px) {
+    @media (max-width: 776px) {
         & {
             display: flex;
             align-items: center;

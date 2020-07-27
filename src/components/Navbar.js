@@ -1,8 +1,9 @@
 import React from 'react'
-import { Container, Button, Input } from '../styles/layout'
+import { Container, Button, SearchInputContainer, SearchInputIcon, Input } from '../styles/layout'
 import { Nav, MobileNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } from '../styles/nav'
 import { Link, useLocation } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
+import { BsSearch } from 'react-icons/bs'
 
 const Navbar = ({ loggedUser, logout }) => {
     return (
@@ -40,6 +41,15 @@ const UpperNavbar = ({ loggedUser, logout }) => {
     )
 }
 
+const searchIconStyle = {
+    // background: '#ffff',
+    // fontSize: '1.9em',
+    // padding: '5px 0',
+    // border: '1px solid #bebebe',
+    // borderRight: 'none',
+    // color: 'grey'
+}
+
 const MainNavbar = ({ loggedUser }) => {
     const location = useLocation()
     return (
@@ -57,7 +67,12 @@ const MainNavbar = ({ loggedUser }) => {
                     <Link to="/">Temas <TiArrowSortedDown className="icenter" /></Link>
                 </NavMenu>
                 <NavInputContainer>
-                    <Input placeholder="buscar" />
+                    <SearchInputContainer noborderleft>
+                        <SearchInputIcon noborderright>
+                            <BsSearch style={ searchIconStyle } />
+                        </SearchInputIcon>
+                        <Input placeholder="buscar" />
+                    </SearchInputContainer>
                     <Button><strong>buscar</strong></Button>
                 </NavInputContainer>
             </Container>

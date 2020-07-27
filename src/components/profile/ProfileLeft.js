@@ -1,24 +1,138 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Card,
     Badge,
     FakeLink,
-    Subtitle
+    Subtitle,
+    Image
 } from '../../styles/layout'
 import {
     LeftColumn,
     ProfileImage,
-    ProfileMenu
+    ProfileMenu,
+    ChangeImageTag
 } from '../../styles/profile'
 import { Link, useLocation } from 'react-router-dom'
 
+import { useMutation } from '@apollo/client'
+import { UPDATE_PROFILE_PICTURE, FIND_USER, FETCH_FEED } from '../../services/queries'
+
 import { BsStar } from 'react-icons/bs'
+import { AiFillCamera } from 'react-icons/ai'
+
+import Modal from '../utils/Modal'
 
 const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) => {
     const location = useLocation()
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const uploadForm = useRef(null)
+    const [selectedFile, setSelectedFile] = useState('')
+    const [fileInputState] = useState('')
+    const [previewSource, setPreviewSource] = useState('')
+
+    const [updateProfilePicture, { loading }] = useMutation(UPDATE_PROFILE_PICTURE, {
+        onError: error => console.log(error),
+        refetchQueries: [
+            { query: FIND_USER, variables: { userId: loggedUser.id } },
+            { query: FETCH_FEED, variables: { limit: 10 } }
+        ],
+        onCompleted: () => handleModal(false)
+    })
+
+    const handleImageClick = e => {
+        e.preventDefault()
+        if (user.id !== loggedUser.id) return
+        uploadForm.current.click()
+    }
+
+    const handleFileUpload = e => {
+        const file = e.target.files[0]
+        setSelectedFile(file)
+        previewFile(file)
+    }
+
+    const previewFile = (file) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = () => {
+            setPreviewSource(reader.result)
+            handleModal(true)
+        }
+    }
+
+    const handleSubmitFile = e => {
+        e.preventDefault()
+
+        if (!previewSource) return
+
+        uploadImage(previewSource)
+    }
+
+    const uploadImage = (base64EncodedImage) => {
+        updateProfilePicture({
+            variables: {
+                newPhoto: base64EncodedImage
+            }
+        })
+    }
+
+    const handleModal = (bool) => {
+        if (bool) {
+            document.querySelector('body').style.overflowY = 'hidden'
+        } else {
+            document.querySelector('body').style.overflowY = ''
+        }
+        setIsModalOpen(bool)
+    }
+
     return (
         <LeftColumn>
-            <ProfileImage url={ user.profile_picture }></ProfileImage>
+            {
+                user.id === loggedUser.id
+                ? (<ProfileImage
+                        url={ user.profile_picture } 
+                        onClick={ handleImageClick }
+                        pointer
+                    >
+                        <ChangeImageTag>
+                            <FakeLink><AiFillCamera className="icenter" /> alterar foto</FakeLink>
+                        </ChangeImageTag>
+                    </ProfileImage>)
+                : <ProfileImage url={ user.profile_picture } />
+            }
+            <form style={{ display: 'none' }} onSubmit={ handleSubmitFile }>
+                <input 
+                    ref={ uploadForm } 
+                    type="file" 
+                    name="image" 
+                    value={ fileInputState }
+                    onChange={ handleFileUpload }
+                />
+            </form>
+
+            <Modal 
+                title="Pré-visualização"
+                action={ handleSubmitFile }
+                actionLabel="salvar"
+                cancel={ () => handleModal(false) }
+                cancelLabel="cancelar"
+                isModalOpen={ isModalOpen } 
+                setModalOpen={ (bool) => handleModal(bool) }
+                loading={ loading }
+            >
+                <div style={{ display: 'flex' }}>
+                    <Image
+                        size={ 200 } 
+                        url={ previewSource } 
+                        style={{ marginRight: '1rem' }}
+                    />
+                    <div>
+                        <p><strong>tamanho: </strong>{ selectedFile.size } bytes</p>
+                        <p><strong>tipo: </strong>{ selectedFile.type }</p>
+                    </div>
+                </div>
+            </Modal>
+            
             <ProfileMenu>
                 <Card>
                     <ProfileMenu>
@@ -33,7 +147,7 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                     <span>
                                         {user.id === loggedUser.id ? 'minhas atualizações' : 'atualizações'}
                                     </span>
-                                    <Badge>{ user.Updates.length > 0 && user.Updates.length }</Badge>
+                                    <Badge>{ user.Posts.length > 0 && user.Posts.length }</Badge>
                                 </li>
                             </Link>
                             <Link to={ `/perfil/${user.id}` }>

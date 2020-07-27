@@ -12,14 +12,15 @@ const authLink = setContext((_, { headers }) => {
     }
 })
 
-const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
+const httpLink = new HttpLink({ uri: '/' })
 
 const memoryCache = new InMemoryCache({
     typePolicies: {
         Query: {
             fields: {
                 getUserPhotos: offsetLimitPagination(),
-                getUserScraps: offsetLimitPagination()
+                getUserScraps: offsetLimitPagination(),
+                fetchFeed: offsetLimitPagination()
             },
         },
     },

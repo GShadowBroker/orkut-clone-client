@@ -4,10 +4,19 @@ import {
 } from '../../styles/profile'
 import FriendsBox from './FriendsBox'
 import CommunitiesBox from './CommunitiesBox'
+import FriendSuggestions from './FriendSuggestions'
 
-const ProfileRight = ({ user }) => {
+const ProfileRight = ({ user, suggestions, handleSendRequest, refetchSuggestions }) => {
+
     return (
         <RightColumn>
+            { suggestions && (
+                <FriendSuggestions 
+                    suggestions={ suggestions } 
+                    handleSendRequest={ handleSendRequest }
+                    refetchSuggestions={ refetchSuggestions }
+                    user={ user }
+                />)}
             <FriendsBox user={ user } />
             <CommunitiesBox user={ user } />
         </RightColumn>

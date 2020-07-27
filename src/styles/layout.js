@@ -41,7 +41,7 @@ export const Container = styled.div`
             }};
         }
     }
-    @media (max-width: 675px) {
+    @media (max-width: 776px) {
         & {
             display: ${props => props.nav && !props.footer ? 'none' : ''};
             margin-top: ${ props => props.main ? '1rem' : '' };
@@ -80,6 +80,7 @@ export const Image = styled.div`
 
 export const MessageContent = styled.div`
     width: 100%;
+    overflow-x: auto;
     margin-left: 1em;
 `
 
@@ -88,6 +89,17 @@ export const MessageHeader = styled.div`
     a {
         font-size: 1.2em;
         font-weight: bold;
+    }
+`
+
+export const MessageProfile = styled.div`
+    border: .3px solid #D4DCEF;
+    display: flex;
+    flex-direction: row;
+    max-width: 250px;
+
+    a {
+        padding: .5rem;
     }
 `
 
@@ -118,7 +130,7 @@ export const ModalOverlay = styled.div`
     width: 100vw;
     height: 100vh;
 
-    background: rgba(0, 0, 0, .8);
+    background: ${props => props.opacity ? props.opacity : 'rgba(0, 0, 0, .4)'};
 
     display: ${props => props.open ? 'flex' : 'none'};
     justify-content: center;
@@ -160,7 +172,7 @@ export const Badge = styled.span`
 `
 export const FakeLink = styled.span`
     cursor: pointer;
-    color: #6999c5;
+    color: #3c88cf;
 `
 
 export const Button = styled.button`
@@ -180,6 +192,20 @@ export const Button = styled.button`
     &:disabled {
         cursor: not-allowed;
         background-image: linear-gradient(#eeeeee, #e5e5e5);
+    }
+`
+
+export const CloseButton = styled.div`
+    font-size: ${props => props.size ? props.size : '1'}rem;
+    font-weight: bold;
+    
+    span {
+        color: #89B1D6;
+        cursor: pointer;
+        border: none !important;
+    }
+    span:hover {
+        color: #779FC5;
     }
 `
 
@@ -235,10 +261,55 @@ export const ActionGroup = styled(InputGroup)`
     }
 `
 
+export const ButtonGroup = styled.div`
+    padding: 1rem 0;
+    display: flex;
+    button {
+        margin-right: .5rem;
+    }
+`
+
 export const Input = styled.input`
     border: 1px solid #bebebe;
     padding: .3em .6em;
     font-family: inherit;
+`
+
+export const SearchInputContainer = styled.div`
+    /* border: 1px solid green; */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: .3rem;
+    flex: 1;
+    height: 26px;
+
+    input {
+        height: 26px;
+        margin: 0 !important;
+        border-right: ${props => props.noborderright ? 'none' : ''};
+        border-left: ${props => props.noborderleft ? 'none' : ''};
+        padding: .3em 0;
+        padding-right: ${props => props.noborderleft ? '.3rem' : '0'};
+        padding-left: ${props => props.noborderright ? '.3rem' : '0'};
+
+        &:focus {
+            outline: none;
+        }
+    }
+`
+
+export const SearchInputIcon = styled.div`
+    display: flex;
+    align-items: center;
+    height: 26px;
+
+    background: #ffff;
+    padding: 5px;
+    border: 1px solid #bebebe;
+    border-right: ${props => props.noborderright ? 'none' : '1px solid #bebebe'};
+    border-left: ${props => props.noborderleft ? 'none' : '1px solid #bebebe'};
+    color: grey;
 `
 
 export const Select = styled.select`
@@ -250,6 +321,11 @@ export const Select = styled.select`
 `
 
 export const Label = styled.label``
+
+export const InputWarning = styled.span`
+    padding: .6rem 0;
+    color: #e74c3c;
+`
 
 export const LoginInputNote = styled(LoginInputGroup)`
     color: grey;
@@ -265,7 +341,7 @@ export const InputNote = styled(LoginInputNote)`
 export const FormUpdate = styled.form`
     border: none;
     padding: .6rem;
-    border: 1px solid #bebebe;
+    border: ${props => props.error ? '1px solid #e74c3c' : '1px solid #bebebe'};
 `
 
 export const InputGroupUpdate = styled.div``
@@ -285,7 +361,7 @@ export const TextArea = styled.textarea`
     font-family: inherit;
 
     &::placeholder {
-        font-size: .9em;
+        font-size: .8rem;
     }
     &:focus {
         outline: none;

@@ -18,7 +18,7 @@ const App = () => {
     const [ token, setToken ] = useState(null)
     const [ redirectRoute, setRedirectRoute ] = useState("/")
     const [ findUser, { error, loading, data } ] = useLazyQuery(FIND_USER, {
-        pollInterval: 120000
+        pollInterval: 1000 * 60 * 1.5
     })
 
     const client = useApolloClient()
@@ -47,7 +47,7 @@ const App = () => {
         if (location.pathname !== '/login') {
             setRedirectRoute(location.pathname)
         }
-    }, [])
+    }, []) // eslint-disable-line
 
     if (loading) return <LoginLoading />
 

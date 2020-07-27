@@ -17,7 +17,7 @@ import {
 
 import ProfileLeft from '../components/profile/ProfileLeft'
 import Breadcrumbs from './utils/Breadcrumbs'
-import Modal from './utils/Modal'
+import ImageModal from './utils/ImageModal'
 import Error404 from '../pages/404Error'
 
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
@@ -57,9 +57,9 @@ const Photo = ({ crumbs, loggedUser }) => {
 
     return (
         <Main>
-            <Modal isModalOpen={ isModalOpen } setModalOpen={ (bool) => handleModal(bool) }>
+            <ImageModal isModalOpen={ isModalOpen } setModalOpen={ (bool) => handleModal(bool) }>
                 <img src={ photo.url } alt={ photo.description } onClick={ () => handleModal(false) } />
-            </Modal>
+            </ImageModal>
 
             <ProfileLeft user={ user } loggedUser={ loggedUser } />
 

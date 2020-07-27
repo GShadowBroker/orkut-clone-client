@@ -15,7 +15,7 @@ import {
 import { BsSearch } from 'react-icons/bs'
 import Skeleton from 'react-loading-skeleton'
 
-const ProfileRightSkeleton = () => {
+const HomeRightSkeleton = () => {
     return (
         <RightColumn>
             <Card>
@@ -28,7 +28,7 @@ const ProfileRightSkeleton = () => {
                                 <BsSearch />
                             </SearchInputIcon>
                         </SearchInputContainer>
-                    </div>  
+                    </div>
                     <FriendsList style={{paddingBottom: '1rem'}}>
                         {
                             Array.from(Array(9).keys()).map((f, i) => (
@@ -55,7 +55,7 @@ const ProfileRightSkeleton = () => {
                                 <BsSearch />
                             </SearchInputIcon>
                         </SearchInputContainer>
-                    </div> 
+                    </div>
                     <FriendsList style={{paddingBottom: '1rem'}}>
                         {
                             Array.from(Array(9).keys()).map((f, i) => (
@@ -74,4 +74,4 @@ const ProfileRightSkeleton = () => {
     )
 }
 
-export default ProfileRightSkeleton
+export default HomeRightSkeleton

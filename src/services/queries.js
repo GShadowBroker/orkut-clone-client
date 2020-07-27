@@ -63,7 +63,7 @@ export const FIND_USER = gql`
                 url
                 description
             }
-            Updates {
+            Posts {
                 id
                 body
             }
@@ -76,20 +76,33 @@ export const FIND_USER = gql`
         }
     }
 `
-export const GET_FEED = gql`
-    query getFeed($limit: Int, $offset: Int) {
+export const FETCH_FEED = gql`
+    query fetchFeed($limit: Int, $offset: Int) {
         getFeed(limit: $limit, offset: $offset) {
-            id
-            createdAt
-            body
-            picture
-            verb
-            object
-            User {
+            count,
+            rows {
                 id
-                name
-                profile_picture
+                createdAt
+                body
+                picture
+                action
+                object
+                User {
+                    id
+                    name
+                    profile_picture
+                }
             }
+        }
+    }
+`
+
+export const GET_SUGGESTIONS = gql`
+    query getSuggestions {
+        getFriendSuggestions {
+            id
+            name
+            profile_picture
         }
     }
 `
@@ -208,7 +221,16 @@ export const GET_USER_UPDATES = gql`
     query getUserUpdates($userId: ID!) {
         findUpdates(userId: $userId) {
             id
+            createdAt
             body
+            action
+            picture
+            object
+            User {
+                id
+                name
+                profile_picture
+            }
         }
     }
 `
@@ -283,6 +305,14 @@ export const UNFRIEND = gql`
     }
 `
 
+export const UPDATE_PROFILE_PICTURE = gql`
+    mutation updateProfilePicture($newPhoto: String!) {
+        updateProfilePicture(newPhoto: $newPhoto) {
+            id
+        }
+    }
+`
+
 export const SEND_SCRAP = gql`
     mutation sendScrap(
         $body: String!
@@ -337,6 +367,14 @@ export const REMOVE_TESTIMONIAL = gql`
             id
         }
     }
+`
+
+export const SEND_UPDATE = gql`
+    mutation sendUpdate($body: String!) {
+        sendUpdate(body: $body) {
+            id
+        }
+    }   
 `
 
 export const JOIN_COMMUNITY = gql`
