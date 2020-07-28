@@ -41,6 +41,7 @@ import todaysFortune from '../../utils/todaysFortune'
 
 import { useQuery } from '@apollo/client'
 import { FETCH_FEED } from '../../services/queries'
+import trunc from '../../utils/truncate'
 
 const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimit }) => {
     const [post, setPost] = useState('')
@@ -217,7 +218,7 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
                                     <Subtitle2 style={{ marginTop: 0 }}><strong>Novo pedido de amizade</strong></Subtitle2>
                                 </MessageHeader>
                                 <MessageBody>
-                                    <Link to={`/perfil/${u.id}`}>{ u.name } </Link>quer ser seu amigo no orkut.
+                                    <Link to={`/perfil/${u.id}`}>{ trunc(u.name, 20) } </Link>quer ser seu amigo no orkut.
                                 </MessageBody>
                                 <MessageActions below>
                                     <Button
@@ -239,7 +240,7 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
                             </Link>
                             <MessageContent>
                                 <MessageHeader>
-                                    <Link to={`/perfil/${f.User.id}`}>{ f.User.name }</Link>
+                                    <Link to={`/perfil/${f.User.id}`}>{ trunc(f.User.name, 30) }</Link>
                                     <Time>
                                         { new Date(f.createdAt).toLocaleString('pt-BR', timeOptions) } ({ moment(f.createdAt).fromNow() })
                                     </Time>

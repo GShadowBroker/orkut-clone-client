@@ -6,6 +6,7 @@ import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 
 import PrivateRoutes from './PrivateRoutes'
 import Login from './components/auth/Login'
+import Register from './components/auth/Register'
 import Notification from './components/utils/Notification'
 
 import { useApolloClient, useLazyQuery } from '@apollo/client'
@@ -15,6 +16,7 @@ import LoginLoading from './components/utils/LoginLoading'
 
 const App = () => {
     const location = useLocation()
+    const [accountCreated, setAccountCreated] = useState(false)
     const [ token, setToken ] = useState(null)
     const [ redirectRoute, setRedirectRoute ] = useState("/")
     const [ findUser, { error, loading, data } ] = useLazyQuery(FIND_USER, {
@@ -44,7 +46,7 @@ const App = () => {
     }, [token, findUser])
 
     useEffect(() => {
-        if (location.pathname !== '/login') {
+        if (location.pathname !== '/login' && location.pathname !== '/registro') {
             setRedirectRoute(location.pathname)
         }
     }, []) // eslint-disable-line
@@ -62,8 +64,19 @@ const App = () => {
             <Switch>
                 <Route exact path="/login">
                     { !(token && data)
-                        ? <Login setToken={ setToken } findUser={ findUser } loading={ loading } />
+                        ? (<Login 
+                            setToken={ setToken } 
+                            findUser={ findUser } 
+                            loading={ loading } 
+                            accountCreated={ accountCreated }
+                        />)
                         : <Redirect to={ redirectRoute } />
+                    }
+                </Route>
+                <Route exact path="/registro">
+                    { !(token && data)
+                        ? <Register setAccountCreated={setAccountCreated} />
+                        : <Redirect to="/login" />
                     }
                 </Route>
                 <Route path="*">

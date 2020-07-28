@@ -21,6 +21,7 @@ import { BsStar } from 'react-icons/bs'
 import { AiFillCamera } from 'react-icons/ai'
 
 import Modal from '../utils/Modal'
+import trunc from '../../utils/truncate'
 
 const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) => {
     const location = useLocation()
@@ -136,7 +137,9 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
             <ProfileMenu>
                 <Card>
                     <ProfileMenu>
-                        <Subtitle>{ user.name }</Subtitle>
+                        <Subtitle>
+                            { trunc(user.name, 35) }
+                        </Subtitle>
                         <ul>
                             <li className="vibes">
                                 <FakeLink>{user.id === loggedUser.id ? '0 vibes' : 'vibes? 0'}</FakeLink>

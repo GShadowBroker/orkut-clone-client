@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Main } from '../styles/profile'
 import { useQuery, useMutation } from '@apollo/client'
 import { 
@@ -18,6 +18,10 @@ import HomeRightSkeleton from '../components/skeletons/HomeRightSkeleton'
 
 const Home = ({ loggedUser }) => {
     const [limit, setLimit] = useState(10)
+
+    useEffect(() => {
+        document.title = `orkut - página de ${loggedUser.name}`
+    }, [loggedUser])
 
     const {
         error: errorSuggestions,

@@ -192,6 +192,7 @@ export const Button = styled.button`
     &:disabled {
         cursor: not-allowed;
         background-image: linear-gradient(#eeeeee, #e5e5e5);
+        color: grey;
     }
 `
 
@@ -209,6 +210,13 @@ export const CloseButton = styled.div`
     }
 `
 
+export const SpinnerButtonContainer = styled.div`
+    min-width: ${ props => props.minwidth ? props.minwidth : 50 }px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 // Typography
 export const Title = styled.h1`
     font-weight: 500;
@@ -223,7 +231,7 @@ export const Subtitle = styled.h2`
             case 'medium':
                 return '#f1c40f'
             case 'low':
-                return 'inherit'
+                return '#27ae60'
             default:
                 return 'inherit'
         }
@@ -232,6 +240,18 @@ export const Subtitle = styled.h2`
 
 export const Subtitle2 = styled.h3`
     font-weight: 500;
+    color: ${props => {
+        switch(props.severity) {
+            case 'high':
+                return '#c0392b'
+            case 'medium':
+                return '#f1c40f'
+            case 'low':
+                return '#27ae60'
+            default:
+                return 'inherit'
+        }
+    }};
 `
 
 export const ShowMore = styled.div`
@@ -270,7 +290,11 @@ export const ButtonGroup = styled.div`
 `
 
 export const Input = styled.input`
-    border: 1px solid #bebebe;
+    border: ${props => {
+        if (props.valid) return '1px solid #27ae60'
+        if (props.invalid) return '1px solid #e74c3c'
+        return '1px solid #bebebe'
+    }};
     padding: .3em .6em;
     font-family: inherit;
 `

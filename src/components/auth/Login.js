@@ -14,11 +14,20 @@ import {
     FakeLinkLogin 
 } from '../../styles/auth'
 
-const Login = ({ setToken, findUser }) => {
+import Notification from '../utils/Notification'
+
+const Login = ({ setToken, findUser, accountCreated }) => {
     return (
         <Wrapper>
             <Container>
                 <LoginContainer>
+                    { accountCreated
+                        && <Notification 
+                            title="Sucesso!" 
+                            message="Sua conta foi criada com sucesso." 
+                            severity="low" 
+                            margin="0 0 .6rem 0"
+                        />}
                     <LoginMain>
                         <LoginHero>
                             <LoginTitle>

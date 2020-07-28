@@ -41,7 +41,7 @@ export const FIND_USER = gql`
             country
             born
             age
-            gender
+            sex
             profile_picture
             Friends {
                 id
@@ -261,6 +261,29 @@ export const LOGIN = gql`
         ) {
             id
             value
+        }
+    }
+`
+
+export const REGISTER = gql`
+    mutation register(
+        $email: EmailAddress!,
+        $password: String!,
+        $born: Date!,
+        $name: String!,
+        $sex: Sex,
+        $country: String!
+    ) {
+        register(
+            email: $email,
+            password: $password,
+            born: $born,
+            name: $name,
+            sex: $sex,
+            country: $country
+        ) {
+            id
+            email
         }
     }
 `

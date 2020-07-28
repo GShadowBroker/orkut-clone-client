@@ -31,10 +31,14 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
             <Card>
                 <ProfileInfo>
                     <InlineHeader>
-                        <div>
+                        <div style={{maxWidth: '40%'}}>
                             <Subtitle>{ user.name }</Subtitle>
                         </div>
-                        <div>
+                        <div style={{
+                            alignSelf: 'start', 
+                            marginTop: '.6rem',
+                            textAlign: 'right'
+                        }}>
                             {
                                 user.Friends.find(u => u.id === loggedUser.id)
                                 ? <Button onClick={ () => handleUnfriend(user) }><TiMinusOutline className="icenter" style={{ color: '#bebebe' }} /> desfazer amizade</Button>
@@ -48,12 +52,14 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                     </InlineHeader>
                     <ProfileSection border>
                         <div>
-                            <p><strong>localização: </strong>{ user.city }, { user.country }</p>
+                            { user.city
+                                ? (<p><strong>localização: </strong>{ user.city }, { user.country }</p>)
+                                : (<p><strong>localização: </strong>{ user.country }</p>)}
                         </div>
                         {
                             viewFullProfile ? (
                                 <div>
-                                    <p><strong>sexo: </strong>{ user.gender }</p>
+                                    <p><strong>sexo: </strong>{ user.sex }</p>
                                     <p><strong>idade: </strong>{ user.age }</p>
                                     <p><strong>aniversário: </strong>{ new Date(user.born).toLocaleString('pt-BR', timeOptions) }</p>
                                     <p><strong>e-mail: </strong>{ user.email }</p>

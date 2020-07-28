@@ -7,17 +7,11 @@ import {
     Subtitle, 
     CloseButton, 
     ButtonGroup, 
-    Button 
+    Button,
+    SpinnerButtonContainer
 } from '../../styles/layout'
 import { ProfileInfo, InlineHeader } from '../../styles/profile'
 import Spinner from 'react-loading'
-
-const spinnerContainer = {
-    minWidth: 50, 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-}
 
 const Modal = ({
     title,
@@ -50,9 +44,9 @@ const Modal = ({
                                 <strong>
                                     {
                                         loading
-                                        ? (<div style={spinnerContainer}>
+                                        ? (<SpinnerButtonContainer>
                                             <Spinner type="spokes" color="#34495e" height='15px' width='15px' />
-                                        </div>)
+                                        </SpinnerButtonContainer>)
                                         : actionLabel
                                     }
                                 </strong>

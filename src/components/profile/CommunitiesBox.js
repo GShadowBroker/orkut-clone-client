@@ -13,6 +13,7 @@ import {
 } from '../../styles/profile'
 import { Link } from 'react-router-dom'
 import { BsSearch } from 'react-icons/bs'
+import trunc from '../../utils/truncate'
 
 const CommunitiesBox = ({ user }) => {
     return (
@@ -33,7 +34,7 @@ const CommunitiesBox = ({ user }) => {
                             <Link to={ `/comunidades/${c.id}` } key={ c.id }>
                                 <div>
                                     <Image size="70" url={ c.picture } />
-                                    <span>{ c.title }</span>
+                                    <span>{ trunc(c.title, 30) }</span>
                                 </div>
                             </Link>
                         ))

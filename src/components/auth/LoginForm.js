@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 
 import { 
     Form, 
@@ -119,7 +119,7 @@ const Login = ({ setToken }) => {
             </LoginFormContainer>
             <RegisterBoxContainer>
                 <span>Ainda não é membro?</span>
-                <FakeLinkLogin><strong>ENTRAR JÁ!</strong></FakeLinkLogin>
+                <Link to="/registro"><strong>ENTRAR JÁ!</strong></Link>
             </RegisterBoxContainer>
         </LoginRegisterContainer>
     )

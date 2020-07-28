@@ -17,6 +17,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import Spinner from 'react-loading'
+import trunc from '../../utils/truncate'
 
 const FriendSuggestions = ({ user, suggestions, handleSendRequest, refetchSuggestions }) => {
     const [loading, setLoading] = useState(false)
@@ -47,7 +48,7 @@ const FriendSuggestions = ({ user, suggestions, handleSendRequest, refetchSugges
                                 </Link>
                             </SuggestionImageContainer>
                             <SuggestionBody>
-                                <span>{ s.name }</span>
+                                <span>{ trunc(s.name, 15) }</span>
                                 { loading
                                     ? <Spinner type="spokes" color="#3c88cf" height='15px' width='15px' />
                                     : (<FakeLink

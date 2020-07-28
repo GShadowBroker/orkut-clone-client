@@ -20,6 +20,7 @@ export const LeftColumn = styled.div`
     margin-right: .6rem;
     flex-direction: column;
     min-width: ${0.17 * bigger}px;
+    max-width: 150px;
     flex-shrink: 1;
 
     @media (max-width: 1015px) {

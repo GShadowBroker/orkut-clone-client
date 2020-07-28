@@ -9,6 +9,12 @@ export const LoginContainer = styled.div`
     margin-top: 4rem;
     width: 100%;
 `
+export const RegisterContainer = styled(LoginContainer)`
+    margin-top: 0;
+    margin-bottom: .6rem;
+    background: #ffff;
+    padding: .6rem;
+`
 
 export const LoginHero = styled.div`
     background: white;
@@ -96,5 +102,57 @@ export const RegisterBoxContainer = styled.div`
 
     span, a {
         padding: .3em 0;
+    }
+    a {
+        cursor: pointer;
+        color: #0047BE;
+
+        &:hover {
+            color: #C40098;
+        }
+    }
+`
+
+export const FormRegister = styled.form`
+    margin-top: 1rem;
+`
+
+export const RegisterInputGroup = styled.div`
+    display: flex;
+    width: 100%;
+    background: #E8EEFA;
+    margin: .2rem 0;
+
+    div {
+        padding: .5rem;
+    }
+`
+
+export const LabelControl = styled.div`
+    width: 35%;
+    color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+
+    div:last-of-type {
+
+    }
+`
+
+export const InputControl = styled.div`
+    width: 65%;
+    display: flex;
+    align-items: center;
+
+    label {
+        margin-right: 1rem;
+    }
+
+    input {
+        margin: 0;
+        margin-right: .2rem;
+        max-width: 100%;
     }
 `
