@@ -29,6 +29,7 @@ import Notification from '../components/utils/Notification'
 import ProfileLeftSkeleton from '../components/skeletons/ProfileLeftSkeleton'
 import ProfileMainSkeleton from '../components/skeletons/ProfileMainSkeleton'
 import ScrapsSkeleton from '../components/skeletons/ScrapsSkeleton'
+import trunc from '../utils/truncate'
 
 const Scraps = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
@@ -221,7 +222,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
 
                 <Card style={{ marginTop: '.6rem' }}>
                     <ProfileInfo>
-                        <h2>{ user.id === loggedUser.id ? 'Minha página de scraps' : `Página de scraps de ${user.name}`} ({ user.Scraps.length })</h2>
+                        <h2>{ user.id === loggedUser.id ? 'Minha página de scraps' : `Página de scraps de ${trunc(user.name, 30)}`} ({ user.Scraps.length })</h2>
                         <Breadcrumbs crumbs={ crumbs } />
                         <CommentSectionHeader>
                             {
@@ -286,7 +287,7 @@ const Scraps = ({ crumbs, loggedUser }) => {
                                         </Link>
                                         <CommentBody>
                                             <CommentSectionHeader style={{ margin: 0 }}>
-                                                <Link to={`/perfil/${scrap.Sender.id}`}>{ scrap.Sender.name }:</Link>
+                                                <Link to={`/perfil/${scrap.Sender.id}`}>{ trunc(scrap.Sender.name, 25) }:</Link>
                                                 <div>
                                                     <Time size="1">
                                                         { new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } (

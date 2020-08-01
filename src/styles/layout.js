@@ -92,8 +92,13 @@ export const MessageHeader = styled.div`
     }
 `
 
+export const MessageHeaderSpaced = styled.div`
+    display: flex;
+    justify-content: space-between;
+`
+
 export const MessageProfile = styled.div`
-    border: .3px solid #D4DCEF;
+    border: .3px solid #e3e8f5;
     display: flex;
     flex-direction: row;
     max-width: 250px;
@@ -111,7 +116,25 @@ export const MessageActions = styled.div`
     }
 `
 
-export const MessageBody = styled.div``
+export const MessageBody = styled.div`
+    overflow-wrap: break-word;
+    max-width: 100%;
+    img {
+        max-width: 100%;
+    }
+    blockquote {
+        color: grey;
+        border-left: 3px solid #eeeeee;
+        padding-left: .5rem;
+        margin: 0;
+        margin: .5rem 0 .5rem .5rem;
+    }
+`
+
+export const MessageDetails = styled.div`
+    margin: .3rem 0;
+    color: grey;
+`
 
 export const Time = styled.span`
     font-size: ${props => props.size ? props.size : '.9'}em;
@@ -126,6 +149,7 @@ export const ModalOverlay = styled.div`
     position: fixed;
     bottom: 0;
     left: 0;
+    z-index: 1;
 
     width: 100vw;
     height: 100vh;
@@ -144,7 +168,7 @@ export const ModalContainer = styled.div`
     justify-content: center;
 
     img {
-        cursor: zoom-out;
+        cursor: ${props => props.image ? 'zoom-out' : 'cursor'};
         max-height: 100vh;
         max-width: 100vw;
     }
@@ -267,7 +291,23 @@ export const Form = styled.form`
 
 export const InputGroup = styled.div`
     padding: .5rem 0;
-    border-bottom: .3px solid #D4DCEF;
+    border-bottom: .3px solid #e3e8f5;
+`
+
+export const FormInputGroup = styled(InputGroup)`
+    border: none;
+    display: flex;
+    flex-direction: column;
+`
+
+export const FormInputGroupCheck = styled.div`
+    display: flex;
+    align-items: center;
+    padding: .5rem 0;
+    input {
+        margin: 0;
+        margin-right: .3rem;
+    }
 `
 
 export const LoginInputGroup = styled(InputGroup)`
@@ -344,7 +384,9 @@ export const Select = styled.select`
     font-family: inherit;
 `
 
-export const Label = styled.label``
+export const Label = styled.label`
+    padding: .5rem 0;
+`
 
 export const InputWarning = styled.span`
     padding: .6rem 0;

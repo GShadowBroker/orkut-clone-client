@@ -69,6 +69,11 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
         uploadImage(previewSource)
     }
 
+    const handleCancel = e => {
+        e.preventDefault()
+        handleModal(false)
+    }
+
     const uploadImage = (base64EncodedImage) => {
         updateProfilePicture({
             variables: {
@@ -115,7 +120,7 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                 title="Pré-visualização"
                 action={ handleSubmitFile }
                 actionLabel="salvar"
-                cancel={ () => handleModal(false) }
+                cancel={ handleCancel }
                 cancelLabel="cancelar"
                 isModalOpen={ isModalOpen } 
                 setModalOpen={ (bool) => handleModal(bool) }
@@ -179,7 +184,7 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                 </li>
                             </Link>
                         </ul>
-                        <h3>Actions</h3>
+                        <h3>Ações</h3>
                         <ul>
                             {
                                 user.Friends.find(u => u.id === loggedUser.id)

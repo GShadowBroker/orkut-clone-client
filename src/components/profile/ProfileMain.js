@@ -69,7 +69,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                         }
                         <FakeLink onClick={ () => setViewFullProfile(!viewFullProfile) }>
                                 { viewFullProfile
-                                    ? 'esconder perfil completo'
+                                    ? 'ocultar perfil'
                                     : 'ver perfil completo'
                                 }
                         </FakeLink>

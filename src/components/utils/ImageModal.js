@@ -10,7 +10,7 @@ const ImageModal = ({ isModalOpen, setModalOpen, children }) => {
             <CloseModal onClick={ () => setModalOpen(false) }>
                 <AiOutlineClose />
             </CloseModal>
-            <ModalContainer>
+            <ModalContainer image>
                 { children }
             </ModalContainer>
         </ModalOverlay>

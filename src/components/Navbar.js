@@ -62,7 +62,7 @@ const MainNavbar = ({ loggedUser }) => {
                     <Link to="/" className={ location.pathname === '/' ? 'active' : '' }>Home</Link>
                     <Link to={ `/perfil/${loggedUser.id}` } className={ location.pathname === `/perfil/${loggedUser.id}` ? 'active' : '' }>Perfil</Link>
                     <Link to={ `/perfil/${loggedUser.id}/scraps` } className={ location.pathname === `/perfil/${loggedUser.id}/scraps` ? 'active' : '' }>Scraps</Link>
-                    <Link to="/comunidades" className={ location.pathname === '/comunidades' ? 'active' : '' }>Comunidades</Link>
+                    <Link to={`/perfil/${loggedUser.id}/comunidades`} className={ location.pathname === `/perfil/${loggedUser.id}/comunidades` ? 'active' : '' }>Comunidades</Link>
                     <Link to="/">Aplicativos <TiArrowSortedDown className="icenter" /></Link>
                     <Link to="/">Temas <TiArrowSortedDown className="icenter" /></Link>
                 </NavMenu>

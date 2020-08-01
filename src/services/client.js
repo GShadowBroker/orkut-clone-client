@@ -20,7 +20,8 @@ const memoryCache = new InMemoryCache({
             fields: {
                 getUserPhotos: offsetLimitPagination(),
                 getUserScraps: offsetLimitPagination(),
-                fetchFeed: offsetLimitPagination()
+                fetchFeed: offsetLimitPagination(),
+                fetchComments: offsetLimitPagination(),
             },
         },
     },

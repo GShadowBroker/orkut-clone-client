@@ -20,7 +20,7 @@ const Home = ({ loggedUser }) => {
     const [limit, setLimit] = useState(10)
 
     useEffect(() => {
-        document.title = `orkut - página de ${loggedUser.name}`
+        document.title = `orkut - perfil de ${loggedUser.name}`
     }, [loggedUser])
 
     const {

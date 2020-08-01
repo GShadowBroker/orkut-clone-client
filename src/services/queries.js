@@ -248,6 +248,124 @@ export const GET_USER_PHOTOS = gql`
     }
 `
 
+export const FIND_COMMUNITY = gql`
+    query findCommunity($communityId: ID!) {
+        findCommunity(communityId: $communityId) {
+            id
+            createdAt
+            title
+            picture
+            description
+            type
+            language
+            country
+            Creator {
+                id
+                name
+            }
+            Category {
+                id
+                title
+            }
+        }
+    }
+`
+
+export const FIND_COMMUNITY_MEMBERS = gql`
+    query findCommunityMembers($communityId: ID!, $limit: Int, $offset: Int) {
+        findCommunityMembers(communityId: $communityId, limit: $limit, offset: $offset) {
+            count
+            rows {
+                id
+                name
+                profile_picture
+            }
+        }
+    }
+`
+
+export const FIND_COMMUNITY_TOPICS = gql`
+    query findCommunityTopics($communityId: ID!, $limit: Int, $offset: Int) {
+        findCommunityTopics(communityId: $communityId, limit: $limit, offset: $offset) {
+            count
+            rows {
+                id
+                createdAt
+                title
+                body
+                TopicCreator {
+                    id
+                    name
+                    profile_picture
+                }
+                Comments {
+                    id
+                    createdAt
+                    body
+                }
+            }
+        }
+    }
+`
+
+export const FETCH_COMMENTS = gql`
+    query fetchComments(
+        $topicId: ID!
+        $order: Order!
+        $limit: Int
+        $offset: Int
+    ) {
+        findTopicComments(
+            topicId: $topicId
+            order: $order
+            limit: $limit
+            offset: $offset
+        ) {
+            count
+            rows {
+                id
+                createdAt
+                body
+                Sender {
+                    id
+                    name
+                    profile_picture
+                }
+            }
+        }
+    }
+`
+
+export const FIND_TOPIC = gql`
+    query findTopic($topicId: ID!, $limit: Int, $offset: Int) {
+        findTopic(
+            topicId: $topicId,
+            limit: $limit,
+            offset: $offset
+        ) {
+            id
+            createdAt
+            title
+            body
+            TopicCreator {
+                id
+                name
+                profile_picture
+            }
+            Comments {
+                id
+                createdAt
+                body
+                Sender {
+                    id
+                    name
+                    profile_picture
+                }
+            }
+        }
+    }
+`
+
 
 // Mutations
 export const LOGIN = gql`
@@ -419,6 +537,46 @@ export const LEAVE_COMMUNITY = gql`
         leaveCommunity(
             communityId: $communityId
         ) {
+            id
+        }
+    }
+`
+
+export const CREATE_TOPIC = gql`
+    mutation createTopic(
+        $communityId: ID!
+        $title: String!
+        $body: String!
+    ) {
+        createTopic(
+            communityId: $communityId
+            title: $title
+            body: $body
+        ) {
+            id
+        }
+    }
+`
+
+export const REMOVE_TOPIC = gql`
+    mutation removeTopic($topicId: ID!) {
+        deleteTopic(topicId: $topicId) {
+            id
+        }
+    }
+`
+
+export const SEND_COMMENT = gql`
+    mutation sendComment($topicId: ID!, $body: String!) {
+        sendTopicComment(topicId: $topicId, body: $body) {
+            id
+        }
+    }
+`
+
+export const REMOVE_COMMENT = gql`
+    mutation removeComment($topicCommentId: ID!) {
+        deleteTopicComment(topicCommentId: $topicCommentId) {
             id
         }
     }

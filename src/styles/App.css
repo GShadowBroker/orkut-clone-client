@@ -20,10 +20,12 @@ a {
 }
 
 .non-extistant {
+    color: #e3e8f5;
     color: #34495e;
     background: #eeeeee;
     color: #e4e4e4;
     color: #afafaf;
+    color: #bebebe;
 }
 
 .icenter {

@@ -140,8 +140,7 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
         <MainColumn>
             <Notification
                 title="Importante" 
-                message="Este site é apenas um clone do orkut.com original e não tem qualquer vínculo com o Google." 
-                severity="low"
+                message="Este site é apenas um clone do orkut.com original e não tem qualquer vínculo com o Google."
                 margin={ '0 0 .6rem 0' }
             />
             <Card>
@@ -242,11 +241,11 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
                                 <MessageHeader>
                                     <Link to={`/perfil/${f.User.id}`}>{ trunc(f.User.name, 30) }</Link>
                                     <Time>
-                                        { new Date(f.createdAt).toLocaleString('pt-BR', timeOptions) } ({ moment(f.createdAt).fromNow() })
+                                        - { new Date(f.createdAt).toLocaleString('pt-BR', timeOptions) } ({ moment(f.createdAt).fromNow() })
                                     </Time>
                                 </MessageHeader>
                                 <MessageBody>
-                                    <div dangerouslySetInnerHTML={{ __html: f.body }} />
+                                    <div dangerouslySetInnerHTML={{ __html: f.body }} style={{ lineHeight: '1.6' }} />
                                     {
                                         f.object
                                         ? (

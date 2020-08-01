@@ -186,8 +186,15 @@ export const ProfileMenu = styled.div`
     h2 {
         padding: .6rem .8rem;
         margin: 0;
-        padding-bottom: .3rem;
-        border-bottom: .3px solid #D4DCEF;
+        border-bottom: .3px solid #e3e8f5;
+    }
+
+    p {
+        color: #afafaf;
+        font-style: italic;
+        border-bottom: .3px solid #e3e8f5;
+        padding: 0 .8rem .8rem .8rem;
+        margin: 0;
     }
 
     h3 {
@@ -208,8 +215,8 @@ export const ProfileInfo = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 0 .8rem;
-    border-top: ${ props => props.bordertop ? '.3px solid #D4DCEF' : '' };
-    border-bottom: ${ props => props.borderbottom ? '.3px solid #D4DCEF' : '' };
+    border-top: ${ props => props.bordertop ? '.3px solid #e3e8f5' : '' };
+    border-bottom: ${ props => props.borderbottom ? '.3px solid #e3e8f5' : '' };
 `
 
 export const InlineHeader = styled.div`
@@ -232,7 +239,7 @@ export const InlineHeader = styled.div`
 
 export const ProfileSection = styled.div`
     padding: 0 0 2rem 0;
-    border-bottom: ${props => props.border ? '.3px solid #D4DCEF' : ''};
+    border-bottom: ${props => props.border ? '.3px solid #e3e8f5' : ''};
 `
 
 export const FriendSuggestionGrid = styled.div`
@@ -328,11 +335,18 @@ export const Comment = styled.div`
 
 export const CommentBody = styled.div`
     width: 100%;
+    overflow-wrap: break-word;
     padding-left: 1rem;
 `
 
 export const CommentContent = styled.div`
     padding: .2rem 0 .4rem 0;
+    overflow-wrap: break-word;
+    max-width: 100%;
+
+    img {
+        max-width: 100%;
+    }
 `
 
 export const CommentCheckbox = styled.div`

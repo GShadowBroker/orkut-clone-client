@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Main } from '../styles/profile'
 import { useQuery, useMutation } from '@apollo/client'
 import { 
     SEND_FRIEND_REQUEST, 
     FIND_USER, UNFRIEND,
-    RESPOND_FRIEND_REQUEST,
-    SEND_UPDATE,
-    GET_SUGGESTIONS,
-    FETCH_FEED
+    GET_SUGGESTIONS
 } from '../services/queries'
 
 import ProfileLeft from '../components/profile/ProfileLeft'
@@ -17,8 +14,6 @@ import Notification from '../components/utils/Notification'
 import HomeRightSkeleton from '../components/skeletons/HomeRightSkeleton'
 
 const Communities = ({ loggedUser, crumbs }) => {
-    const [limit, setLimit] = useState(10)
-
     const {
         error: errorSuggestions,
         loading: loadingSuggestions,
@@ -48,22 +43,6 @@ const Communities = ({ loggedUser, crumbs }) => {
         },
         refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }]
     })
-    const [respondFriendRequest] = useMutation(RESPOND_FRIEND_REQUEST, {
-        onError: (error) => {
-            error.graphQLErrors
-                ? alert(error.graphQLErrors[0].message)
-                : alert('Server timeout')
-        },
-        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }]
-    })
-    const [sendUpdate] = useMutation(SEND_UPDATE, {
-        onError: (error) => {
-            error.graphQLErrors
-                ? alert(error.graphQLErrors[0].message)
-                : alert('Server timeout')
-        },
-        refetchQueries: [{ query: FETCH_FEED, variables: { limit, offset: 0 } }]
-    })
 
     const handleUnfriend = (friend) => {
         unfriend({
@@ -82,15 +61,6 @@ const Communities = ({ loggedUser, crumbs }) => {
         })
     }
 
-    const handleRespondFriendRequest = (requester, accept) => {
-        respondFriendRequest({
-            variables: {
-                requesterId: requester.id,
-                accept
-            }
-        })
-    }
-
     if (errorSuggestions) return <Notification />
 
     return (
@@ -104,10 +74,6 @@ const Communities = ({ loggedUser, crumbs }) => {
 
             <CommunitiesMain
                 user={ loggedUser }
-                handleRespondFriendRequest={ handleRespondFriendRequest }
-                sendUpdate={ sendUpdate }
-                limit={ limit }
-                setLimit={ setLimit }
             />
 
             {

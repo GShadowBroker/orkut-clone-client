@@ -22,6 +22,10 @@ const App = () => {
     const [ findUser, { error, loading, data } ] = useLazyQuery(FIND_USER, {
         pollInterval: 1000 * 60 * 1.5
     })
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
 
     const client = useApolloClient()
     const logout = () => {

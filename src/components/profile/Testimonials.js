@@ -32,6 +32,8 @@ import draftToHtml from 'draftjs-to-html'
 import Togglable from '../utils/Togglable'
 import TestimonialsSkeleton from '../skeletons/TestimonialsSkeleton'
 
+import Spinner from 'react-loading'
+
 const Testimonials = ({ user, loggedUser }) => {
     const { error, loading, data } = useQuery(GET_USER_TESTIMONIALS, {
         variables: { receiverId: user.id }
@@ -56,7 +58,7 @@ const Testimonials = ({ user, loggedUser }) => {
         ],
         onCompleted: () => setTestimonial(EditorState.createEmpty())
     })
-    const [removeTestimonial] = useMutation(REMOVE_TESTIMONIAL, {
+    const [removeTestimonial, {loading: loadingTestimonialRemoval}] = useMutation(REMOVE_TESTIMONIAL, {
         onError: error => (
             error.graphQLErrors
                 ? alert(error.graphQLErrors[0].message)
@@ -121,7 +123,7 @@ const Testimonials = ({ user, loggedUser }) => {
                                 <MessageHeader>
                                     <Link to={`/perfil/${t.Sender.id}`}>{ t.Sender.name }</Link>
                                     <Time>
-                                        { new Date(t.createdAt).toLocaleString('pt-BR', timeOptions) } ({ moment(t.createdAt).fromNow() })
+                                        - { new Date(t.createdAt).toLocaleString('pt-BR', timeOptions) } ({ moment(t.createdAt).fromNow() })
                                     </Time>
                                 </MessageHeader>
                                 <MessageBody>
@@ -130,7 +132,10 @@ const Testimonials = ({ user, loggedUser }) => {
                             </MessageContent>
                             { (user.id === loggedUser.id || t.Sender.id === loggedUser.id) && (
                                 <MessageActions>
-                                    <FakeLink onClick={ () => handleTestimonialRemoval(t) }>excluir</FakeLink>
+                                    { loadingTestimonialRemoval
+                                        ? <Spinner type="spokes" color="#3c88cf" height='15px' width='15px' />
+                                        : <FakeLink onClick={ () => handleTestimonialRemoval(t) }>excluir</FakeLink>
+                                    }
                                 </MessageActions>
                             )}
                         </Message>

@@ -7,31 +7,40 @@ import { Switch, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
-import Profile from './pages/Profile'
-import Scraps from './pages/Scraps'
-import Photos from './pages/Photos'
-import Photo from './components/Photo'
-import Communities from './pages/Communities'
+// import Profile from './pages/Profile'
+// import Scraps from './pages/Scraps'
+// import Photos from './pages/Photos'
+// import Photo from './components/Photo'
+// import Communities from './pages/Communities'
+// import Community from './pages/Community'
+// import Topic from './pages/Topic'
+
+import ProfileRoute from './pages/ProfileRoute'
+import CommunityRoute from  './pages/CommunityRoute'
+
 import Error404 from './pages/404Error'
 
 import ResponsiveLayout from './components/ResponsiveLayout'
 
 const PrivateRoutes = ({ data, logout }) => {
-    const routes = [
-        { path: "/", name: "Home", Component: Home },
-        { path: "/perfil/:userId", name: "Perfil", Component: Profile },
-        { path: "/perfil/:userId/scraps", name: "Scraps", Component: Scraps },
-        { path: "/perfil/:userId/fotos", name: "Fotos", Component: Photos },
-        { path: "/perfil/:userId/fotos/:photoId", name: "Foto", Component: Photo },
-        { path: "/comunidades", name: "Comunidades", Component: Communities },
-    ]
+    // const routes = [
+    //     { path: "/", name: "Home", Component: Home },
+    //     { path: "/perfil/:userId", name: "Perfil", Component: Profile },
+    //     { path: "/perfil/:userId/scraps", name: "Scraps", Component: Scraps },
+    //     { path: "/perfil/:userId/fotos", name: "Fotos", Component: Photos },
+    //     { path: "/perfil/:userId/fotos/:photoId", name: "Foto", Component: Photo },
+    //     { path: "/perfil/:userId/comunidades", name: "Comunidades", Component: Communities },
+    //     { path: "/comunidades/:communityId", name: "Comunidade", Component: CommunityRoute},
+    //     { path: "/comunidades/:communityId/forum/:topicId", name: "Tópico", Component: Topic}
+    // ]
 
+    const crumbs = 'PÃO > PÃO > PÃO'
     return (
         <Wrapper>
             <Navbar loggedUser={ data.findUser } logout={ logout } />
             <Container main>
                 <Switch>
-                    {
+                    {/* {
                         routes.map(({ path, Component }, key) => (
                             <Route exact path={ path } key={ key } component={props => {
                                 const crumbs = routes
@@ -59,7 +68,19 @@ const PrivateRoutes = ({ data, logout }) => {
                                 )
                             }} />
                         ))
-                    }
+                    } */}
+                    <Route path="/perfil/:userId">
+                        <ProfileRoute loggedUser={data.findUser} crumbs={crumbs} />
+                    </Route>
+
+                    <Route path="/comunidades/:communityId">
+                        <CommunityRoute loggedUser={data.findUser} crumbs={crumbs} />
+                    </Route>
+
+                    <Route exact path="/">
+                        <Home loggedUser={data.findUser} crumbs={crumbs} />
+                    </Route>
+
                     <Route path="*">
                         <Error404 />
                     </Route>
