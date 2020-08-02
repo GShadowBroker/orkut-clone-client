@@ -44,7 +44,7 @@ const ScrapsSkeleton = () => {
                             Array.from(Array(10).keys()).map((scrap, i) => (
                                 <Comment key={ i }>
                                     <FakeLink>
-                                        <Skeleton height={ 80 } width={ 80 } />
+                                        <Skeleton height={ 70 } width={ 70 } />
                                     </FakeLink>
                                     <CommentBody>
                                         <CommentSectionHeader style={{ margin: 0 }}>

@@ -257,8 +257,6 @@ const CommunityMain = ({
                     </InlineHeader>
 
                     <div style={{
-                        // borderTop: '.3px solid #e3e8f5',
-                        // borderBottom: '.3px solid #e3e8f5',
                         padding: '.5rem 0'
                     }}>
                         {

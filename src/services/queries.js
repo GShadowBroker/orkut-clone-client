@@ -271,14 +271,28 @@ export const FIND_COMMUNITY = gql`
     }
 `
 
-export const FIND_COMMUNITY_MEMBERS = gql`
-    query findCommunityMembers($communityId: ID!, $limit: Int, $offset: Int) {
-        findCommunityMembers(communityId: $communityId, limit: $limit, offset: $offset) {
+export const FETCH_MEMBERS = gql`
+    query fetchMembers(
+            $communityId: ID!, 
+            $filter: String, 
+            $random: Boolean, 
+            $limit: Int, 
+            $offset: Int) {
+        findCommunityMembers(
+            communityId: $communityId,
+            filter: $filter,
+            random: $random, 
+            limit: $limit, 
+            offset: $offset
+        ) {
             count
             rows {
                 id
                 name
                 profile_picture
+                age
+                city
+                country
             }
         }
     }

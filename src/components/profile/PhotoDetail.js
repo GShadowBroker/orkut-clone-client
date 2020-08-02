@@ -22,9 +22,10 @@ import Error404 from '../../pages/404Error'
 
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
-const PhotoDetail = ({ crumbs, loggedUser }) => {
+const PhotoDetail = ({ loggedUser }) => {
     const { userId, photoId } = useParams()
     const history = useHistory()
+
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const { error, loading, data } = useQuery(FIND_USER, {
@@ -64,7 +65,9 @@ const PhotoDetail = ({ crumbs, loggedUser }) => {
             <Card>
                 <ProfileInfo>
                     <h2>{ user.id === loggedUser.id ? 'Minhas fotos' : `Fotos de ${user.name}`} ({ user.Photos.length })</h2>
-                    {/* <Breadcrumbs crumbs={ crumbs } /> */}
+                    
+                    <Breadcrumbs user={ user.name } photo={ photo.description } />
+
                     <p>Mostrando <strong>{ [...user.Photos].reverse().indexOf(photo) + 1 }</strong> de <strong>{ user.Photos.length }</strong> fotos</p>
                 </ProfileInfo>
                 <PhotoContainer>

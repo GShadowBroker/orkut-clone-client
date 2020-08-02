@@ -15,6 +15,7 @@ import { TiArrowSortedDown } from 'react-icons/ti'
 
 import Notification from '../utils/Notification'
 import Skeleton from 'react-loading-skeleton'
+import Breadcrumbs from '../utils/Breadcrumbs'
 
 const PhotosMain = ({ crumbs, loggedUser }) => {
     const { userId } = useParams()
@@ -44,7 +45,7 @@ const PhotosMain = ({ crumbs, loggedUser }) => {
             <Card>
                 <ProfileInfo>
                     <h2>{ user.id === loggedUser.id ? 'Minhas fotos' : `Fotos de ${user.name}`} ({ user.Photos.length })</h2>
-                    {/* <Breadcrumbs crumbs={ crumbs } /> */}
+                    <Breadcrumbs user={ user.name } />
                 </ProfileInfo>
                 {
                     loadingPhotos
@@ -68,6 +69,7 @@ const PhotosMain = ({ crumbs, loggedUser }) => {
                                     </Link>
                                 ))
                             }
+                            { photos.length === 0 && <span style={{color: "grey"}}>Nenhuma foto</span> }
                         </PhotoList>
                         <ShowMore>
                             { photos.length < photoCount && (

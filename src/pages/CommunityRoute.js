@@ -5,7 +5,7 @@ import { useParams, Route, Switch, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { 
     FIND_COMMUNITY, 
-    FIND_COMMUNITY_MEMBERS, 
+    FETCH_MEMBERS, 
     FIND_COMMUNITY_TOPICS,
     JOIN_COMMUNITY,
     LEAVE_COMMUNITY,
@@ -24,8 +24,10 @@ import CommunityMainSkeleton from '../components/skeletons/CommunityMainSkeleton
 import CommunityRightSkeleton from '../components/skeletons/CommunityRightSkeleton'
 
 import TopicMain from '../components/communities/TopicMain'
+import MembersMain from '../components/communities/MembersMain'
+import ForumMain from '../components/communities/ForumMain'
 
-const CommunityRoute = ({ loggedUser, crumbs }) => {
+const CommunityRoute = ({ loggedUser }) => {
     const match = useRouteMatch()
 
     const { communityId } = useParams()
@@ -35,8 +37,8 @@ const CommunityRoute = ({ loggedUser, crumbs }) => {
     const { error, loading, data } = useQuery(FIND_COMMUNITY, {
         variables: { communityId }
     })
-    const { error: errorMembers, loading: loadingMembers, data: dataMembers } = useQuery(FIND_COMMUNITY_MEMBERS, {
-        variables: { communityId, limit: 9 }
+    const { error: errorMembers, loading: loadingMembers, data: dataMembers } = useQuery(FETCH_MEMBERS, {
+        variables: { communityId, random: true, limit: 9 }
     })
     const { error: errorTopics, loading: loadingTopics, data: dataTopics } = useQuery(FIND_COMMUNITY_TOPICS, {
         variables: { communityId, limit: 5, offset: 0 }
@@ -112,12 +114,16 @@ const CommunityRoute = ({ loggedUser, crumbs }) => {
                         user={ loggedUser } 
                         community={ community }
                         topics={ topics }
-                        crumbs={ crumbs }
                     />
                 </Route>
                     
                 <Route exact path={`${match.path}/forum`}>
-                    <h1>FORUM</h1>
+                    <ForumMain
+                        user={ loggedUser } 
+                        community={ community }
+                        topics={ topics }
+                        topicCount={ topicCount }
+                    />
                 </Route>
 
                 <Route exact path={`${match.path}/enquetes`}>
@@ -125,7 +131,7 @@ const CommunityRoute = ({ loggedUser, crumbs }) => {
                 </Route>
 
                 <Route exact path={`${match.path}/membros`}>
-                    <h1>MEMBROS</h1>
+                    <MembersMain community={ community } />
                 </Route>
 
                 <Route exact path={`${match.path}`}>

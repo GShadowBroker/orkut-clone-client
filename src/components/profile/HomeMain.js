@@ -60,45 +60,35 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
 
     useEffect(() => {
         const savedConfig = JSON.parse(window.localStorage.getItem('config'))
-        
-        if (!savedConfig) {
-            
-            const fortune = todaysFortune[Math.floor(Math.random() * todaysFortune.length)]
-            const config = {
-                lastRead: new Date().getDate(),
-                fortune
-            }
-            window.localStorage.setItem('config', JSON.stringify(config))
-            setFortune(fortune)
 
-        } else if (!savedConfig.lastRead) {
-            
-            const fortune = todaysFortune[Math.floor(Math.random() * todaysFortune.length)]
-            const config = {
-                ...savedConfig,
-                lastRead: new Date().getDate(),
-                fortune
-            }
-            window.localStorage.setItem('config', JSON.stringify(config))
-            setFortune(fortune)
-
-        } else if ((Number(savedConfig.lastRead) + 1) <= Number(new Date().getDate()) ) {
-           
-            const fortune = todaysFortune[Math.floor(Math.random() * todaysFortune.length)]
-            const config = {
-                ...savedConfig,
-                lastRead: new Date().getDate(),
-                fortune
-            }
-            window.localStorage.setItem('config', JSON.stringify(config))
-            setFortune(fortune)
-
-        } else {
-            if (!fortune) {
+        if (savedConfig && savedConfig.lastRead) {
+            if ((new Date().getDate() > Number(savedConfig.lastRead) + 1)
+                || (new Date().getDate() === 1 && Number(savedConfig.lastRead) !== 1)) {
+                    const fortune = todaysFortune[Math.floor(Math.random() * todaysFortune.length)]
+                    const config = {
+                        ...savedConfig,
+                        lastRead: new Date().getDate(),
+                        fortune
+                    }
+                    window.localStorage.setItem('config', JSON.stringify(config))
+                    setFortune(fortune)
+                    return
+            } else {
                 setFortune(savedConfig.fortune)
+                return
             }
+        } else {
+            const fortune = todaysFortune[Math.floor(Math.random() * todaysFortune.length)]
+            const config = {
+                ...savedConfig,
+                lastRead: new Date().getDate(),
+                fortune
+            }
+            window.localStorage.setItem('config', JSON.stringify(config))
+            setFortune(fortune)
+            return
         }
-    }, []) //eslint-disable-line
+    }, [])
 
     const handleSubmit = e => {
         e.preventDefault()

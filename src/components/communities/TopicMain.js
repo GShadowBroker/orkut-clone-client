@@ -22,11 +22,18 @@ import {
     InlineHeader,
     CommentSectionFooter,
     PaginationBlock,
+    Page,
     CommentSectionHeader
 } from '../../styles/profile'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { FIND_COMMUNITY_TOPICS, FETCH_COMMENTS, REMOVE_TOPIC, SEND_COMMENT, REMOVE_COMMENT } from '../../services/queries'
+import { 
+    FIND_COMMUNITY_TOPICS, 
+    FETCH_COMMENTS, 
+    REMOVE_TOPIC, 
+    SEND_COMMENT, 
+    REMOVE_COMMENT 
+} from '../../services/queries'
 import Notification from '../utils/Notification'
 import trunc from '../../utils/truncate'
 import Error404 from '../../pages/404Error'
@@ -42,7 +49,7 @@ import errorHandler from '../../utils/errorHandler'
 import Spinner from 'react-loading'
 import TopicMainSkeleton from '../skeletons/TopicMainSkeleton'
 
-const TopicMain = ({ user, community, topics, crumbs }) => {
+const TopicMain = ({ user, community, topics }) => {
     const { communityId, topicId } = useParams()
     const history = useHistory()
     const [errors, setErrors] = useState('')
@@ -132,6 +139,7 @@ const TopicMain = ({ user, community, topics, crumbs }) => {
     const commentCount = data && data.findTopicComments.count
 
     const pages = Math.ceil(commentCount / limit)
+    const currentPage = (offset / limit) + 1
 
     const nextPage = () => {
         fetchMore({
@@ -201,31 +209,32 @@ const TopicMain = ({ user, community, topics, crumbs }) => {
                             <Button>Denunciar spam</Button>
                         </div>
                     </InlineHeader>
-                    {/* <Breadcrumbs crumbs={ crumbs } /> */}
+                    <Breadcrumbs community={ community.title } topic={ topic.title } />
                 </ProfileInfo>
 
                 <ProfileInfo>
                     <CommentSectionFooter>
-                        <PaginationBlock>
+                        <PaginationBlock noborder>
                             {
                                 hasPrevPage
-                                ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
-                                : <span>primeira</span>
+                                ? <Page onClick={ firstPage }><FakeLink>primeira</FakeLink></Page>
+                                : <Page>primeira</Page>
                             }
                             {
                                 hasPrevPage
-                                ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
-                                : <span>&lt; anterior</span>
+                                ? <Page onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></Page>
+                                : <Page>&lt; anterior</Page>
+                            }
+                            <Page>{ currentPage } de { pages }</Page>
+                            {
+                                hasNextPage
+                                ? <Page onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></Page>
+                                : <Page>próxima &gt;</Page>
                             }
                             {
                                 hasNextPage
-                                ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
-                                : <span>próxima &gt;</span>
-                            }
-                            {
-                                hasNextPage
-                                ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
-                                : <span>última</span>
+                                ? <Page onClick={ lastPage }><FakeLink>última</FakeLink></Page>
+                                : <Page>última</Page>
                             }
                         </PaginationBlock>
                     </CommentSectionFooter>
@@ -301,27 +310,27 @@ const TopicMain = ({ user, community, topics, crumbs }) => {
                 { comments.length > 0 && (
                     <ProfileInfo>
                         <CommentSectionFooter style={{marginBottom: '1.5rem'}}>
-                            
-                                <PaginationBlock>
+                                <PaginationBlock noborder>
                                     {
                                         hasPrevPage
-                                        ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
-                                        : <span>primeira</span>
+                                        ? <Page onClick={ firstPage }><FakeLink>primeira</FakeLink></Page>
+                                        : <Page>primeira</Page>
                                     }
                                     {
                                         hasPrevPage
-                                        ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
-                                        : <span>&lt; anterior</span>
+                                        ? <Page onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></Page>
+                                        : <Page>&lt; anterior</Page>
+                                    }
+                                    <Page>{ currentPage } de { pages }</Page>
+                                    {
+                                        hasNextPage
+                                        ? <Page onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></Page>
+                                        : <Page>próxima &gt;</Page>
                                     }
                                     {
                                         hasNextPage
-                                        ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
-                                        : <span>próxima &gt;</span>
-                                    }
-                                    {
-                                        hasNextPage
-                                        ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
-                                        : <span>última</span>
+                                        ? <Page onClick={ lastPage }><FakeLink>última</FakeLink></Page>
+                                        : <Page>última</Page>
                                     }
                                 </PaginationBlock>
                             

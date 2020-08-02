@@ -169,7 +169,7 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                 </li>
                             </Link>
                             <Link to={ `/perfil/${user.id}/fotos` }>
-                                <li className={ location.pathname === `/perfil/${user.id}/fotos` ? 'active' : '' }>
+                                <li className={ location.pathname.startsWith(`/perfil/${user.id}/fotos`) ? 'active' : '' }>
                                     <span>fotos</span><Badge>{ user.Photos.length > 0 && user.Photos.length }</Badge>
                                 </li>
                             </Link>

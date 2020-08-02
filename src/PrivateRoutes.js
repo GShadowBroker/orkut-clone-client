@@ -34,7 +34,6 @@ const PrivateRoutes = ({ data, logout }) => {
     //     { path: "/comunidades/:communityId/forum/:topicId", name: "Tópico", Component: Topic}
     // ]
 
-    const crumbs = 'PÃO > PÃO > PÃO'
     return (
         <Wrapper>
             <Navbar loggedUser={ data.findUser } logout={ logout } />
@@ -70,19 +69,51 @@ const PrivateRoutes = ({ data, logout }) => {
                         ))
                     } */}
                     <Route path="/perfil/:userId">
-                        <ProfileRoute loggedUser={data.findUser} crumbs={crumbs} />
+                        <ResponsiveLayout
+                            breakpoint={ 776 }
+                            renderDesktop={ () => (
+                                <ProfileRoute loggedUser={data.findUser} />
+                            ) }
+                            renderMobile={ () => (
+                                <h1>Mobile Profile</h1>
+                            ) }
+                        />
                     </Route>
 
                     <Route path="/comunidades/:communityId">
-                        <CommunityRoute loggedUser={data.findUser} crumbs={crumbs} />
+                        <ResponsiveLayout 
+                            breakpoint={ 776 }
+                            renderDesktop={ () => (
+                                <CommunityRoute loggedUser={data.findUser} />
+                            ) }
+                            renderMobile={ () => (
+                                <h1>Community Mobile</h1>
+                            ) }
+                        />
                     </Route>
 
                     <Route exact path="/">
-                        <Home loggedUser={data.findUser} crumbs={crumbs} />
+                        <ResponsiveLayout 
+                            breakpoint={ 776 }
+                            renderDesktop={ () => (
+                                <Home loggedUser={data.findUser} />
+                            ) }
+                            renderMobile={ () => (
+                                <h1>Home Mobile</h1>
+                            ) }
+                        />
                     </Route>
 
                     <Route path="*">
-                        <Error404 />
+                        <ResponsiveLayout 
+                            breakpoint={ 776 }
+                            renderDesktop={ () => (
+                                <Error404 />
+                            ) }
+                            renderMobile={ () => (
+                                <h1>404 Error Mobile</h1>
+                            ) }
+                        />
                     </Route>
                 </Switch>
             </Container>

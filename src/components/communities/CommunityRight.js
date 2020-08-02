@@ -20,8 +20,14 @@ const CommunityRight = ({ community, user, members, memberCount }) => {
         <RightColumn>
             <Card style={{ marginBottom: '.6em' }}>
                 <ProfileFriends>
-                    <div style={{paddingBottom: '1rem'}}>
+                    <div style={{
+                        paddingBottom: '1rem', 
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
                         <Subtitle2>Membros ({ memberCount })</Subtitle2>
+                        <Link to={`/comunidades/${community.id}/membros`}>ver membros</Link>
                     </div> 
                     <FriendsList style={{paddingBottom: '1rem'}}>
                         {

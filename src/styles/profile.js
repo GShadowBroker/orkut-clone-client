@@ -361,8 +361,12 @@ export const PaginationBlock = styled.div`
         padding-right: 0;
     }
     span:not(:last-child) {
-        border-right: .5px solid #bebebe;
+        border-right: ${props => props.noborder ? "none" : ".5px solid #bebebe"};
     }
+`
+
+export const Page = styled.span`
+    color: #afafaf;
 `
 
 // Photos

@@ -11,11 +11,12 @@ import ProfileRight from '../components/profile/ProfileRight'
 import CommunitiesMain from '../components/profile/CommunitiesMain'
 import PhotosMain from '../components/profile/PhotosMain'
 import PhotoDetail from '../components/profile/PhotoDetail'
+import ScrapsMain from '../components/profile/ScrapsMain'
 
 import Notification from '../components/utils/Notification'
 import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
 
-const ProfileRoute = ({ loggedUser, crumbs }) => {
+const ProfileRoute = ({ loggedUser }) => {
     const match = useRouteMatch()
     const { userId } = useParams()
     const { error, loading, data } = useQuery(FIND_USER, {
@@ -81,15 +82,15 @@ const ProfileRoute = ({ loggedUser, crumbs }) => {
                 </Route>
 
                 <Route exact path={`${match.path}/scraps`}>
-                    <h1>Scraps</h1>
+                    <ScrapsMain loggedUser={loggedUser} />
                 </Route>
 
                 <Route exact path={`${match.path}/fotos/:photoId`}>
-                    <PhotoDetail crumbs={crumbs} loggedUser={loggedUser} />
+                    <PhotoDetail loggedUser={loggedUser} />
                 </Route>
 
                 <Route exact path={`${match.path}/fotos`}>
-                    <PhotosMain crumbs={crumbs} loggedUser={loggedUser} />
+                    <PhotosMain loggedUser={loggedUser} />
                 </Route>
 
                 <Route exact path={`${match.path}/videos`}>
