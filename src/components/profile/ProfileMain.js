@@ -91,13 +91,13 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                             <LastImages>
                                 {
                                     [...user.Photos].reverse().slice(0, 5).map(p => (
-                                        <Link key={ p.id } to={`/perfil/${user.id}/fotos/${p.id}`} >
+                                        <Link key={ p.id } to={`/perfil/${user.id}/albuns/${p.folderId}/fotos/${p.id}`} >
                                             <Image url={ p.url } size="85" />
                                         </Link>
                                     ))
                                 }
                             </LastImages>
-                            { user.Photos.length > 0 && <Link to={`/perfil/${user.id}/fotos`}><p>ver todas as fotos</p></Link>}
+                            { user.Photos.length > 0 && <Link to={`/perfil/${user.id}/albuns`}><p>ver todas as fotos</p></Link>}
                         </div>
                     </ProfileSection>
                     <ProfileSection>

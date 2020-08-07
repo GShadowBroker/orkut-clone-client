@@ -1,23 +1,17 @@
 import React, { useState } from 'react'
-import { useParams, useHistory, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import moment from 'moment'
 import {
     Card,
-    Button,
     Subtitle,
     Image,
     Message,
     MessageContent,
     MessageBody,
-    MessageActions,
     MessageHeaderSpaced,
     MessageDetails,
-    Time,
     FakeLink,
-    Form,
     Input,
-    InputGroup,
-    ActionGroup,
     SearchInputContainer,
     SearchInputIcon
 } from '../../styles/layout'
@@ -28,20 +22,15 @@ import {
     CommentSectionFooter,
     PaginationBlock,
     Page,
-    CommentSectionHeader
 } from '../../styles/profile'
 
 import { useQuery, useLazyQuery } from '@apollo/client'
 import {
-    FIND_COMMUNITY_TOPICS
+    FETCH_TOPICS
 } from '../../services/queries'
 import Notification from '../utils/Notification'
 import trunc from '../../utils/truncate'
 import Breadcrumbs from '../utils/Breadcrumbs'
-import Togglable from '../utils/Togglable'
-
-import Editor from '../RichEditor'
-import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import Spinner from 'react-loading'
 import TopicMainSkeleton from '../skeletons/TopicMainSkeleton'
@@ -50,27 +39,72 @@ import { IoIosArrowDropdown } from 'react-icons/io'
 
 const ForumMain = ({ user, community }) => {
     const { communityId } = useParams()
-    const history = useHistory()
-    const [errors, setErrors] = useState('')
-    const [limit, setLimit] = useState(10)
+    const [errors] = useState('')
+    const [limit] = useState(10)
     const [offset, setOffset] = useState(0)
 
+    const [search, setSearch] = useState('')
     const [timeoutState, setTimeoutState] = useState(null)
 
-    const { error, loading, data, fetchMore } = useQuery(FIND_COMMUNITY_TOPICS, {
-        variables: { communityId, limit: 10, offset: 0 }
+    const { error, loading, data, fetchMore } = useQuery(FETCH_TOPICS, {
+        variables: { communityId, limit, offset, limitComment: 1 }
     })
+    const [fetchTopics, { loading: loadingTopics, data: dataTopics }] = useLazyQuery(FETCH_TOPICS)
+
+    const handleSearch = () => {
+        if (!search) {
+            clearTimeout(timeoutState)
+            setTimeoutState(null)
+            return
+        }
+
+        let timeoutId
+        if (!timeoutState) {
+            timeoutId = setTimeout(() => {
+                // Action after user stops typing
+                console.log('searching for', search) //network request
+                setTimeoutState(null)
+                fetchTopics({
+                    variables: {
+                        communityId,
+                        filter: search,
+                        limit,
+                        offset,
+                        limitComment: 1
+                    }
+                })
+            }, 2000)
+            setTimeoutState(timeoutId)
+        } else {
+            clearTimeout(timeoutState)
+            setTimeoutState(null)
+
+            timeoutId = setTimeout(() => {
+                // Action after user stops typing
+                console.log('searching for', search) //network request
+                setTimeoutState(null)
+                fetchTopics({
+                    variables: {
+                        communityId,
+                        filter: search,
+                        limit,
+                        offset,
+                        limitComment: 1
+                    }
+                })
+            }, 2000)
+            setTimeoutState(timeoutId)
+        }
+    }
 
     if (error) return <Notification />
     if (loading) return <TopicMainSkeleton />
 
-    const topics = data && data.findCommunityTopics.rows
+    let topics = data && data.findCommunityTopics.rows
     const topicCount = data && data.findCommunityTopics.count
 
-    console.log(data)
-
-    const pages = Math.ceil(topicCount / limit)
-    const currentPage = (offset / limit) + 1
+    let pages = Math.ceil(topicCount / limit) || 1
+    let currentPage = (offset / limit) + 1
 
     const nextPage = () => {
         fetchMore({
@@ -105,8 +139,16 @@ const ForumMain = ({ user, community }) => {
         setOffset((pages - 1) * limit)
     }
 
-    const hasNextPage = limit < topicCount && offset !== (pages - 1) * limit
-    const hasPrevPage = offset >= limit
+    let hasNextPage = limit < topicCount && offset !== (pages - 1) * limit
+    let hasPrevPage = offset >= limit
+
+    if (dataTopics && dataTopics.findCommunityTopics) {
+        topics = dataTopics.findCommunityTopics.rows
+        hasNextPage = false
+        hasPrevPage = false
+        pages = 1
+        currentPage = 1
+    }
 
     return (
         <MainColumn stretched>
@@ -153,10 +195,21 @@ const ForumMain = ({ user, community }) => {
                     }}>
                         <Input
                             placeholder="buscar tópico"
+                            value={search}
+                            onChange={ ({target}) => setSearch(target.value) }
+                            onKeyUp={ handleSearch }
                         />
                         <SearchInputIcon noborderleft>
                             <BsSearch />
                         </SearchInputIcon>
+                        { (timeoutState || loadingTopics)
+                            && (
+                                <div style={{display: 'flex', paddingLeft: '.5rem'}}>
+                                    <Spinner type="spokes" color="#3c88cf" height='15px' width='15px' />
+                                    <span style={{marginLeft: '.5rem', color: 'grey'}}>procurando tópicos...</span>
+                                </div>
+                            )
+                        }
                     </SearchInputContainer>
                 </ProfileInfo>
 

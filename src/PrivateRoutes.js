@@ -17,6 +17,7 @@ import Home from './pages/Home'
 
 import ProfileRoute from './pages/ProfileRoute'
 import CommunityRoute from  './pages/CommunityRoute'
+import CreateCommunity from './pages/CreateCommunity'
 
 import Error404 from './pages/404Error'
 
@@ -88,6 +89,18 @@ const PrivateRoutes = ({ data, logout }) => {
                             ) }
                             renderMobile={ () => (
                                 <h1>Community Mobile</h1>
+                            ) }
+                        />
+                    </Route>
+
+                    <Route path="/criar-comunidade">
+                        <ResponsiveLayout 
+                            breakpoint={ 776 }
+                            renderDesktop={ () => (
+                                <CreateCommunity loggedUser={data.findUser} />
+                            ) }
+                            renderMobile={ () => (
+                                <h1>Community Creation Mobile</h1>
                             ) }
                         />
                     </Route>

@@ -27,9 +27,10 @@ import { IoIosArrowDropdown } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import trunc from '../../utils/truncate'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 
 import { useMutation } from '@apollo/client'
-import { CREATE_TOPIC, FIND_COMMUNITY_TOPICS } from '../../services/queries'
+import { CREATE_TOPIC, FETCH_TOPICS } from '../../services/queries'
 
 import Modal from '../utils/Modal'
 import errorHandler from '../../utils/errorHandler'
@@ -69,7 +70,7 @@ const CommunityMain = ({
     const [createTopic] = useMutation(CREATE_TOPIC, {
         onError: error => errorHandler(error, setErrors),
         refetchQueries: [
-            { query: FIND_COMMUNITY_TOPICS, variables: { communityId: community.id, limit: 5, offset: 0 } }
+            { query: FETCH_TOPICS, variables: { communityId: community.id, limit: 5, offset: 0, limitComment: 1 } }
         ],
         onCompleted: () => handleSubmitCompleted()
     })

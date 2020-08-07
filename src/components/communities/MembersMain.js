@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
-import { useParams, useHistory, Link } from 'react-router-dom'
-import moment from 'moment'
+import { useParams, Link } from 'react-router-dom'
 import {
     Card,
-    Button,
     Subtitle,
     Image,
     Message,
     MessageContent,
     MessageBody,
-    MessageActions,
-    Time,
     FakeLink,
-    Form,
     Input,
-    InputGroup,
-    ActionGroup,
     SearchInputContainer,
     SearchInputIcon
 } from '../../styles/layout'
@@ -36,10 +29,6 @@ import {
 import Notification from '../utils/Notification'
 import trunc from '../../utils/truncate'
 import Breadcrumbs from '../utils/Breadcrumbs'
-import Togglable from '../utils/Togglable'
-
-import Editor from '../RichEditor'
-import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import Spinner from 'react-loading'
 import TopicMainSkeleton from '../skeletons/TopicMainSkeleton'
@@ -47,9 +36,8 @@ import { BsSearch } from 'react-icons/bs'
 
 const MembersMain = ({ user, community, topics }) => {
     const { communityId } = useParams()
-    const history = useHistory()
-    const [errors, setErrors] = useState('')
-    const [limit, setLimit] = useState(10)
+    const [errors] = useState('')
+    const [limit] = useState(10)
     const [offset, setOffset] = useState(0)
     const [memberSearch, setMemberSearch] = useState('')
 
@@ -67,8 +55,8 @@ const MembersMain = ({ user, community, topics }) => {
     let members = data && data.findCommunityMembers.rows
     const memberCount = data && data.findCommunityMembers.count
 
-    const pages = Math.ceil(memberCount / limit)
-    const currentPage = (offset / limit) + 1
+    let pages = Math.ceil(memberCount / limit) || 1
+    let currentPage = (offset / limit) + 1
 
     const nextPage = () => {
         fetchMore({
@@ -153,10 +141,16 @@ const MembersMain = ({ user, community, topics }) => {
         }
     }
 
-    if (dataMembers && dataMembers.findCommunityMembers) members = dataMembers.findCommunityMembers.rows
+    let hasNextPage = limit < memberCount && offset !== (pages - 1) * limit
+    let hasPrevPage = offset >= limit
 
-    const hasNextPage = limit < memberCount && offset !== (pages - 1) * limit
-    const hasPrevPage = offset >= limit
+    if (dataMembers && dataMembers.findCommunityMembers) {
+        members = dataMembers.findCommunityMembers.rows
+        hasNextPage = false
+        hasPrevPage = false
+        pages = 1
+        currentPage = 1
+    }
 
     return (
         <MainColumn stretched>

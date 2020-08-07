@@ -6,7 +6,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { 
     FIND_COMMUNITY, 
     FETCH_MEMBERS, 
-    FIND_COMMUNITY_TOPICS,
+    FETCH_TOPICS,
     JOIN_COMMUNITY,
     LEAVE_COMMUNITY,
     FIND_USER
@@ -40,8 +40,8 @@ const CommunityRoute = ({ loggedUser }) => {
     const { error: errorMembers, loading: loadingMembers, data: dataMembers } = useQuery(FETCH_MEMBERS, {
         variables: { communityId, random: true, limit: 9 }
     })
-    const { error: errorTopics, loading: loadingTopics, data: dataTopics } = useQuery(FIND_COMMUNITY_TOPICS, {
-        variables: { communityId, limit: 5, offset: 0 }
+    const { error: errorTopics, loading: loadingTopics, data: dataTopics } = useQuery(FETCH_TOPICS, {
+        variables: { communityId, limit: 5, offset: 0, limitComment: 1 }
     })
     const [joinCommunity, { loading: loadingJoin }] = useMutation(JOIN_COMMUNITY, {
         onError: error => errorHandler(error, setErrors),
@@ -57,21 +57,6 @@ const CommunityRoute = ({ loggedUser }) => {
             { query: FIND_USER, variables: { userId: loggedUser.id } }
         ]
     })
-
-    const handleJoinCommunity = () => {
-        joinCommunity({
-            variables: {
-                communityId
-            }
-        })
-    }
-    const handleLeaveCommunity = () => {
-        leaveCommunity({
-            variables: {
-                communityId
-            }
-        })
-    }
 
     if (loading || loadingMembers || loadingTopics) return (
         <Main>
@@ -91,7 +76,25 @@ const CommunityRoute = ({ loggedUser }) => {
     const topics = dataTopics && dataTopics.findCommunityTopics.rows
     const topicCount = dataTopics && dataTopics.findCommunityTopics.count
 
-    console.log(match.path)
+    const handleJoinCommunity = () => {
+        const answer = window.confirm(`Deseja participar da comunidade ${community.title}?`)
+        if (!answer) return
+        joinCommunity({
+            variables: {
+                communityId
+            }
+        })
+    }
+    const handleLeaveCommunity = () => {
+        const answer = window.confirm(`Deseja mesmo sair da comunidade ${community.title}?`)
+        if (!answer) return
+        leaveCommunity({
+            variables: {
+                communityId
+            }
+        })
+    }
+
     return (
         <Main>
             <CommunityLeft

@@ -22,7 +22,8 @@ const memoryCache = new InMemoryCache({
                 getUserScraps: offsetLimitPagination(),
                 fetchFeed: offsetLimitPagination(),
                 fetchComments: offsetLimitPagination(),
-                fetchMembers: offsetLimitPagination()
+                fetchMembers: offsetLimitPagination(),
+                fetchTopics: offsetLimitPagination(),
             },
         },
     },

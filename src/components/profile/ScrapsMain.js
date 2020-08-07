@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 
 import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
@@ -144,7 +145,7 @@ const ScrapsMain = ({ loggedUser }) => {
     }
 
     // Pagination Methods
-    const pages = Math.ceil(scrapCount / limit)
+    const pages = Math.ceil(scrapCount / limit) || 1
 
     const nextPage = () => {
         fetchMore({

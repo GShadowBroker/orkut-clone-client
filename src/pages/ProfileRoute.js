@@ -3,14 +3,13 @@ import { Main } from '../styles/profile'
 import { useParams, Switch, Route, useRouteMatch } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND, GET_ALL_USERS } from '../services/queries'
+import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND } from '../services/queries'
 
 import ProfileLeft from '../components/profile/ProfileLeft'
 import ProfileMain from '../components/profile/ProfileMain'
 import ProfileRight from '../components/profile/ProfileRight'
 import CommunitiesMain from '../components/profile/CommunitiesMain'
-import PhotosMain from '../components/profile/PhotosMain'
-import PhotoDetail from '../components/profile/PhotoDetail'
+import ProfilePhotos from './ProfilePhotos'
 import ScrapsMain from '../components/profile/ScrapsMain'
 
 import Notification from '../components/utils/Notification'
@@ -30,7 +29,7 @@ const ProfileRoute = ({ loggedUser }) => {
                 ? alert(error.graphQLErrors[0].message)
                 : alert('Server timeout')
         },
-        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }, { query: GET_ALL_USERS }]
+        refetchQueries: [{ query: FIND_USER, variables: { userId } }]
     })
     const [unfriend] = useMutation(UNFRIEND, {
         onError: (error) => {
@@ -38,11 +37,12 @@ const ProfileRoute = ({ loggedUser }) => {
                 ? alert(error.graphQLErrors[0].message)
                 : alert('Server timeout')
         },
-        refetchQueries: [{ query: FIND_USER, variables: { userId: loggedUser.id } }, { query: GET_ALL_USERS }]
+        refetchQueries: [{ query: FIND_USER, variables: { userId } }]
     })
 
     const handleUnfriend = (friend) => {
-        console.log('Tchau tchau,', friend.name)
+        const answer = window.confirm(`Deseja desfazer amizade com ${friend.name}?`)
+        if (!answer) return
         unfriend({
             variables: {
                 friendId: friend.id
@@ -51,7 +51,8 @@ const ProfileRoute = ({ loggedUser }) => {
     }
 
     const handleSendRequest = (requestee) => {
-        console.log('Adding', requestee.name)
+        const answer = window.confirm(`Deseja enviar uma solicitação de amizade para ${requestee.name}?`)
+        if (!answer) return
         sendFriendRequest({
             variables: {
                 requesteeId: requestee.id
@@ -65,7 +66,7 @@ const ProfileRoute = ({ loggedUser }) => {
         <Notification />
     )
 
-    const user = data ? data.findUser : null;
+    const user = data && data.findUser
 
     return (
         <Main>
@@ -77,31 +78,27 @@ const ProfileRoute = ({ loggedUser }) => {
             />
             
             <Switch>
-                <Route exact path={`${match.path}/atualizacoes`}>
+                <Route path={`${match.path}/atualizacoes`}>
                     <h1>Updates</h1>
                 </Route>
 
-                <Route exact path={`${match.path}/scraps`}>
+                <Route path={`${match.path}/scraps`}>
                     <ScrapsMain loggedUser={loggedUser} />
                 </Route>
 
-                <Route exact path={`${match.path}/fotos/:photoId`}>
-                    <PhotoDetail loggedUser={loggedUser} />
+                <Route path={`${match.path}/albuns`}>
+                    <ProfilePhotos loggedUser={loggedUser} />
                 </Route>
 
-                <Route exact path={`${match.path}/fotos`}>
-                    <PhotosMain loggedUser={loggedUser} />
-                </Route>
-
-                <Route exact path={`${match.path}/videos`}>
+                <Route path={`${match.path}/videos`}>
                     <h1>Videos</h1>
                 </Route>
 
-                <Route exact path={`${match.path}/depoimentos`}>
+                <Route path={`${match.path}/depoimentos`}>
                     <h1>Testimonials</h1>
                 </Route>
 
-                <Route exact path={`${match.path}/comunidades`}>
+                <Route path={`${match.path}/comunidades`}>
                     <CommunitiesMain
                         user={ loggedUser }
                     />
@@ -111,7 +108,7 @@ const ProfileRoute = ({ loggedUser }) => {
                     />
                 </Route>
 
-                <Route exact path={`${match.path}`}>
+                <Route path={`${match.path}`}>
                     <ProfileMain
                         user={ user } 
                         loggedUser={ loggedUser } 

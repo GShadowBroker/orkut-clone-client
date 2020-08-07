@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 import {
     Card,
     Button,
@@ -28,7 +29,7 @@ import {
 
 import { useQuery, useMutation } from '@apollo/client'
 import { 
-    FIND_COMMUNITY_TOPICS, 
+    FETCH_TOPICS, 
     FETCH_COMMENTS, 
     REMOVE_TOPIC, 
     SEND_COMMENT, 
@@ -95,14 +96,13 @@ const TopicMain = ({ user, community, topics }) => {
     const [removeTopic, { loading: loadingTopicRemoval }] = useMutation(REMOVE_TOPIC, {
         onError: error => errorHandler(error, setErrors),
         refetchQueries: [
-            { query: FIND_COMMUNITY_TOPICS, variables: { communityId, limit: 5, offset: 0 }}
+            { query: FETCH_TOPICS, variables: { communityId, limit: 5, offset: 0, limitComment: 1 }}
         ],
         onCompleted: () => history.push(`/comunidades/${communityId}`)
     })
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(draftToHtml(convertToRaw(comment.getCurrentContent())))
         sendComment({
             variables: {
                 topicId,
@@ -138,7 +138,7 @@ const TopicMain = ({ user, community, topics }) => {
     const comments = data && data.findTopicComments.rows
     const commentCount = data && data.findTopicComments.count
 
-    const pages = Math.ceil(commentCount / limit)
+    const pages = Math.ceil(commentCount / limit) || 1
     const currentPage = (offset / limit) + 1
 
     const nextPage = () => {

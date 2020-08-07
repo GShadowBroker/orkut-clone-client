@@ -64,6 +64,14 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
     const handleSubmitFile = e => {
         e.preventDefault()
 
+        if (selectedFile.type.slice(0, 5) !== 'image') {
+            alert('A foto de perfil deve ser um arquivo de imagem.')
+            return
+        }
+        if (Number(selectedFile.size) > 10000000) {
+            alert('A foto selecionada é grande demais.')
+            return
+        }
         if (!previewSource) return
 
         uploadImage(previewSource)
@@ -109,7 +117,8 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
             <form style={{ display: 'none' }} onSubmit={ handleSubmitFile }>
                 <input 
                     ref={ uploadForm } 
-                    type="file" 
+                    type="file"
+                    accept="image/*"
                     name="image" 
                     value={ fileInputState }
                     onChange={ handleFileUpload }
@@ -168,8 +177,8 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                     <span>scraps</span><Badge>{ user.Scraps.length > 0 && user.Scraps.length }</Badge>
                                 </li>
                             </Link>
-                            <Link to={ `/perfil/${user.id}/fotos` }>
-                                <li className={ location.pathname.startsWith(`/perfil/${user.id}/fotos`) ? 'active' : '' }>
+                            <Link to={ `/perfil/${user.id}/albuns` }>
+                                <li className={ location.pathname.startsWith(`/perfil/${user.id}/albuns`) ? 'active' : '' }>
                                     <span>fotos</span><Badge>{ user.Photos.length > 0 && user.Photos.length }</Badge>
                                 </li>
                             </Link>

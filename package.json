@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
+    "react-hook-form": "^6.3.0",
     "react-icons": "^3.10.0",
     "react-loading": "^2.0.3",
     "react-loading-skeleton": "^2.1.1",

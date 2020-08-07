@@ -1,5 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Input, Select, Button, ButtonGroup, SpinnerButtonContainer } from '../../styles/layout'
+import React, { useState } from 'react'
+import {
+    Input,
+    Select, 
+    Button, 
+    ButtonGroup, 
+    SpinnerButtonContainer, 
+    ErrorBoxContainer 
+} from '../../styles/layout'
 import {
     FakeLinkLogin,
     FormRegister,
@@ -14,23 +21,20 @@ import { useMutation } from '@apollo/client'
 import { REGISTER } from '../../services/queries'
 
 import Spinner from 'react-loading'
+import { RiErrorWarningLine } from 'react-icons/ri'
 
 import Notification from '../utils/Notification'
 import errorHandler from '../../utils/errorHandler'
 
+import { useForm } from 'react-hook-form'
+
 const RegisterForm = ({ setAccountCreated }) => {
     const history = useHistory()
+
+    const { register: registerForm, handleSubmit: onSubmit, errors: formErrors } = useForm()
+
     // Form fields
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [born, setBorn] = useState('')
-    const [name, setName] = useState('')
-    const [sex, setSex] = useState('')
-    const [country, setCountry] = useState('Brasil')
     const [acceptedTerms, setAcceptedTerms] = useState(false)
-
-    const [isFormValid, setIsFormValid] = useState(false)
-
     const [errors, setErrors] = useState('')
 
     const [register, { error, loading }] = useMutation(REGISTER, {
@@ -44,29 +48,10 @@ const RegisterForm = ({ setAccountCreated }) => {
         }
     })
 
-    useEffect(() => {
-        const checkValidity = () => {
-            if (
-                !email
-                || !password
-                || !born
-                || !name
-                || !country
-                || !sex
-                || !acceptedTerms
-            ) {
-                if (isFormValid === false) return
-                setIsFormValid(false)
-                return
-            }
-            if (isFormValid === false) setIsFormValid(true)
-        }
-        checkValidity()
-    })
-
-    const handleSubmit = e => {
-        e.preventDefault()
-
+    const handleSubmit = data => {
+        console.log(data)
+        if (!acceptedTerms) return
+        const { email, password, born, name, sex, country } = data
         console.table({
             email,
             password,
@@ -88,10 +73,106 @@ const RegisterForm = ({ setAccountCreated }) => {
         })
     }
 
+    const validateBirthdate = (value) => {
+        if (new Date(value) >= (new Date() - 1000 * 60 * 60 * 24 * 30 * 12 * 5)) return false
+        else if (new Date(value) <= new Date('1900-01-01')) return false
+        return true
+    }
+
     return (
-        <FormRegister onSubmit={ handleSubmit }>
+        <FormRegister onSubmit={ onSubmit(handleSubmit) }>
 
             { errors && <Notification title="Erro" message={ errors } margin="0" />}
+
+            { formErrors.email && formErrors.email.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o e-mail é obrigatório</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.email && formErrors.email.type === 'maxLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o e-mail fornecido é longo demais</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.email && formErrors.email.type === 'minLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o e-mail fornecido é curto demais</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.email && formErrors.email.type === 'pattern'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o e-mail deve ser válido</span>
+                    </ErrorBoxContainer>
+            }
+
+            { formErrors.password && formErrors.password.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> a senha é obrigatória</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.password && formErrors.password.type === 'maxLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> a senha fornecida é longa demais</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.password && formErrors.password.type === 'minLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> a senha fornecida é curta demais (mínimo de 5 caractéres)</span>
+                    </ErrorBoxContainer>
+            }
+
+            { formErrors.born && formErrors.born.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> a data de nascimento é obrigatória</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.born && formErrors.born.type === 'validate'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> data de nascimento inválida (ou muito improvável ¯\_(ツ)_/¯)</span>
+                    </ErrorBoxContainer>
+            }
+
+            { formErrors.name && formErrors.name.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o nome é obrigatório</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.name && formErrors.name.type === 'maxLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o nome fornecido é longo demais (máximo de 100 caractéres)</span>
+                    </ErrorBoxContainer>
+            }
+            { formErrors.name && formErrors.name.type === 'minLength'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> o nome fornecido é curto demais</span>
+                    </ErrorBoxContainer>
+            }
+
+            { formErrors.sex && formErrors.sex.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> sexo não selecionado (caso não queira informá-lo, marque a opção 'desejo não informar')</span>
+                    </ErrorBoxContainer>
+            }
+
+            { formErrors.country && formErrors.country.type === 'required'
+                && <ErrorBoxContainer>
+                        <RiErrorWarningLine className="icenter" />
+                        <span> selecione o país</span>
+                    </ErrorBoxContainer>
+            }
 
             <RegisterInputGroup>
                 <LabelControl>
@@ -102,11 +183,13 @@ const RegisterForm = ({ setAccountCreated }) => {
                         id="email"
                         name="email"
                         type="email" 
-                        value={email} 
-                        onChange={({target}) => setEmail(target.value)}
-                        maxLength="255"
-                        minLength="5"
-                        required
+                        ref={registerForm({
+                            required: true,
+                            maxLength: 255,
+                            minLength: 5,
+                            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        })}
+                        invalid={ formErrors.email }
                     />
                 </InputControl>
             </RegisterInputGroup>
@@ -120,11 +203,12 @@ const RegisterForm = ({ setAccountCreated }) => {
                         id="password"
                         name="password"
                         type="password"
-                        value={password}
-                        onChange={({target}) => setPassword(target.value)}
-                        maxLength="255"
-                        minLength="5"
-                        required
+                        ref={registerForm({
+                            required: true,
+                            minLength: 5,
+                            maxLength: 255
+                        })}
+                        invalid={ formErrors.password }
                     />
                 </InputControl>
             </RegisterInputGroup>
@@ -138,9 +222,11 @@ const RegisterForm = ({ setAccountCreated }) => {
                         id="born"
                         name="born"
                         type="date"
-                        value={born}
-                        onChange={({target}) => setBorn(target.value)}
-                        required
+                        ref={registerForm({
+                            required: true,
+                            validate: validateBirthdate
+                        })}
+                        invalid={ formErrors.born }
                     />
                 </InputControl>
             </RegisterInputGroup>
@@ -154,11 +240,12 @@ const RegisterForm = ({ setAccountCreated }) => {
                         id="name"
                         name="name"
                         type="text"
-                        value={name}
-                        onChange={({target}) => setName(target.value)}
-                        maxLength="100"
-                        minLength="2"
-                        required
+                        ref={registerForm({
+                            required: true,
+                            minLength: 2,
+                            maxLength: 100
+                        })}
+                        invalid={ formErrors.name }
                     />
                 </InputControl>
             </RegisterInputGroup>
@@ -167,12 +254,12 @@ const RegisterForm = ({ setAccountCreated }) => {
                 <LabelControl>
                     <span>sexo:</span>
                 </LabelControl>
-                <InputControl onChange={ ({target}) => setSex(target.value) }>
-                    <Input id="masculino" type="radio" name="sex" value="masculino" />
+                <InputControl>
+                    <Input id="masculino" type="radio" name="sex" value="masculino" ref={registerForm({required: true})} />
                     <label htmlFor="masculino">masculino</label>
-                    <Input id="feminino" type="radio" name="sex" value="feminino" />
+                    <Input id="feminino" type="radio" name="sex" value="feminino" ref={registerForm({required: true})} />
                     <label htmlFor="feminino">feminino</label>
-                    <Input id="notinformed" type="radio" name="sex" value="notinformed" />
+                    <Input id="notinformed" type="radio" name="sex" value="notinformed" ref={registerForm({required: true})} />
                     <label htmlFor="notinformed">desejo não informar</label>
                 </InputControl>
             </RegisterInputGroup>
@@ -185,9 +272,9 @@ const RegisterForm = ({ setAccountCreated }) => {
                     <Select
                         id="country"
                         name="country"
-                        value={ country }
-                        onChange={ ({target}) => setCountry(target.value) }
-                        required
+                        defaultValue="Brasil"
+                        ref={registerForm({ required: true })}
+                        invalid={ formErrors.country }
                     >
                         {
                             countries.map(c => (
@@ -216,7 +303,7 @@ const RegisterForm = ({ setAccountCreated }) => {
             </RegisterInputGroup>
 
             <ButtonGroup>
-                <Button type="submit" disabled={ !isFormValid || loading }>
+                <Button type="submit" disabled={ loading || !acceptedTerms }>
                     {
                         loading
                         ? (<SpinnerButtonContainer minwidth={228}>

@@ -62,6 +62,7 @@ export const FIND_USER = gql`
                 id
                 url
                 description
+                folderId
             }
             Posts {
                 id
@@ -107,45 +108,51 @@ export const GET_SUGGESTIONS = gql`
     }
 `
 
-// Remove Topics altogether
 export const GET_ALL_COMMUNITIES = gql`
-    query allCommunities {
-        allCommunities {
-            id
-            createdAt
-            title
-            picture
-            description
-            language
-            type
-            Creator {
+    query getAllCommunities(
+        $creatorId: ID,
+        $filter: String,
+        $limit: Int,
+        $offset: Int,
+        $limitTopic: Int,
+        $offsetTopic: Int,
+        $limitComment: Int,
+        $offsetComment: Int,
+        
+    ) {
+        allCommunities(
+            creatorId: $creatorId,
+            filter: $filter,
+            limit: $limit,
+            offset: $offset,
+            limitTopic: $limitTopic,
+            offsetTopic: $offsetTopic,
+            limitComment: $limitComment,
+            offsetComment: $offsetComment
+        ) {
+            count
+            rows {
                 id
-                name
-            }
-            Members {
-                id
-            }
-            Category {
                 title
-            },
-            Topics {
-                id,
-                title,
-                body,
-                TopicCreator {
-                    id
-                    name
-                },
+                picture
+                creatorId
+                Topics {
+                    id,
+                    title,
+                    createdAt
+                }
                 Comments {
                     id
-                    body
-                    Sender {
-                        id
-                        name
-                    }
+                    createdAt
                 }
             }
         }
+    }
+`
+
+export const GET_COMMUNITY_MEMBERS_COUNT = gql`
+    query getCommunityMembersCount($communityId: ID!) {
+        getCommunityMembersCount(communityId: $communityId)
     }
 `
 
@@ -235,14 +242,48 @@ export const GET_USER_UPDATES = gql`
     }
 `
 
+export const GET_USER_ALBUNS = gql`
+    query getUserAlbuns($userId: ID!) {
+        findPhotoFolders(userId: $userId) {
+            id
+            createdAt
+            title
+            visible_to_all
+            userId
+            Photos {
+                id
+                url
+            }
+        }
+    }
+`
+
 export const GET_USER_PHOTOS = gql`
-    query getUserPhotos($userId: ID!, $limit: Int, $offset: Int) {
-        findPhotos(userId: $userId, limit: $limit, offset: $offset) {
+    query getUserPhotos($userId: ID!, $folderId: ID!, $limit: Int, $offset: Int) {
+        findPhotos(userId: $userId, folderId: $folderId, limit: $limit, offset: $offset) {
             count,
             rows {
                 id
                 url
                 description
+            }
+        }
+    }
+`
+
+export const GET_PHOTO_COMMENTS = gql`
+    query getPhotoComments($photoId: ID!, $limit: Int, $offset: Int) {
+        findPhotoComments(photoId: $photoId, limit: $limit, offset: $offset) {
+            count
+            rows {
+                id
+                createdAt
+                body
+                Sender {
+                    id
+                    name
+                    profile_picture
+                }
             }
         }
     }
@@ -298,9 +339,23 @@ export const FETCH_MEMBERS = gql`
     }
 `
 
-export const FIND_COMMUNITY_TOPICS = gql`
-    query findCommunityTopics($communityId: ID!, $limit: Int, $offset: Int) {
-        findCommunityTopics(communityId: $communityId, limit: $limit, offset: $offset) {
+export const FETCH_TOPICS = gql`
+    query fetchTopics(
+        $communityId: ID!,
+        $filter: String,
+        $limit: Int, 
+        $offset: Int
+        $limitComment: Int
+        $offsetComment: Int
+    ) {
+        findCommunityTopics(
+            communityId: $communityId,
+            filter: $filter
+            limit: $limit, 
+            offset: $offset
+            limitComment: $limitComment
+            offsetComment: $offsetComment
+        ) {
             count
             rows {
                 id
@@ -376,6 +431,15 @@ export const FIND_TOPIC = gql`
                     profile_picture
                 }
             }
+        }
+    }
+`
+
+export const GET_ALL_CATEGORIES = gql`
+    query getAllCategories {
+        allCategories {
+            id
+            title
         }
     }
 `
@@ -530,6 +594,72 @@ export const SEND_UPDATE = gql`
             id
         }
     }   
+`
+
+export const CREATE_NEW_ALBUM = gql`
+    mutation createNewAlbum(
+        $title: String,
+        $visible_to_all: Boolean
+    ) {
+        createPhotoFolder(
+            title: $title,
+            visible_to_all: $visible_to_all
+        ) {
+            id
+        }
+    }
+`
+
+export const REMOVE_ALBUM = gql`
+    mutation removeAlbum(
+        $folderId: ID!
+    ) {
+        deletePhotoFolder(
+            folderId: $folderId
+        ) {
+            id
+        }
+    }
+`
+
+export const SEND_PHOTO_COMMENT = gql`
+    mutation sendPhotoComment($body: String!, $photoId: ID!) {
+        createPhotoComment(body: $body, photoId: $photoId) {
+            id
+        }
+    }
+`
+
+export const REMOVE_PHOTO_COMMENT = gql`
+    mutation removePhotoComment($commentId: ID!) {
+        deletePhotoComment(commentId: $commentId) {
+            id
+        }
+    }
+`
+
+export const CREATE_NEW_COMMUNITY = gql`
+    mutation createNewCommunity(
+        $title: String!
+        $categoryId: ID!
+        $type: String!
+        $language: String!
+        $country: String!
+        $picture: String!
+        $description: String
+    ) {
+        createCommunity(
+            title: $title
+            categoryId: $categoryId
+            type: $type
+            language: $language
+            country: $country
+            picture: $picture
+            description: $description
+        ) {
+            id
+        }
+    }
 `
 
 export const JOIN_COMMUNITY = gql`

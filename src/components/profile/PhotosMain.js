@@ -1,50 +1,188 @@
 import React, { useState } from 'react'
 
-import { Link, useParams, useRouteMatch } from 'react-router-dom'
+import { Link, useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
-import { useQuery } from '@apollo/client'
-import { FIND_USER, GET_USER_PHOTOS } from '../../services/queries'
+import { useQuery, useMutation } from '@apollo/client'
+import { GET_USER_PHOTOS, REMOVE_ALBUM, GET_USER_ALBUNS } from '../../services/queries'
 
-import { Card, Image, FakeLink, ShowMore } from '../../styles/layout'
+import { 
+    Card, 
+    Image, 
+    FakeLink, 
+    ShowMore, 
+    Button,
+    FlexBoxCenter,
+    Form,
+    Input,
+    ErrorBoxContainer,
+    ModalInputGroup,
+    ModalActionGroup,
+} from '../../styles/layout'
 import {
     MainColumn,
     ProfileInfo,
-    PhotoList
+    PhotoList,
+    InlineHeader
 } from '../../styles/profile'
 import { TiArrowSortedDown } from 'react-icons/ti'
+import { AiFillCamera } from 'react-icons/ai'
 
 import Notification from '../utils/Notification'
 import Skeleton from 'react-loading-skeleton'
 import Breadcrumbs from '../utils/Breadcrumbs'
+import errorHandler from '../../utils/errorHandler'
+import Spinner from 'react-loading'
 
-const PhotosMain = ({ crumbs, loggedUser }) => {
-    const { userId } = useParams()
+import RawModal from '../utils/RawModal'
+import styled from 'styled-components'
+
+const PreviewImageGrid = styled.div`
+    display: grid;
+    grid-template-columns: 80px 80px 80px 80px;
+    grid-gap: .5rem;
+
+    div {
+        min-height: 80px;
+        border: .5px solid #afafaf;
+        border-style: dashed;
+    }
+`
+
+const PhotosMain = ({ user, loggedUser, albuns }) => {
+    const { userId, folderId } = useParams()
     const match = useRouteMatch()
+    const history = useHistory()
+
     const [offset] = useState(0)
     const [limit, setLimit ] = useState(10)
+    const [errors, setErrors] = useState('')
+    const [isModalOpen, setIsModalOpen] = useState(true)
 
-    const { error, loading, data } = useQuery(FIND_USER, {
-        variables: { userId }
-    })
+    // Image Upload
+    const [preview, setPreview] = useState([])
+    const [selectedFile, setSelectedFile] = useState('')
 
+    const handleFileUpload = e => {
+        const file = e.target.files[0]
+        setSelectedFile(file)
+        previewFile(file)
+    }
+
+    const previewFile = (file) => {
+        if (!file) return
+        const reader = new FileReader()
+
+        reader.readAsDataURL(file)
+        reader.onloadend = () => {
+            setPreview([...preview, reader.result])
+        }
+    }
+
+    // Hooks
     const { error: errorPhotos, loading: loadingPhotos, data: dataPhotos, fetchMore } = useQuery(GET_USER_PHOTOS, {
-        variables: { userId, limit, offset }
+        variables: { userId, folderId, limit, offset }
+    })
+    const [removeAlbum, { loading: loadingAlbumRemoval }] = useMutation(REMOVE_ALBUM, {
+        onError: error => errorHandler(error, setErrors),
+        onCompleted: () => history.push(`/perfil/${userId}/albuns`),
+        refetchQueries: [
+            { query: GET_USER_ALBUNS, variables: { userId } }
+        ]
     })
 
-    if (error || errorPhotos) return <Notification />
-    if (loading) return (
-        <h1>loading...</h1>
-    )
+    const handleAlbumDelete = () => {
+        const question = window.confirm('Tem certeza de que deseja excluir este álbum e todo o seu conteúdo?')
+        if (!question) return
+        removeAlbum({
+            variables: {
+                folderId
+            }
+        })
+    }
 
-    const user = data && data.findUser
+    const handleModal = () => {
+        if (isModalOpen) {
+            document.querySelector('body').style.overflowY = ''
+            setIsModalOpen(false)
+        } else {
+            document.querySelector('body').style.overflowY = 'hidden'
+            setIsModalOpen(true)
+        }
+    }
+    const handleCancel = e => {
+        e.preventDefault()
+        handleModal()
+    }
+    const onSubmit = e => {
+        e.preventDefault()
+        console.log('submitting...')
+    }
+
+    if (errorPhotos) return <Notification />
+
     const photos = dataPhotos && dataPhotos.findPhotos.rows
     const photoCount = dataPhotos && dataPhotos.findPhotos.count
+    const album = albuns.find(a => a.id === folderId) || null
 
     return (
         <MainColumn stretched>
+            { errors && <Notification message={errors} /> }
+
+            <RawModal
+                title="Adicionar fotos"
+                isModalOpen={ isModalOpen }
+                setModalOpen={ handleModal }
+            >
+                { preview.length > 0 && (
+                    <InlineHeader>
+                        <p><strong>fotos adicionadas ({ preview.length }):</strong></p>
+                        <FakeLink onClick={ () => setPreview([]) }>limpar</FakeLink>
+                    </InlineHeader>
+                )}
+                <PreviewImageGrid>
+                    { preview.length > 0
+                        ? preview.map((i, index) => <Image key={index} url={i} size={80} />)
+                            .concat(Array.from(Array((8 - preview.length) || 1).keys()).map((i, index) => <div key={index}></div>))
+                        : Array.from(Array(8).keys()).map((i, index) => <div key={index}></div>)
+                    }
+                </PreviewImageGrid>
+                <Form onSubmit={onSubmit}>
+                    <ModalInputGroup>
+                        <label htmlFor="newphoto"><strong>selecione uma foto ou mais:</strong></label>
+                        <Input
+                            id="newphoto" 
+                            type="file" 
+                            accept="image/*"
+                            name="image"
+                            onChange={ handleFileUpload }
+                        />
+                    </ModalInputGroup>
+                    <ModalActionGroup>
+                        <Button type="submit"><strong>salvar</strong></Button>
+                        <Button onClick={handleCancel}>cancelar</Button>
+                    </ModalActionGroup>
+                </Form>
+            </RawModal>
+
             <Card>
                 <ProfileInfo>
-                    <h2>{ user.id === loggedUser.id ? 'Minhas fotos' : `Fotos de ${user.name}`} ({ user.Photos.length })</h2>
+                    <div style={{
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between'
+                    }}>
+                        <h2>{ `${ album && album.title }` } ({ album && album.Photos.length })</h2>
+                        { loggedUser.id === user.id &&
+                            <FakeLink onClick={ handleAlbumDelete }>
+                                {
+                                    loadingAlbumRemoval
+                                    ? <Spinner type="spokes" color="#3c88cf" height='15px' width='15px' />
+                                    : 'excluir álbum'
+                                }
+                            </FakeLink>
+                        }
+                    </div>
+                    
                     <Breadcrumbs user={ user.name } />
                 </ProfileInfo>
                 {
@@ -86,6 +224,18 @@ const PhotosMain = ({ crumbs, loggedUser }) => {
                         </ShowMore>
                     </ProfileInfo>)
                 }
+
+                { loggedUser.id === user.id &&
+                    (<ProfileInfo style={{ marginBottom: '1rem' }}>
+                        <div>
+                            <Button onClick={ handleModal }>
+                                <FlexBoxCenter>
+                                    <AiFillCamera />
+                                    <strong style={{ marginLeft: '.2rem' }}>Adicionar fotos</strong>
+                                </FlexBoxCenter>
+                            </Button>
+                        </div>
+                    </ProfileInfo>)}
             </Card>
         </MainColumn>
     )

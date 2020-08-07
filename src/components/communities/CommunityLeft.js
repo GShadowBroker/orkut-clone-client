@@ -58,17 +58,17 @@ const CommunityLeft = ({
                             </Link>
                             <Link to={ `/comunidades/${community.id}/forum` }>
                                 <li className={ location.pathname.startsWith(`/comunidades/${community.id}/forum`) ? 'active' : '' }>
-                                    <span>fórum</span><Badge>{ topicCount }</Badge>
+                                    <span>fórum</span><Badge>{ topicCount ? topicCount : null }</Badge>
                                 </li>
                             </Link>
                             <Link to={ `/comunidades/${community.id}/enquetes` }>
                                 <li className={ location.pathname.startsWith(`/comunidades/${community.id}/enquetes`) ? 'active' : '' }>
-                                    <span>enquetes</span><Badge>0</Badge>
+                                    <span>enquetes</span><Badge></Badge>
                                 </li>
                             </Link>
                             <Link to={ `/comunidades/${community.id}/membros` }>
                                 <li className={ location.pathname === `/comunidades/${community.id}/membros` ? 'active' : '' }>
-                                    <span>membros</span><Badge>{ memberCount }</Badge>
+                                    <span>membros</span><Badge>{ memberCount ? memberCount : null }</Badge>
                                 </li>
                             </Link>
                         </ul>

@@ -32,7 +32,7 @@ import trunc from '../../utils/truncate'
 //     )
 // }
 
-const Breadcrumbs = ({ user, photo, community, topic }) => {
+const Breadcrumbs = ({ user, photo, community, folder, topic, keepAllCrumbs }) => {
     const match = useRouteMatch()
 
     const routes = match.path
@@ -40,10 +40,13 @@ const Breadcrumbs = ({ user, photo, community, topic }) => {
         .replace("fotos", `fotos de ${user}`)
         .replace(":photoId", photo ? trunc(photo, 30) : "")
         .replace(":communityId", community ? trunc(community, 30) : "")
+        .replace(":folderId", folder ? folder : "album")
         .replace(":topicId", topic ? trunc(topic, 30) : "")
         .replace("/", "")
         .split("/")
-    routes.shift() // Removes perfil or comunidades
+    if (!keepAllCrumbs) {
+        routes.shift() // Removes perfil or comunidades
+    }
     routes.unshift("home") // Adds home to the front
 
     return (

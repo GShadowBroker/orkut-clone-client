@@ -68,6 +68,12 @@ export const Message = styled.div`
     justify-content: space-between;
 `
 
+export const FlexBoxCenter = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 export const Image = styled.div`
     background-image: url(${ props => props.url });
     background-repeat: no-repeat;
@@ -149,7 +155,7 @@ export const ModalOverlay = styled.div`
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: 5;
 
     width: 100vw;
     height: 100vh;
@@ -329,6 +335,34 @@ export const ButtonGroup = styled.div`
     }
 `
 
+export const ModalInputGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: .8rem 0;
+
+    label {
+        padding-bottom: .2rem;
+    }
+`
+
+export const ModalActionGroup = styled.div`
+    border-top: .3px solid #e3e8f5;
+    padding: .8rem 0;
+    button {
+        margin-right: .5rem;
+    }
+`
+
+export const RadioGroup = styled.div`
+    display: flex;
+    align-items: center;
+
+    input {
+        margin: 0;
+        margin-right: .2rem;
+    }
+`
+
 export const Input = styled.input`
     border: ${props => {
         if (props.valid) return '1px solid #27ae60'
@@ -434,6 +468,12 @@ export const TextArea = styled.textarea`
     }
 `
 
+export const ErrorBoxContainer = styled.div`
+    background: #FFFFD2;
+    color: #c0392b;
+    margin-bottom: .6rem;
+    padding: .3rem;
+`
 
 // 404 Error Page
 

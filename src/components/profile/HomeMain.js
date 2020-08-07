@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 import Notification from '../utils/Notification'
 
 import { TiArrowSortedDown } from 'react-icons/ti'
@@ -123,7 +124,6 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
     const feed = data && data.getFeed.rows
     const feedCount = data && data.getFeed.count
 
-    // const pages = Math.ceil(feedCount / limit)
     const hasMoreFeed = limit < feedCount
     
     return (
