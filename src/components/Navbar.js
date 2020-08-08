@@ -1,16 +1,18 @@
 import React from 'react'
-import { Container, Button, SearchInputContainer, SearchInputIcon, Input } from '../styles/layout'
-import { Nav, MobileNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } from '../styles/nav'
+import { Container, Button, SearchInputContainer, SearchInputIcon, Input, ProfileImage } from '../styles/layout'
+import { Nav, MobileNav, FooterNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } from '../styles/nav'
 import { Link, useLocation } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
-import { BsSearch } from 'react-icons/bs'
+import { IoMdHome } from 'react-icons/io'
+import { BsSearch, BsPeopleCircle, BsPeopleFill } from 'react-icons/bs'
 
 const Navbar = ({ loggedUser, logout }) => {
     return (
         <Nav>
-            <MobileNavbar />
+            <MobileNavbar loggedUser={loggedUser} />
             <UpperNavbar logout={ logout } loggedUser={ loggedUser } />
             <MainNavbar loggedUser={ loggedUser } />
+            <FooterNavbar loggedUser={loggedUser} />
         </Nav>
     )
 }
@@ -80,17 +82,29 @@ const MainNavbar = ({ loggedUser }) => {
     )
 }
 
-const MobileNavbar = () => {
-    const iconStyle = {
-        fontSize: '2em',
-        cursor: 'pointer'
-    }
+const iconStyle = {
+    fontSize: '2em',
+    cursor: 'pointer'
+}
+
+const MobileNavbar = ({ loggedUser }) => {
     return (
         <MobileNav>
-            <Logo><strong>orkut</strong></Logo>
             <TiThMenu style={ iconStyle } />
-            
+            <Logo><strong>orkut</strong></Logo>
+            <ProfileImage url={ loggedUser.profile_picture } size={ 40 } />
         </MobileNav>
+    )
+}
+
+const FooterNavbar = ({ loggedUser }) => {
+    return (
+        <FooterNav>
+            <IoMdHome style={ iconStyle } />
+            <BsSearch style={ iconStyle } />
+            <BsPeopleCircle style={ iconStyle } />
+            <BsPeopleFill style={ iconStyle } />
+        </FooterNav>
     )
 }
 

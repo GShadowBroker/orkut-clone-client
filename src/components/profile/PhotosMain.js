@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link, useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_USER_PHOTOS, REMOVE_ALBUM, GET_USER_ALBUNS } from '../../services/queries'
+import { GET_USER_PHOTOS, REMOVE_ALBUM, GET_USER_ALBUNS, UPLOAD_NEW_PHOTOS } from '../../services/queries'
 
 import { 
     Card, 
@@ -14,9 +14,9 @@ import {
     FlexBoxCenter,
     Form,
     Input,
-    ErrorBoxContainer,
     ModalInputGroup,
     ModalActionGroup,
+    SpinnerButtonContainer
 } from '../../styles/layout'
 import {
     MainColumn,
@@ -56,11 +56,11 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
     const [offset] = useState(0)
     const [limit, setLimit ] = useState(10)
     const [errors, setErrors] = useState('')
-    const [isModalOpen, setIsModalOpen] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     // Image Upload
     const [preview, setPreview] = useState([])
-    const [selectedFile, setSelectedFile] = useState('')
+    const [setSelectedFile] = useState('')
 
     const handleFileUpload = e => {
         const file = e.target.files[0]
@@ -89,6 +89,17 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
             { query: GET_USER_ALBUNS, variables: { userId } }
         ]
     })
+    const [uploadNewPhotos, { loading: loadingUpload }] = useMutation(UPLOAD_NEW_PHOTOS, {
+        onError: error => errorHandler(error, setErrors),
+        onCompleted: () => {
+            toggleModal()
+            setPreview([])
+        },
+        refetchQueries: [
+            { query: GET_USER_ALBUNS, variables: { userId } },
+            { query: GET_USER_PHOTOS, variables: { userId, folderId, limit, offset } }
+        ]
+    })
 
     const handleAlbumDelete = () => {
         const question = window.confirm('Tem certeza de que deseja excluir este álbum e todo o seu conteúdo?')
@@ -100,7 +111,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
         })
     }
 
-    const handleModal = () => {
+    const toggleModal = () => {
         if (isModalOpen) {
             document.querySelector('body').style.overflowY = ''
             setIsModalOpen(false)
@@ -111,11 +122,18 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
     }
     const handleCancel = e => {
         e.preventDefault()
-        handleModal()
+        toggleModal()
     }
     const onSubmit = e => {
         e.preventDefault()
-        console.log('submitting...')
+        console.log('submitting...', preview)
+        if (preview.length < 1) return
+        uploadNewPhotos({
+            variables: {
+                photos: preview,
+                folderId
+            }
+        })
     }
 
     if (errorPhotos) return <Notification />
@@ -131,7 +149,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
             <RawModal
                 title="Adicionar fotos"
                 isModalOpen={ isModalOpen }
-                setModalOpen={ handleModal }
+                setModalOpen={ toggleModal }
             >
                 { preview.length > 0 && (
                     <InlineHeader>
@@ -158,7 +176,14 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
                         />
                     </ModalInputGroup>
                     <ModalActionGroup>
-                        <Button type="submit"><strong>salvar</strong></Button>
+                        {loadingUpload
+                            ? <Button disabled>
+                                <SpinnerButtonContainer minwidth={100}>
+                                    <Spinner type="spokes" color="#34495e" height='15px' width='15px' /><span style={{marginLeft: '.5rem'}}>salvando...</span>
+                                </SpinnerButtonContainer>
+                            </Button>
+                            : <Button type="submit"><strong>salvar</strong></Button>
+                        }
                         <Button onClick={handleCancel}>cancelar</Button>
                     </ModalActionGroup>
                 </Form>
@@ -228,7 +253,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
                 { loggedUser.id === user.id &&
                     (<ProfileInfo style={{ marginBottom: '1rem' }}>
                         <div>
-                            <Button onClick={ handleModal }>
+                            <Button onClick={ toggleModal }>
                                 <FlexBoxCenter>
                                     <AiFillCamera />
                                     <strong style={{ marginLeft: '.2rem' }}>Adicionar fotos</strong>

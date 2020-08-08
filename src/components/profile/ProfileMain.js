@@ -4,7 +4,9 @@ import {
     FakeLink,
     Button,
     Subtitle,
-    Image
+    FlexBoxCenter,
+    Image,
+    ProfileImage
 } from '../../styles/layout'
 import {
     MainColumn,
@@ -16,8 +18,9 @@ import {
 import { TiPlusOutline, TiMinusOutline } from 'react-icons/ti'
 import { Link } from 'react-router-dom'
 import Testimonials from './Testimonials'
+import styled from 'styled-components'
 
-const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) => {
+const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobile }) => {
     const [viewFullProfile, setViewFullProfile] = useState(false)
 
     const timeOptions = {
@@ -29,27 +32,38 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
     return (
         <MainColumn>
             <Card>
+                { mobile
+                    && <ProfileInfo style={{marginTop: '.6rem'}}>
+                            <FlexBoxCenter style={{flexDirection: 'column'}}>
+                                <ProfileImage url={ user.profile_picture } size={ 200 } />
+                                <Subtitle>{ user.name }</Subtitle>
+                            </FlexBoxCenter>
+                        </ProfileInfo>
+                }
+
                 <ProfileInfo>
-                    <InlineHeader>
-                        <div style={{maxWidth: '40%'}}>
-                            <Subtitle>{ user.name }</Subtitle>
-                        </div>
-                        <div style={{
-                            alignSelf: 'start', 
-                            marginTop: '.6rem',
-                            textAlign: 'right'
-                        }}>
-                            {
-                                user.Friends.find(u => u.id === loggedUser.id)
-                                ? <Button onClick={ () => handleUnfriend(user) }><TiMinusOutline className="icenter" style={{ color: '#bebebe' }} /> desfazer amizade</Button>
-                                : (user.Requesters.find(u => u.id === loggedUser.id))
-                                    ? <Button disabled>solicitação enviada</Button>
-                                    : <Button onClick={ () => handleSendRequest(user) }><TiPlusOutline className="icenter" style={{ color: '#bebebe' }} /> adicionar como amigo</Button>
-                            }
-                            <FakeLink>ignorar</FakeLink>
-                            <FakeLink>reportar</FakeLink>
-                        </div>
-                    </InlineHeader>
+                    { !mobile
+                        && <InlineHeader>
+                                <div style={{maxWidth: '40%'}}>
+                                    <Subtitle>{ user.name }</Subtitle>
+                                </div>
+                                <div style={{
+                                    alignSelf: 'start', 
+                                    marginTop: '.6rem',
+                                    textAlign: 'right'
+                                }}>
+                                    {
+                                        user.Friends.find(u => u.id === loggedUser.id)
+                                        ? <Button onClick={ () => handleUnfriend(user) }><TiMinusOutline className="icenter" style={{ color: '#bebebe' }} /> desfazer amizade</Button>
+                                        : (user.Requesters.find(u => u.id === loggedUser.id))
+                                            ? <Button disabled>solicitação enviada</Button>
+                                            : <Button onClick={ () => handleSendRequest(user) }><TiPlusOutline className="icenter" style={{ color: '#bebebe' }} /> adicionar como amigo</Button>
+                                    }
+                                    <FakeLink>ignorar</FakeLink>
+                                    <FakeLink>reportar</FakeLink>
+                                </div>
+                            </InlineHeader>
+                    }
                     <ProfileSection border>
                         <div>
                             { user.city
@@ -105,6 +119,16 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                             <InlineHeader>
                                 <Subtitle>Vídeos Recentes</Subtitle>
                             </InlineHeader>
+                            <LastImages style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                                {
+                                    [...user.Videos].reverse().slice(0, 3).map(v => (
+                                        <FlexBoxCenter key={ v.id } style={{width: '100%', minHeight: 100}}>
+                                            <iframe title={ v.description } height="85" width="140" src={ v.url.replace("watch?v=", "embed/") } frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                        </FlexBoxCenter>
+                                    ))
+                                }
+                            </LastImages>
+                            { user.Videos.length > 0 && <Link to={`/perfil/${user.id}/videos`}><p>ver todos os vídeos</p></Link>}
                         </div>
                     </ProfileSection>
                 </ProfileInfo>

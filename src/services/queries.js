@@ -64,6 +64,10 @@ export const FIND_USER = gql`
                 description
                 folderId
             }
+            Videos {
+                id
+                url
+            }
             Posts {
                 id
                 body
@@ -444,6 +448,21 @@ export const GET_ALL_CATEGORIES = gql`
     }
 `
 
+export const FIND_USER_VIDEOS = gql`
+    query findUserVideos($userId: ID!, $limit: Int, $offset: Int) {
+        findVideos(userId: $userId, limit: $limit, offset: $offset) {
+            count
+            rows {
+                id
+                createdAt
+                url
+                description
+                userId
+            }
+        }
+    }
+`
+
 
 // Mutations
 export const LOGIN = gql`
@@ -622,6 +641,12 @@ export const REMOVE_ALBUM = gql`
     }
 `
 
+export const UPLOAD_NEW_PHOTOS = gql`
+    mutation uploadNewPhotos($photos: [String]!, $folderId: ID!) {
+        uploadPhotos(photos: $photos, folderId: $folderId)
+    }
+`
+
 export const SEND_PHOTO_COMMENT = gql`
     mutation sendPhotoComment($body: String!, $photoId: ID!) {
         createPhotoComment(body: $body, photoId: $photoId) {
@@ -633,6 +658,22 @@ export const SEND_PHOTO_COMMENT = gql`
 export const REMOVE_PHOTO_COMMENT = gql`
     mutation removePhotoComment($commentId: ID!) {
         deletePhotoComment(commentId: $commentId) {
+            id
+        }
+    }
+`
+
+export const SEND_VIDEO = gql`
+    mutation sendVideo($url: String!, $description: String) {
+        saveVideo(url: $url, description: $description) {
+            id
+        }
+    }
+`
+
+export const REMOVE_VIDEO = gql`
+    mutation removeVideo($videoId: ID!) {
+        deleteVideo(videoId: $videoId) {
             id
         }
     }

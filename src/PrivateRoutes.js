@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
+import HomeMobile from './pages/HomeMobile'
 // import Profile from './pages/Profile'
 // import Scraps from './pages/Scraps'
 // import Photos from './pages/Photos'
@@ -16,6 +17,7 @@ import Home from './pages/Home'
 // import Topic from './pages/Topic'
 
 import ProfileRoute from './pages/ProfileRoute'
+import ProfileRouteMobile from './pages/ProfileRouteMobile'
 import CommunityRoute from  './pages/CommunityRoute'
 import CreateCommunity from './pages/CreateCommunity'
 
@@ -76,7 +78,7 @@ const PrivateRoutes = ({ data, logout }) => {
                                 <ProfileRoute loggedUser={data.findUser} />
                             ) }
                             renderMobile={ () => (
-                                <h1>Mobile Profile</h1>
+                                <ProfileRouteMobile loggedUser={data.findUser} />
                             ) }
                         />
                     </Route>
@@ -112,7 +114,7 @@ const PrivateRoutes = ({ data, logout }) => {
                                 <Home loggedUser={data.findUser} />
                             ) }
                             renderMobile={ () => (
-                                <h1>Home Mobile</h1>
+                                <HomeMobile loggedUser={data.findUser} />
                             ) }
                         />
                     </Route>

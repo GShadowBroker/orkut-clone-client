@@ -44,7 +44,7 @@ import { useQuery } from '@apollo/client'
 import { FETCH_FEED } from '../../services/queries'
 import trunc from '../../utils/truncate'
 
-const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimit }) => {
+const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimit, mobile }) => {
     const [post, setPost] = useState('')
     const [fortune, setFortune] = useState('')
     const [show, setShow] = useState('all')
@@ -169,11 +169,12 @@ const HomeMain = ({ user, handleRespondFriendRequest, sendUpdate, limit, setLimi
                                 <option value="friends">amigos</option>
                             </Select>
                         </div>
-                        <OrkutStyles>
-                            Estilo Orkut:
-                            <Button><AiFillLayout /></Button>
-                            <Button><FaThList /></Button>
-                        </OrkutStyles>
+                        { !mobile
+                            && <OrkutStyles>
+                                    Estilo Orkut:
+                                    <Button><AiFillLayout /></Button>
+                                    <Button><FaThList /></Button>
+                                </OrkutStyles>}
                     </InlineHeader>
                 </ProfileInfo>
                 <ProfileInfo borderbottom>

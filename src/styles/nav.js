@@ -60,7 +60,7 @@ export const Logo = styled.div`
 
     @media (max-width: 950px) {
         & {
-            font-size: 1.5em;
+            font-size: 2em;
         }
     }
 `
@@ -127,18 +127,44 @@ export const NavInputContainer = styled.div`
 export const MobileNav = styled.nav`
     z-index: 91;
     position: fixed;
+    
     display: none;
-    height: 40px;
+    height: 60px;
     width: 100%;
     padding: 0 1em;
-    background: #89B1D6;
-    color: white;
+    background: #ffff;
+    color: inherit;
+
+    box-shadow: 2px 2px 6px #bebebe;
 
     @media (max-width: 776px) {
         & {
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+    }
+`
+
+export const FooterNav = styled.div`
+    z-index: 91;
+    position: fixed;
+    bottom: 0;
+    
+    display: none;
+    height: 60px;
+    width: 100%;
+    padding: 0 1em;
+    background: #ffff;
+    color: inherit;
+
+    box-shadow: 2px 2px 6px #bebebe;
+
+    @media (max-width: 776px) {
+        & {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
         }
     }
 `

@@ -50,7 +50,7 @@ export const Container = styled.div`
                     return '0 1rem'
                 }
                 if (props.main) {
-                    return '40px 1rem 2rem 1rem'
+                    return '60px 1rem 2rem 1rem'
                 }
                 return '0 1rem 2rem 1rem'
             }};
@@ -82,6 +82,10 @@ export const Image = styled.div`
     display: block;
     width: ${props => props.size}px;
     height: ${props => props.size}px;
+`
+
+export const ProfileImage = styled(Image)`
+    border-radius: 50%;
 `
 
 export const MessageContent = styled.div`

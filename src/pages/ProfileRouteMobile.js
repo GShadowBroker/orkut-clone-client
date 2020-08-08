@@ -16,7 +16,7 @@ import ScrapsMain from '../components/profile/ScrapsMain'
 import Notification from '../components/utils/Notification'
 import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
 
-const ProfileRoute = ({ loggedUser }) => {
+const ProfileRouteMobile = ({ loggedUser }) => {
     const match = useRouteMatch()
     const { userId } = useParams()
     const { error, loading, data } = useQuery(FIND_USER, {
@@ -70,14 +70,7 @@ const ProfileRoute = ({ loggedUser }) => {
     const user = data && data.findUser
 
     return (
-        <Main>
-            <ProfileLeft
-                user={ user } 
-                loggedUser={ loggedUser } 
-                handleSendRequest={ handleSendRequest }
-                handleUnfriend={ handleUnfriend }
-            />
-            
+        <div>
             <Switch>
                 <Route path={`${match.path}/atualizacoes`}>
                     <h1>Updates</h1>
@@ -106,6 +99,7 @@ const ProfileRoute = ({ loggedUser }) => {
                     <ProfileRight
                         user={ user } 
                         loggedUser={ loggedUser }
+                        mobile={ true }
                     />
                 </Route>
 
@@ -114,16 +108,18 @@ const ProfileRoute = ({ loggedUser }) => {
                         user={ user } 
                         loggedUser={ loggedUser } 
                         handleSendRequest={ handleSendRequest }
-                        handleUnfriend={ handleUnfriend } 
+                        handleUnfriend={ handleUnfriend }
+                        mobile={ true }
                     />
                     <ProfileRight
                         user={ user } 
                         loggedUser={ loggedUser }
+                        mobile={ true }
                     />
                 </Route>
             </Switch>
-        </Main>
+        </div>
     )
 }
 
-export default ProfileRoute
+export default ProfileRouteMobile

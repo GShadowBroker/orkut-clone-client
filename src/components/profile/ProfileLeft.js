@@ -184,7 +184,7 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                             </Link>
                             <Link to={ `/perfil/${user.id}/videos` }>
                                 <li className={ location.pathname === `/perfil/${user.id}/videos` ? 'active' : '' }>
-                                    <span>videos</span><Badge></Badge>
+                                    <span>videos</span><Badge>{ user.Videos.length > 0 && user.Videos.length }</Badge>
                                 </li>
                             </Link>
                             <Link to={ `/perfil/${user.id}/depoimentos` }>

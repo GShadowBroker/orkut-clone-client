@@ -100,7 +100,8 @@ const PhotoDetail = ({ loggedUser, user, albuns }) => {
         })
     }
 
-    const photos = [...user.Photos].reverse()
+    const photos = [...user.Photos].reverse().filter(p => p.folderId === folderId)
+    console.log('photos', photos)
     const photo = user && photos.find(p => p.id === photoId)
     const comments = dataPhoto && dataPhoto.findPhotoComments.rows
     const commentCount = dataPhoto && dataPhoto.findPhotoComments.count
@@ -138,7 +139,7 @@ const PhotoDetail = ({ loggedUser, user, albuns }) => {
                     
                     <Breadcrumbs user={ user.name } photo={ photo.description } folder="album" />
 
-                    <p>Mostrando <strong>{ [...user.Photos].reverse().indexOf(photo) + 1 }</strong> de <strong>{ user.Photos.length }</strong> fotos</p>
+                    <p>Mostrando <strong>{ [...user.Photos].reverse().filter(p => p.folderId === folderId).indexOf(photo) + 1 }</strong> de <strong>{ photos.length }</strong> fotos</p>
                 </ProfileInfo>
                 <PhotoContainer>
                     { prevPhoto ? (
