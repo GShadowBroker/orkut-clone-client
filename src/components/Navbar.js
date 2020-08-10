@@ -88,9 +88,32 @@ const iconStyle = {
 }
 
 const MobileNavbar = ({ loggedUser }) => {
+    const handleDrawer = () => {
+        const drawer = document.querySelector('#menu-drawer')
+        const body = document.querySelector('body')
+        const content = document.querySelector('#main-content')
+        const wrapper = document.querySelector('#menu-content-wrapper')
+
+        if (drawer.style.width === '') {
+            content.style.transform = 'translate(280px)'
+
+            body.style.overflow = 'hidden'
+            wrapper.style.overflow = 'hidden'
+
+            drawer.style.width = '280px'
+        } else {
+            content.style.transform = ''
+
+            body.style.overflow = ''
+            wrapper.style.overflow = ''
+
+            drawer.style.width = ''
+        }
+    }
+
     return (
         <MobileNav>
-            <TiThMenu style={ iconStyle } />
+            <TiThMenu style={ iconStyle } onClick={ handleDrawer } />
             <Logo><strong>orkut</strong></Logo>
             <ProfileImage url={ loggedUser.profile_picture } size={ 40 } />
         </MobileNav>
@@ -100,10 +123,18 @@ const MobileNavbar = ({ loggedUser }) => {
 const FooterNavbar = ({ loggedUser }) => {
     return (
         <FooterNav>
-            <IoMdHome style={ iconStyle } />
-            <BsSearch style={ iconStyle } />
-            <BsPeopleCircle style={ iconStyle } />
-            <BsPeopleFill style={ iconStyle } />
+            <Link to="/">
+                <IoMdHome style={ iconStyle } />
+            </Link>
+            <Link to={`/buscar`}>
+                <BsSearch style={ iconStyle } />
+            </Link>
+            <Link to={`/perfil/${loggedUser.id}`}>
+                <BsPeopleCircle style={ iconStyle } />  
+            </Link>
+            <Link to={`/perfil/${loggedUser.id}/comunidades`}>
+                <BsPeopleFill style={ iconStyle } />
+            </Link>
         </FooterNav>
     )
 }

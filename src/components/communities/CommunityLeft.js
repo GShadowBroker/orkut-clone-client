@@ -20,7 +20,7 @@ const CommunityLeft = ({
     topics,
     topicCount,
     user,
-    setNewTopicFormOpen,
+    toggleTopicForm,
     handleJoinCommunity,
     handleLeaveCommunity,
     loadingJoin,
@@ -31,7 +31,7 @@ const CommunityLeft = ({
 
     const handleCreateTopic = () => {
         if (location.pathname === `/comunidades/${community.id}`) {
-            setNewTopicFormOpen(true)
+            toggleTopicForm()
             return
         }
         history.push(`/comunidades/${community.id}`)

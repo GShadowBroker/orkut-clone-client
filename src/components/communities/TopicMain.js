@@ -50,7 +50,7 @@ import errorHandler from '../../utils/errorHandler'
 import Spinner from 'react-loading'
 import TopicMainSkeleton from '../skeletons/TopicMainSkeleton'
 
-const TopicMain = ({ user, community, topics }) => {
+const TopicMain = ({ user, community, topics, mobile }) => {
     const { communityId, topicId } = useParams()
     const history = useHistory()
     const [errors, setErrors] = useState('')
@@ -191,24 +191,43 @@ const TopicMain = ({ user, community, topics }) => {
 
             <Card style={{marginBottom: '.6rem'}}>
                 <ProfileInfo>
-                    <InlineHeader style={{paddingBottom: '0'}}>
-                        <div style={{maxWidth: '80%'}}>
-                            <Link to={`/comunidades/${communityId}/forum/${topicId}`}>
-                                <Subtitle>{ topic.title }
-                                    <span style={{border: 'none', fontSize: '.8em', color: 'grey'}}>
-                                        { commentCount === 1 ? `- ${commentCount} resposta` : `- ${commentCount} respostas` }
-                                    </span>
-                                </Subtitle>
-                            </Link>
-                        </div>
-                        <div style={{
-                            alignSelf: 'start', 
-                            marginTop: '.6rem',
-                            textAlign: 'right'
-                        }}>
-                            <Button>Denunciar spam</Button>
-                        </div>
-                    </InlineHeader>
+                    { mobile
+                        ? <div>
+                                <div style={{maxWidth: '80%'}}>
+                                    <Link to={`/comunidades/${communityId}/forum/${topicId}`}>
+                                        <Subtitle>{ topic.title }
+                                            <span style={{border: 'none', fontSize: '.8em', color: 'grey'}}>
+                                                { commentCount === 1 ? `- ${commentCount} resposta` : `- ${commentCount} respostas` }
+                                            </span>
+                                        </Subtitle>
+                                    </Link>
+                                </div>
+                                <div style={{
+                                    alignSelf: 'start', 
+                                    marginBottom: '.5rem',
+                                    textAlign: 'right'
+                                }}>
+                                    <Button>Denunciar spam</Button>
+                                </div>
+                            </div>
+                        : <InlineHeader style={{paddingBottom: '0'}}>
+                            <div style={{maxWidth: '80%'}}>
+                                <Link to={`/comunidades/${communityId}/forum/${topicId}`}>
+                                    <Subtitle>{ topic.title }
+                                        <span style={{border: 'none', fontSize: '.8em', color: 'grey'}}>
+                                            { commentCount === 1 ? `- ${commentCount} resposta` : `- ${commentCount} respostas` }
+                                        </span>
+                                    </Subtitle>
+                                </Link>
+                            </div>
+                            <div style={{
+                                alignSelf: 'start', 
+                                marginTop: '.6rem',
+                                textAlign: 'right'
+                            }}>
+                                <Button>Denunciar spam</Button>
+                            </div>
+                        </InlineHeader>}
                     <Breadcrumbs community={ community.title } topic={ topic.title } />
                 </ProfileInfo>
 

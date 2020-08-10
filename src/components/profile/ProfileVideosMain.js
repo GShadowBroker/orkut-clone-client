@@ -28,10 +28,13 @@ import { SEND_VIDEO, FIND_USER } from '../../services/queries'
 import styled from 'styled-components'
 
 const VideoGrid = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: .5rem;
+    display: flex;
+    flex-wrap: wrap;
 
+    div {
+        flex: 1;
+        padding: .5rem;
+    }
 `
 
 const ProfileVideosMain = ({ loggedUser, user }) => {
@@ -148,8 +151,8 @@ const ProfileVideosMain = ({ loggedUser, user }) => {
                         {
                             user.Videos.length > 0
                             ? user.Videos.map(v =>
-                                <FlexBoxCenter key={ v.id } style={{width: '100%', minHeight: 250}}>
-                                    <iframe title={ v.description } height="200" src={ v.url.replace("watch?v=", "embed/") } frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                <FlexBoxCenter key={ v.id } style={{ minHeight: 250}}>
+                                    <iframe title={ v.description } height="180" width="250" src={ v.url.replace("watch?v=", "embed/") } frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                 </FlexBoxCenter>
                             )
                             : null

@@ -25,16 +25,19 @@ import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 const AlbumGrid = styled.div`
-    padding: 0 .8rem;
+    /* padding: 0 .8rem;
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr; */
+    display: flex;
+    flex-wrap: wrap;
 `
 
 const AlbumContainer = styled.div`
     position: relative;
     min-height: 250px;
-    width: 100%;
+    flex-grow: 1;
+    padding: .8rem;
 
     display: flex;
     flex-direction: column;
@@ -193,15 +196,14 @@ const FoldersMain = ({
                     ? (<AlbumGrid>
                         { albuns.map(a => {
                             if (a.visible_to_all || (!a.visible_to_all && meOrFriend)) return (
-                                <Link key={a.id} to={`${match.url}/${a.id}/fotos`}>
-                                    <AlbumContainer>
-                                        <AlbumItem url={ (a.Photos[0] && a.Photos[0].url) } />
-                                        { a.title } ({ a.Photos.length })
-
-                                        <AlbumItemBackground deg={1} zindex={1} />
-                                        <AlbumItemBackground deg={-2} zindex={2} />
+                                
+                                    <AlbumContainer key={a.id}>
+                                        <Link to={`${match.url}/${a.id}/fotos`} style={{textAlign: 'center'}}>
+                                            <AlbumItem url={ (a.Photos[0] && a.Photos[0].url) } />
+                                            <span>{ a.title } ({ a.Photos.length })</span>
+                                        </Link>
                                     </AlbumContainer>
-                                </Link>
+                                
                             )
                             return null
                         }

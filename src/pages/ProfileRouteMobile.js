@@ -11,7 +11,7 @@ import ProfileRight from '../components/profile/ProfileRight'
 import CommunitiesMain from '../components/profile/CommunitiesMain'
 import ProfilePhotos from './ProfilePhotos'
 import ProfileVideosMain from '../components/profile/ProfileVideosMain'
-import ScrapsMain from '../components/profile/ScrapsMain'
+import ScrapsMainMobile from '../components/profile/ScrapsMainMobile'
 
 import Notification from '../components/utils/Notification'
 import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
@@ -77,7 +77,9 @@ const ProfileRouteMobile = ({ loggedUser }) => {
                 </Route>
 
                 <Route path={`${match.path}/scraps`}>
-                    <ScrapsMain loggedUser={ loggedUser } />
+                    <ScrapsMainMobile
+                        loggedUser={ loggedUser }
+                    />
                 </Route>
 
                 <Route path={`${match.path}/albuns`}>

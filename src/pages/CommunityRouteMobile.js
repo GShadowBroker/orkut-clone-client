@@ -106,27 +106,14 @@ const CommunityRoute = ({ loggedUser }) => {
     }
 
     return (
-        <Main>
-            <CommunityLeft
-                user={ loggedUser }
-                community={ community }
-                members={ members }
-                memberCount={ memberCount }
-                topics={ topics }
-                topicCount={ topicCount }
-                toggleTopicForm={ toggleTopicForm }
-                handleJoinCommunity={ handleJoinCommunity }
-                loadingJoin={ loadingJoin }
-                handleLeaveCommunity={ handleLeaveCommunity }
-                loadingLeave={ loadingLeave }
-            />
-
+        <div>
             <Switch>
                 <Route exact path={`${match.path}/forum/:topicId`}>
                     <TopicMain
                         user={ loggedUser } 
                         community={ community }
                         topics={ topics }
+                        mobile={ true }
                     />
                 </Route>
                     
@@ -153,23 +140,25 @@ const CommunityRoute = ({ loggedUser }) => {
                         community={ community }
                         topics={ topics }
                         topicCount={ topicCount }
-                        newTopicFormOpen={ newTopicFormOpen }
-                        setNewTopicFormOpen={ setNewTopicFormOpen }
+                        newTopicFormOpen={newTopicFormOpen}
+                        setNewTopicFormOpen={setNewTopicFormOpen}
                         toggleTopicForm={ toggleTopicForm }
                         handleJoinCommunity={ handleJoinCommunity }
                         loadingJoin={ loadingJoin }
                         handleLeaveCommunity={ handleLeaveCommunity }
                         loadingLeave={ loadingLeave }
+                        mobile={ true }
                     />
                     <CommunityRight
                         user={ loggedUser }
                         community={ community }
                         members={ members }
                         memberCount={ memberCount }
+                        mobile={ true }
                     />
                 </Route>
             </Switch>
-        </Main>
+        </div>
     )
 }
 

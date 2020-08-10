@@ -15,24 +15,31 @@ const Modal = ({
     setModalOpen, // function that opens/closes modal
     children,
     minWidth,
-    minHeight
+    minHeight,
+    maxWidth
 }) => {
+
+    const handleClose = () => {
+        setModalOpen(false)
+        document.querySelector('body').style.overflow = ''
+    }
 
     return (
         <ModalOverlay open={ isModalOpen } >
             <ModalContainer>
                 <Card style={{maxHeight: '98vh'}}>
                     <ProfileInfo style={{ 
-                        padding: '0 1.5rem', 
-                        minWidth,
-                        minHeight,
+                        padding: '0 1.5rem',
                         maxHeight: '98vh',
                         maxWidth: '80vw',
-                        overflowY: 'auto' 
+                        overflowY: 'auto',
+                        minWidth,
+                        minHeight,
+                        maxWidth,
                     }}>
                         <InlineHeader>
                             <Subtitle>{ title }</Subtitle>
-                            <CloseButton size={ 1.5 } onClick={ () => setModalOpen(false) }>
+                            <CloseButton size={ 1.5 } onClick={ handleClose }>
                                 <span>&times;</span>
                             </CloseButton>
                         </InlineHeader>

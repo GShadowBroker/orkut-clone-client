@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link, useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_USER_PHOTOS, REMOVE_ALBUM, GET_USER_ALBUNS, UPLOAD_NEW_PHOTOS } from '../../services/queries'
+import { GET_USER_PHOTOS, REMOVE_ALBUM, GET_USER_ALBUNS, UPLOAD_NEW_PHOTOS, FIND_USER } from '../../services/queries'
 
 import { 
     Card, 
@@ -60,11 +60,9 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
 
     // Image Upload
     const [preview, setPreview] = useState([])
-    const [setSelectedFile] = useState('')
 
     const handleFileUpload = e => {
         const file = e.target.files[0]
-        setSelectedFile(file)
         previewFile(file)
     }
 
@@ -96,6 +94,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
             setPreview([])
         },
         refetchQueries: [
+            { query: FIND_USER, variables: { userId } },
             { query: GET_USER_ALBUNS, variables: { userId } },
             { query: GET_USER_PHOTOS, variables: { userId, folderId, limit, offset } }
         ]
@@ -227,9 +226,12 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
                         <PhotoList>
                             {
                                 photos.map(photo => (
-                                    <Link key={ photo.id } to={`${match.url}/${photo.id}`} >
-                                        <Image url={ photo.url } size="140" />
-                                    </Link>
+                                    <div key={ photo.id }>
+                                        <Link to={`${match.url}/${photo.id}`} >
+                                            <Image url={ photo.url } size="140" />
+                                        </Link>
+                                    </div>
+                                    
                                 ))
                             }
                             { photos.length === 0 && <span style={{color: "grey"}}>Nenhuma foto</span> }

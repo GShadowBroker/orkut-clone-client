@@ -160,7 +160,7 @@ const CommunityItem = ({ community }) => {
                 { community.Topics.length > 0
                     ? (<MessageBody>
                         <p style={{ marginBottom: '.3rem' }}>Última postagem: { new Date(community.Topics[0].createdAt).toLocaleDateString('pt', timeOptions) } ({ moment(community.Topics[0].createdAt).fromNow() })</p>
-                        <Link to={`/comunidades/${community.id}/forum/${community.Topics[0].id}`}>{ community.Topics[0].title }</Link>
+                        <Link to={`/comunidades/${community.id}/forum/${community.Topics[0].id}`}>{ trunc(community.Topics[0].title, 30) }</Link>
                     </MessageBody>)
                     : (<MessageBody>
                         <p style={{ color: '#afafaf' }}>Nenhuma postagem</p>

@@ -36,4 +36,8 @@ export const Foot = styled.footer`
             text-align: center;
         }
     }
+
+    @media (max-width: 776px) {
+        margin-bottom: 60px;
+    }
 `

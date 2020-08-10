@@ -104,7 +104,6 @@ const ScrapsMain = ({ loggedUser, mobile }) => {
     const selectAll = () => {
         let newSelected = [...selected]
         scraps.forEach(s => newSelected.push(s.id))
-        console.log('new selected', newSelected)
 
         const checkboxes = document.querySelectorAll('.comment-checkbox')
         checkboxes.forEach(c => c.checked = true)
@@ -218,11 +217,11 @@ const ScrapsMain = ({ loggedUser, mobile }) => {
                 <ProfileInfo>
                     <h2>{ user.id === loggedUser.id ? 'Minha página de scraps' : `Página de scraps de ${trunc(user.name, 30)}`} ({ user.Scraps.length })</h2>
                     <Breadcrumbs user={ user.name } />
-                    <CommentSectionHeader>
+                    <CommentSectionHeader style={{fontSize: '.9em'}}>
                         {
                             user.id === loggedUser.id
                             ? <Button onClick={ removeSelected } disabled={ removeLoading }>
-                                { removeLoading ? 'excluindo scraps ...' : 'excluir scraps selecionados' }
+                                { removeLoading ? 'excluindo scraps ...' : 'excluir selecionados' }
                             </Button>
                             : <span></span>
                         }
@@ -231,35 +230,35 @@ const ScrapsMain = ({ loggedUser, mobile }) => {
                             <option value="20">Ver 20 scraps</option>
                         </Select>
                     </CommentSectionHeader>
-                    <CommentSectionHeader>
+                    {
+                        user.id === loggedUser.id
+                        ? <div style={{margin: '.5rem 0'}}>
+                                <span>Selecionar: <FakeLink onClick={ selectAll }>Todos</FakeLink>, <FakeLink onClick={ resetSelect } >Nenhum</FakeLink></span>
+                            </div>
+                        : null
+                    }
+                    <PaginationBlock style={{margin: '.5rem 0', textAlign: 'right'}}>
                         {
-                            user.id === loggedUser.id
-                            ? <span>Selecionar: <FakeLink onClick={ selectAll }>Todos</FakeLink>, <FakeLink onClick={ resetSelect } >Nenhum</FakeLink></span>
-                            : <span></span>
+                            hasPrevPage
+                            ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
+                            : <span>primeira</span>
                         }
-                        <PaginationBlock>
-                            {
-                                hasPrevPage
-                                ? <span onClick={ firstPage }><FakeLink>primeira</FakeLink></span>
-                                : <span>primeira</span>
-                            }
-                            {
-                                hasPrevPage
-                                ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
-                                : <span>&lt; anterior</span>
-                            }
-                            {
-                                hasNextPage
-                                ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
-                                : <span>próxima &gt;</span>
-                            }
-                            {
-                                hasNextPage
-                                ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
-                                : <span>última</span>
-                            }
-                        </PaginationBlock>
-                    </CommentSectionHeader>
+                        {
+                            hasPrevPage
+                            ? <span onClick={ prevPage }><FakeLink>&lt; anterior</FakeLink></span>
+                            : <span>&lt; anterior</span>
+                        }
+                        {
+                            hasNextPage
+                            ? <span onClick={ nextPage }><FakeLink>próxima &gt;</FakeLink></span>
+                            : <span>próxima &gt;</span>
+                        }
+                        {
+                            hasNextPage
+                            ? <span onClick={ lastPage }><FakeLink>última</FakeLink></span>
+                            : <span>última</span>
+                        }
+                    </PaginationBlock>
 
                     <CommentSection>
                         {
@@ -276,23 +275,16 @@ const ScrapsMain = ({ loggedUser, mobile }) => {
                                     <Link to={`/perfil/${scrap.Sender.id}`}>
                                         <Image
                                             url={ scrap.Sender.profile_picture } 
-                                            size="70"
+                                            size="50"
                                         />
                                     </Link>
                                     <CommentBody>
                                         <CommentSectionHeader style={{ margin: 0 }}>
                                             <Link to={`/perfil/${scrap.Sender.id}`}>{ trunc(scrap.Sender.name, 25) }:</Link>
-                                            <div>
-                                                <Time size="1">
-                                                    { new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } (
-                                                        { moment(scrap.createdAt).fromNow() })
-                                                </Time>
-                                                {
-                                                    user.id === loggedUser.id || scrap.Sender.id === loggedUser.id
-                                                        ? <Button onClick={ () => deleteScrap(scrap) }>apagar</Button>
-                                                        : null
-                                                }
-                                            </div>
+                                            <Time size=".9">
+                                                { new Date(scrap.createdAt).toLocaleString('pt-BR', timeOptions) } (
+                                                { moment(scrap.createdAt).fromNow() })
+                                            </Time>
                                         </CommentSectionHeader>
                                         <CommentContent>
                                             <div dangerouslySetInnerHTML={{ __html: scrap.body }} />

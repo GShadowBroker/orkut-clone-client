@@ -125,7 +125,7 @@ export const NavInputContainer = styled.div`
 `
 
 export const MobileNav = styled.nav`
-    z-index: 91;
+    z-index: 5;
     position: fixed;
     
     display: none;
@@ -147,7 +147,7 @@ export const MobileNav = styled.nav`
 `
 
 export const FooterNav = styled.div`
-    z-index: 91;
+    z-index: 5;
     position: fixed;
     bottom: 0;
     
@@ -157,6 +157,10 @@ export const FooterNav = styled.div`
     padding: 0 1em;
     background: #ffff;
     color: inherit;
+
+    a {
+        color: inherit;
+    }
 
     box-shadow: 2px 2px 6px #bebebe;
 

@@ -25,6 +25,17 @@ const App = () => {
     
     useEffect(() => {
         window.scrollTo(0, 0);
+        const drawer = document.querySelector('#menu-drawer')
+        const body = document.querySelector('body')
+        const content = document.querySelector('#main-content')
+        const wrapper = document.querySelector('#menu-content-wrapper')
+
+        if (drawer && content && wrapper) {
+            content.style.transform = ''
+            body.style.overflow = ''
+            wrapper.style.overflow = ''
+            drawer.style.width = ''
+        }
     }, [location.pathname]);
 
     const client = useApolloClient()
@@ -64,7 +75,7 @@ const App = () => {
     )
 
     return (
-        <div>
+        <>
             <Switch>
                 <Route exact path="/login">
                     { !(token && data)
@@ -90,7 +101,7 @@ const App = () => {
                     }
                 </Route>
             </Switch>
-        </div>
+        </>
     )
 }
 

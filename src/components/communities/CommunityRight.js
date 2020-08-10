@@ -14,7 +14,50 @@ import {
 import { Link } from 'react-router-dom'
 import trunc from '../../utils/truncate'
 
-const CommunityRight = ({ community, user, members, memberCount }) => {
+const CommunityRight = ({ community, user, members, memberCount, mobile }) => {
+
+    if (mobile) return (
+        <div style={{ marginTop: '.6em' }}>
+            <Card style={{ marginBottom: '.6em' }}>
+                <ProfileFriends>
+                    <div style={{
+                        paddingBottom: '1rem', 
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Subtitle2>Membros ({ memberCount })</Subtitle2>
+                        <Link to={`/comunidades/${community.id}/membros`}>ver membros</Link>
+                    </div> 
+                    <FriendsList style={{paddingBottom: '1rem'}}>
+                        {
+                            members.map(m => (
+                                <Link to={ `/perfil/${m.id}` } key={ m.id }>
+                                    <div>
+                                        <Image size="70" url={ m.profile_picture } />
+                                        <span>{ trunc(m.name, 25) }</span>
+                                    </div>
+                                </Link>
+                            ))
+                        }
+                    </FriendsList>
+                </ProfileFriends>
+            </Card>
+
+            <Card>
+                <ProfileFriends>
+                    <div style={{paddingBottom: '1rem'}}>
+                        <Subtitle2>Comunidades relacionadas </Subtitle2>
+                    </div>  
+                    <FriendsList style={{paddingBottom: '1rem'}}>
+
+                        {/* MOSTRAR COMUNIDADES RELACIONADAS */}
+
+                    </FriendsList>
+                </ProfileFriends>
+            </Card>
+        </div>
+    )
 
     return (
         <RightColumn>

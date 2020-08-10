@@ -13,7 +13,11 @@ import {
     FormInputGroup,
     FormInputGroupCheck,
     Input,
-    Label
+    Label,
+    ButtonGroup,
+    SpinnerButtonContainer,
+    FlexBoxCenter,
+    ProfileImage
 } from '../../styles/layout'
 import {
     MainColumn,
@@ -32,9 +36,10 @@ import 'moment/locale/pt-br'
 import { useMutation } from '@apollo/client'
 import { CREATE_TOPIC, FETCH_TOPICS } from '../../services/queries'
 
-import Modal from '../utils/Modal'
+import RawModal from '../utils/RawModal'
 import errorHandler from '../../utils/errorHandler'
 import Notification from '../utils/Notification'
+import Spinner from 'react-loading'
 
 import Editor from '../RichEditor'
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -48,10 +53,12 @@ const CommunityMain = ({
     topicCount,
     newTopicFormOpen,
     setNewTopicFormOpen,
+    toggleTopicForm,
     handleJoinCommunity,
     handleLeaveCommunity,
     loadingJoin,
-    loadingLeave
+    loadingLeave,
+    mobile
 }) => {
     const [viewFullProfile, setViewFullProfile] = useState(true)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -90,12 +97,12 @@ const CommunityMain = ({
     }
     const handleTopicCancel = e => {
         e.preventDefault()
-        setNewTopicFormOpen(false)
+        toggleTopicForm()
     }
 
     const handleSubmitCompleted = () => {
         setLoadingSubmit(false)
-        setNewTopicFormOpen(false)
+        toggleTopicForm()
     }
 
     const validateEditor = () => {
@@ -114,92 +121,125 @@ const CommunityMain = ({
     }
 
     const isMember = user.Subscriptions.find(c => c.id === community.id) ? true : false
-
     return (
         <MainColumn>
-
-            <Modal
+            <RawModal
                 title="Criar um novo tópico"
-                action={ handleTopicSubmit }
-                actionLabel="criar tópico"
-                cancel={ handleTopicCancel }
-                cancelLabel="cancelar"
                 isModalOpen={ newTopicFormOpen }
                 setModalOpen={ setNewTopicFormOpen }
-                loading={ loadingSubmit }
-                disabled={ loadingSubmit || !agree || !title || !body ? true : false }
+                minWidth={ mobile ? "auto" : 400 }
             >
-                <div style={{ padding: '.5rem 0' }}>
-                    <Label><strong>Comunidade: </strong></Label>
-                    <Link to={`/comunidades/${community.id}`}>{ community.title }</Link>
-                </div>
-                <div style={{ padding: '.5rem 0' }}>
-                    <Label><strong>Autor: </strong></Label>
-                    <Link to={`/perfil/${user.id}`}>{ user.name }</Link>
-                </div>
-                <FormInputGroup>
-                    <Label htmlFor="title-newtopic"><strong>Assunto:</strong></Label>
-                    <Input 
-                        id="title-newtopic"
-                        name="title"
-                        value={title} 
-                        onChange={({target}) => setTitle(target.value)}
-                        maxLength="100"
-                        required
-                    />
-                    <MessageDetails>{ title.length }/100</MessageDetails>
-                </FormInputGroup>
-                <FormInputGroup>
-                    <Label htmlFor="body-newtopic"><strong>Mensagem:</strong>
-                        { editorError ? <span style={{color:'red'}}>{` (${editorError})`}</span> : null }
-                    </Label>
-                    <Editor
-                        id="body-newtopic"
-                        name="body"
-                        message={ body }
-                        setEditorState={ setEditorState }
-                        onBlur={ validateEditor }
-                        user={ user }
-                    />
-                </FormInputGroup>
-                <FormInputGroupCheck>
-                    <Input 
-                        id="agreetoterms" 
-                        type="checkbox" 
-                        checked={ agree } 
-                        onChange={ () => setAgree(!agree) }
-                    />
-                    <Label htmlFor="agreetoterms">Declaro que minha postagem segue os <FakeLink>Termos de Uso e Conduta</FakeLink> do site.</Label>
-                </FormInputGroupCheck>
-            </Modal>
+                <form onSubmit={ handleTopicSubmit }>
+                    <div style={{ padding: '.5rem 0' }}>
+                        <Label><strong>Comunidade: </strong></Label>
+                        <Link to={`/comunidades/${community.id}`}>{ community.title }</Link>
+                    </div>
+                    <div style={{ padding: '.5rem 0' }}>
+                        <Label><strong>Autor: </strong></Label>
+                        <Link to={`/perfil/${user.id}`}>{ user.name }</Link>
+                    </div>
+                    <FormInputGroup>
+                        <Label htmlFor="title-newtopic"><strong>Assunto:</strong></Label>
+                        <Input 
+                            id="title-newtopic"
+                            name="title"
+                            value={title} 
+                            onChange={({target}) => setTitle(target.value)}
+                            maxLength="100"
+                            required
+                        />
+                        <MessageDetails>{ title.length }/100</MessageDetails>
+                    </FormInputGroup>
+                    <FormInputGroup>
+                        <Label htmlFor="body-newtopic"><strong>Mensagem:</strong>
+                            { editorError ? <span style={{color:'red'}}>{` (${editorError})`}</span> : null }
+                        </Label>
+                        <Editor
+                            id="body-newtopic"
+                            name="body"
+                            message={ body }
+                            setEditorState={ setEditorState }
+                            onBlur={ validateEditor }
+                            user={ user }
+                        />
+                    </FormInputGroup>
+                    <FormInputGroupCheck>
+                        <Input 
+                            id="agreetoterms" 
+                            type="checkbox" 
+                            checked={ agree } 
+                            onChange={ () => setAgree(!agree) }
+                        />
+                        <Label htmlFor="agreetoterms">Declaro que minha postagem segue os <FakeLink>Termos de Uso e Conduta</FakeLink> do site.</Label>
+                    </FormInputGroupCheck>
+                    <ButtonGroup>
+                        <Button type="submit" disabled={ loadingSubmit || !agree || !title || !body ? true : false  }>
+                            <strong>
+                                {
+                                    loadingSubmit
+                                    ? (<SpinnerButtonContainer>
+                                        <Spinner type="spokes" color="#34495e" height='15px' width='15px' />
+                                    </SpinnerButtonContainer>)
+                                    : "criar tópico"
+                                }
+                            </strong>
+                        </Button>
+                        <Button onClick={ handleTopicCancel } disabled={ loadingSubmit }>{ "cancelar" }</Button>
+                    </ButtonGroup>
+                </form>
+            </RawModal>
 
             { errors && <Notification title="Erro" message={ errors } /> }
 
             <Card>
-                <ProfileInfo>
-                    <InlineHeader style={{paddingBottom: '0'}}>
-                        <div style={{maxWidth: '40%'}}>
-                            <Subtitle>{ community.title }</Subtitle>
-                        </div>
-                        <div style={{
-                            alignSelf: 'start', 
-                            marginTop: '.6rem',
-                            textAlign: 'right'
-                        }}>
-                            {
-                                isMember
-                                ? (<Button onClick={ handleLeaveCommunity }>
-                                        <TiMinusOutline className="icenter" style={{ color: '#bebebe' }} />
-                                        { loadingLeave ? 'Saindo...' : ' Deixar comunidade' }
-                                    </Button>)
-                                : (<Button onClick={ handleJoinCommunity }>
-                                        <TiPlusOutline className="icenter" style={{ color: '#bebebe' }} />
-                                        { loadingJoin ? 'Entrando...' : ' Participar da comunidade'}
-                                    </Button>)
-                            }
-                            
-                        </div>
-                    </InlineHeader>
+                <ProfileInfo style={{marginTop: '.6rem'}}>
+                    { mobile
+                        ?   <div>
+                                <FlexBoxCenter style={{flexDirection: 'column'}}>
+                                    <ProfileImage url={ community.picture } size={ 200 } />
+                                    <Subtitle>{ community.title }</Subtitle>
+                                </FlexBoxCenter>
+                                <div style={{
+                                    alignSelf: 'start',
+                                    textAlign: 'center'
+                                }}>
+                                    {
+                                        isMember
+                                        ? (<Button onClick={ handleLeaveCommunity }>
+                                                <TiMinusOutline className="icenter" style={{ color: '#bebebe' }} />
+                                                { loadingLeave ? 'Saindo...' : ' Deixar comunidade' }
+                                            </Button>)
+                                        : (<Button onClick={ handleJoinCommunity }>
+                                                <TiPlusOutline className="icenter" style={{ color: '#bebebe' }} />
+                                                { loadingJoin ? 'Entrando...' : ' Participar da comunidade'}
+                                            </Button>)
+                                    }
+                                </div>
+                            </div>
+                        : <InlineHeader style={{paddingBottom: '0'}}>
+                                <div style={{maxWidth: '40%'}}>
+                                    <Subtitle>{ community.title }</Subtitle>
+                                </div>
+                                <div style={{
+                                    alignSelf: 'start', 
+                                    marginTop: '.6rem',
+                                    textAlign: 'right'
+                                }}>
+                                    {
+                                        isMember
+                                        ? (<Button onClick={ handleLeaveCommunity }>
+                                                <TiMinusOutline className="icenter" style={{ color: '#bebebe' }} />
+                                                { loadingLeave ? 'Saindo...' : ' Deixar comunidade' }
+                                            </Button>)
+                                        : (<Button onClick={ handleJoinCommunity }>
+                                                <TiPlusOutline className="icenter" style={{ color: '#bebebe' }} />
+                                                { loadingJoin ? 'Entrando...' : ' Participar da comunidade'}
+                                            </Button>)
+                                    }
+                                </div>
+                            </InlineHeader>
+                    }
+
                     <ProfileSection border style={{ paddingBottom: '.5rem' }}>
                         {
                             viewFullProfile ? (
@@ -253,7 +293,7 @@ const CommunityMain = ({
                             marginTop: '.6rem',
                             textAlign: 'right'
                         }}>
-                            { isMember && <Button onClick={ () => setNewTopicFormOpen(true) }>Criar tópico</Button>}
+                            { isMember && <Button onClick={ toggleTopicForm }>Criar tópico</Button>}
                         </div>
                     </InlineHeader>
 

@@ -20,6 +20,18 @@ import { Link } from 'react-router-dom'
 import Testimonials from './Testimonials'
 import styled from 'styled-components'
 
+const FloatRightContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+`
+
 const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobile }) => {
     const [viewFullProfile, setViewFullProfile] = useState(false)
 
@@ -32,18 +44,24 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobi
     return (
         <MainColumn>
             <Card>
-                { mobile
-                    && <ProfileInfo style={{marginTop: '.6rem'}}>
-                            <FlexBoxCenter style={{flexDirection: 'column'}}>
+                <ProfileInfo>
+                    { mobile
+                        ? <FlexBoxCenter style={{flexDirection: 'column', marginTop: '.6rem', position: 'relative'}}>
                                 <ProfileImage url={ user.profile_picture } size={ 200 } />
                                 <Subtitle>{ user.name }</Subtitle>
+                                {
+                                    user.Friends.find(u => u.id === loggedUser.id)
+                                    ? <Button onClick={ () => handleUnfriend(user) }><TiMinusOutline className="icenter" style={{ color: '#bebebe' }} /> desfazer amizade</Button>
+                                    : (user.Requesters.find(u => u.id === loggedUser.id))
+                                        ? <Button disabled>solicitação enviada</Button>
+                                        : <Button onClick={ () => handleSendRequest(user) }><TiPlusOutline className="icenter" style={{ color: '#bebebe' }} /> adicionar como amigo</Button>
+                                }
+                                <FloatRightContainer>
+                                    <FakeLink>ignorar</FakeLink>
+                                    <FakeLink>reportar</FakeLink>
+                                </FloatRightContainer>
                             </FlexBoxCenter>
-                        </ProfileInfo>
-                }
-
-                <ProfileInfo>
-                    { !mobile
-                        && <InlineHeader>
+                        : <InlineHeader>
                                 <div style={{maxWidth: '40%'}}>
                                     <Subtitle>{ user.name }</Subtitle>
                                 </div>
@@ -64,6 +82,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobi
                                 </div>
                             </InlineHeader>
                     }
+
                     <ProfileSection border>
                         <div>
                             { user.city

@@ -51,9 +51,10 @@ export const MainColumn = styled.div`
     flex-direction: column;
     flex: 1;
 
-    min-width: ${props => props.stretched ? 0.72 * bigger : 0.52 * bigger}px;
+    /* min-width: ${props => props.stretched ? 0.72 * bigger : 0.52 * bigger}px; */
+    max-width: 100vw;
 
-    @media (max-width: 1015px) {
+    /* @media (max-width: 1015px) {
         & {
             min-width: ${props => props.stretched ? 0.72 * big : 0.52 * big}px;
         }
@@ -72,7 +73,7 @@ export const MainColumn = styled.div`
         & {
             min-width: ${props => props.stretched ? 0.72 * tiny : 0.52 * tiny}px;
         }
-    }
+    } */
 `
 
 export const RightColumn = styled.div`
@@ -306,6 +307,7 @@ export const LastImages = styled.div`
 // Scraps
 export const CommentSectionHeader = styled.div`
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     margin: .5rem 0;
@@ -331,6 +333,13 @@ export const Comment = styled.div`
     margin: .2rem 0;
     background: #E2E8FD;
 
+    @media (max-width: 776px) {
+        & {
+            font-size: .9em;
+            padding: .8rem .2rem;
+        }
+    }
+
 `
 
 export const CommentBody = styled.div`
@@ -351,6 +360,11 @@ export const CommentContent = styled.div`
 
 export const CommentCheckbox = styled.div`
     padding-right: .5rem;
+    @media (max-width: 776px) {
+        & {
+            padding-right: .2rem;
+        }
+    }
 `
 
 export const PaginationBlock = styled.div`
@@ -362,6 +376,12 @@ export const PaginationBlock = styled.div`
     }
     span:not(:last-child) {
         border-right: ${props => props.noborder ? "none" : ".5px solid #bebebe"};
+    }
+
+    @media (max-width: 776px) {
+        & {
+            font-size: .8em;
+        }
     }
 `
 
@@ -375,9 +395,22 @@ export const PhotoList = styled.div`
     width: 100%;
     overflow-x: auto;
     padding: 1rem 0;
-    display: grid;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: .6rem 0;
+        flex: 1;
+    }
+
+    /* display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: .6rem;
+    grid-gap: .6rem; */
 `
 
 export const PhotoContainer = styled.div`

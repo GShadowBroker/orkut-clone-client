@@ -14,6 +14,8 @@ export const Container = styled.div`
     max-width: 1000px;
     margin: auto;
 
+    transition: transform .5s;
+
     /* navbar */
     display: ${ props => props.nav ? 'flex' : 'block' };
     padding: ${ props => props.nav ? '0 1rem' : '0 1rem 2rem 1rem'};
@@ -56,6 +58,20 @@ export const Container = styled.div`
             }};
         }
     }
+`
+
+export const DrawerMenu = styled.aside`
+    height: 100%;
+    width: 0px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ffff;
+    overflow-x: hidden;
+    padding: 60px 0;
+    transition: 0.5s;
+    box-shadow: 2px 2px 6px #bebebe;
 `
 
 export const Card = styled.div`
@@ -119,6 +135,7 @@ export const MessageProfile = styled.div`
 `
 
 export const MessageActions = styled.div`
+    text-align: right;
     font-size: .9em;
     padding: ${props => props.below ? '1rem 0 0 0' : ''};
     button {
@@ -368,6 +385,7 @@ export const RadioGroup = styled.div`
 `
 
 export const Input = styled.input`
+    max-width: 100%;
     border: ${props => {
         if (props.valid) return '1px solid #27ae60'
         if (props.invalid) return '1px solid #e74c3c'
@@ -419,6 +437,7 @@ export const Select = styled.select`
     border: 1px solid #bebebe;
     border-radius: .2rem;
     padding: .3em .6em;
+    max-width: 100%;
     font-family: inherit;
 `
 

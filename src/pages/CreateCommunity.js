@@ -48,7 +48,7 @@ const RadioGroup = styled.div`
     }
 `
 const TextAreaDescription = styled.textarea`
-    width: 60%;
+    width: ${props => props.mobile ? '100%' : '60%'};
     resize: vertical;
     height: 200px;
     max-height: 400px;
@@ -56,7 +56,7 @@ const TextAreaDescription = styled.textarea`
     border: 1px solid #bebebe;
 `
 
-const CreateCommunity = ({ loggedUser }) => {
+const CreateCommunity = ({ loggedUser, mobile }) => {
     const history = useHistory()
     const [errors, setErrors] = useState('')
 
@@ -307,6 +307,7 @@ const CreateCommunity = ({ loggedUser }) => {
                                 type="text" 
                                 ref={ register({ maxLength: 2048 })}
                                 invalid={ formErrors.description }
+                                mobile={ mobile }
                             />
                             <p>seu texto contém { (watch("description") && watch("description").length) || 0 } caractéres</p>
                         </InputControl>
