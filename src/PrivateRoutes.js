@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './styles/App.css'
-import { Wrapper, Container, DrawerMenu } from './styles/layout'
+import { Wrapper, Container, DrawerMenu, MainContainer } from './styles/layout'
 
 import { Switch, Route } from 'react-router-dom'
 
@@ -14,17 +14,35 @@ import ProfileRouteMobile from './pages/ProfileRouteMobile'
 import CommunityRoute from  './pages/CommunityRoute'
 import CommunityRouteMobile from './pages/CommunityRouteMobile'
 import CreateCommunity from './pages/CreateCommunity'
+import Config from './components/Config'
 
 import Error404 from './pages/404Error'
 
 import ResponsiveLayout from './components/ResponsiveLayout'
 
 const PrivateRoutes = ({ data, logout }) => {
+    const [configOpen, setConfigOpen] = useState(false)
+    const toggleConfig = () => {
+        const body = document.querySelector('body')
+        if (configOpen) {
+            body.style.overflow = ''
+            setConfigOpen(false)
+        } else {
+            body.style.overflow = 'hidden'
+            setConfigOpen(true)
+        }
+    }
     return (
         <Wrapper>
-            <Navbar loggedUser={ data.findUser } logout={ logout } />
-            <div id="menu-content-wrapper">
-                <Drawer loggedUser={ data.findUser } logout={ logout } />
+            <Navbar loggedUser={ data.findUser } logout={ logout } toggleConfig={ toggleConfig } />
+            <MainContainer id="menu-content-wrapper">
+                <Drawer loggedUser={ data.findUser } logout={ logout } toggleConfig={ toggleConfig } />
+                <Config
+                    loggedUser={ data.findUser } 
+                    configOpen={ configOpen } 
+                    setConfigOpen={ setConfigOpen }
+                    toggleConfig={ toggleConfig }
+                />
                 <Container id="main-content" main>
                     <Switch>
                         {/* {
@@ -111,13 +129,13 @@ const PrivateRoutes = ({ data, logout }) => {
                                     <Error404 />
                                 ) }
                                 renderMobile={ () => (
-                                    <h1>404 Error Mobile</h1>
+                                    <h1>404 - Página não encontrada</h1>
                                 ) }
                             />
                         </Route>
                     </Switch>
                 </Container>
-            </div>
+            </MainContainer>
             <Footer />
         </Wrapper>
     )

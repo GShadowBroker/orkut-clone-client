@@ -1,20 +1,20 @@
 import React from 'react'
-import { Main } from '../styles/profile'
 import { useParams, Switch, Route, useRouteMatch } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
 import { SEND_FRIEND_REQUEST, FIND_USER, UNFRIEND } from '../services/queries'
 
-import ProfileLeft from '../components/profile/ProfileLeft'
 import ProfileMain from '../components/profile/ProfileMain'
 import ProfileRight from '../components/profile/ProfileRight'
 import CommunitiesMain from '../components/profile/CommunitiesMain'
 import ProfilePhotos from './ProfilePhotos'
 import ProfileVideosMain from '../components/profile/ProfileVideosMain'
 import ScrapsMainMobile from '../components/profile/ScrapsMainMobile'
+import TestimonialsMain from '../components/profile/TestimonialsMain'
+import Search from '../components/profile/Search'
 
 import Notification from '../components/utils/Notification'
-import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
+import ProfileMobileSkeleton from '../components/skeletons/ProfileMobileSkeleton'
 
 const ProfileRouteMobile = ({ loggedUser }) => {
     const match = useRouteMatch()
@@ -61,7 +61,7 @@ const ProfileRouteMobile = ({ loggedUser }) => {
         })
     }
 
-    if (loading) return <ProfileSkeleton />
+    if (loading) return <ProfileMobileSkeleton />
 
     if (error) return (
         <Notification />
@@ -72,9 +72,9 @@ const ProfileRouteMobile = ({ loggedUser }) => {
     return (
         <div>
             <Switch>
-                <Route path={`${match.path}/atualizacoes`}>
+                {/* <Route path={`${match.path}/atualizacoes`}>
                     <h1>Updates</h1>
-                </Route>
+                </Route> */}
 
                 <Route path={`${match.path}/scraps`}>
                     <ScrapsMainMobile
@@ -83,26 +83,39 @@ const ProfileRouteMobile = ({ loggedUser }) => {
                 </Route>
 
                 <Route path={`${match.path}/albuns`}>
-                    <ProfilePhotos loggedUser={ loggedUser } />
+                    <ProfilePhotos loggedUser={ loggedUser } mobile={ true } />
                 </Route>
 
                 <Route path={`${match.path}/videos`}>
-                    <ProfileVideosMain loggedUser={ loggedUser } user={ user } />
+                    <ProfileVideosMain 
+                        loggedUser={ loggedUser }
+                        user={ user }
+                        mobile={ true }    
+                    />
                 </Route>
 
                 <Route path={`${match.path}/depoimentos`}>
-                    <h1>Testimonials</h1>
+                    <TestimonialsMain 
+                        user={ user } 
+                        loggedUser={ loggedUser }
+                        mobile={ true }
+                    />
                 </Route>
 
                 <Route path={`${match.path}/comunidades`}>
                     <CommunitiesMain
                         user={ loggedUser }
+                        mobile={true}
                     />
                     <ProfileRight
                         user={ user } 
                         loggedUser={ loggedUser }
                         mobile={ true }
                     />
+                </Route>
+
+                <Route path={`${match.path}/pesquisar`}>
+                    <Search loggedUser={data.findUser} />
                 </Route>
 
                 <Route path={`${match.path}`}>

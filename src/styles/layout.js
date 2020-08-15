@@ -7,6 +7,10 @@ export const Wrapper = styled.div`
     background: ${props => props.background ? props.background : 'inherit'};
 `
 
+export const MainContainer = styled.div`
+    flex: 1;
+`
+
 export const Container = styled.div`
     flex: 1;
     height: 100%;
@@ -545,4 +549,35 @@ export const FortuneLogo = styled.div`
     background-size: contain;
     min-width: 40px;
     min-height: 40px;
+`
+
+export const FloatRightContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+`
+
+export const MobileMenuContainer = styled.div`
+    height: 40px;
+
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+`
+
+export const IconContainer = styled.div`
+    flex: 1;
+    height: 100%;
+    font-size: 2.5em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `

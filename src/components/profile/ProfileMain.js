@@ -6,7 +6,10 @@ import {
     Subtitle,
     FlexBoxCenter,
     Image,
-    ProfileImage
+    ProfileImage,
+    FloatRightContainer,
+    MobileMenuContainer,
+    IconContainer
 } from '../../styles/layout'
 import {
     MainColumn,
@@ -16,21 +19,14 @@ import {
     LastImages
 } from '../../styles/profile'
 import { TiPlusOutline, TiMinusOutline } from 'react-icons/ti'
+import { AiOutlineMessage } from 'react-icons/ai'
+import { MdPhotoCamera, MdVideoLibrary } from 'react-icons/md'
+import { IoIosPeople } from 'react-icons/io'
+
 import { Link } from 'react-router-dom'
 import Testimonials from './Testimonials'
+import MobileProfileMenu from './MobileProfileMenu'
 import styled from 'styled-components'
-
-const FloatRightContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-
-    position: absolute;
-    top: 0;
-    right: 0;
-`
 
 const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobile }) => {
     const [viewFullProfile, setViewFullProfile] = useState(false)
@@ -66,7 +62,7 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobi
                                     <Subtitle>{ user.name }</Subtitle>
                                 </div>
                                 <div style={{
-                                    alignSelf: 'start', 
+                                    alignSelf: 'start',
                                     marginTop: '.6rem',
                                     textAlign: 'right'
                                 }}>
@@ -82,6 +78,8 @@ const ProfileMain = ({ user, loggedUser, handleSendRequest, handleUnfriend, mobi
                                 </div>
                             </InlineHeader>
                     }
+
+                    { mobile && <MobileProfileMenu user={ user } /> }
 
                     <ProfileSection border>
                         <div>

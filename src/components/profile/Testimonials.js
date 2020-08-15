@@ -35,7 +35,7 @@ import TestimonialsSkeleton from '../skeletons/TestimonialsSkeleton'
 
 import Spinner from 'react-loading'
 
-const Testimonials = ({ user, loggedUser }) => {
+const Testimonials = ({ user, loggedUser, mobile }) => {
     const { error, loading, data } = useQuery(GET_USER_TESTIMONIALS, {
         variables: { receiverId: user.id }
     })

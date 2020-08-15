@@ -27,12 +27,10 @@ const Modal = ({
     return (
         <ModalOverlay open={ isModalOpen } >
             <ModalContainer>
-                <Card style={{maxHeight: '98vh'}}>
+                <Card>
                     <ProfileInfo style={{ 
                         padding: '0 1.5rem',
-                        maxHeight: '98vh',
-                        maxWidth: '80vw',
-                        overflowY: 'auto',
+                        maxWidth: '90vw',
                         minWidth,
                         minHeight,
                         maxWidth,
@@ -56,8 +54,8 @@ const Modal = ({
 Modal.defaultProps = {
     title: '',
     isModalOpen: false,
-    minWidth: 400,
-    minHeight: 'auto'
+    minWidth: 300,
+    maxWidth: '90vw'
 }
 
 export default Modal

@@ -19,9 +19,7 @@ import CommunityRight from '../components/communities/CommunityRight'
 import Notification from '../components/utils/Notification'
 import errorHandler from '../utils/errorHandler'
 
-import CommunityLeftSkeleton from '../components/skeletons/CommunityLeftSkeleton'
-import CommunityMainSkeleton from '../components/skeletons/CommunityMainSkeleton'
-import CommunityRightSkeleton from '../components/skeletons/CommunityRightSkeleton'
+import CommunityMobileSkeleton from '../components/skeletons/CommunityMobileSkeleton'
 
 import TopicMain from '../components/communities/TopicMain'
 import MembersMain from '../components/communities/MembersMain'
@@ -68,13 +66,7 @@ const CommunityRoute = ({ loggedUser }) => {
         ]
     })
 
-    if (loading || loadingMembers || loadingTopics) return (
-        <Main>
-            <CommunityLeftSkeleton />
-            <CommunityMainSkeleton />
-            <CommunityRightSkeleton />
-        </Main>
-    )
+    if (loading || loadingMembers || loadingTopics) return <CommunityMobileSkeleton />
 
     if (error || errorMembers || errorTopics || errors) return (
         <Notification message={ errors ? errors : null } />

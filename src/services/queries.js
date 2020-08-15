@@ -2,26 +2,16 @@ import { gql } from '@apollo/client'
 
 // Queries
 export const GET_ALL_USERS = gql`
-    query getAllUsers {
-        allUsers {
-            id
-            name
-            email
-            city
-            country
-            profile_picture
-            Friends {
+    query getAllUsers($filter: String, $limit: Int, $offset: Int) {
+        allUsers(filter: $filter, limit: $limit, offset: $offset) {
+            count
+            rows {
                 id
                 name
-            }
-            Requesters {
-                id
-                name
-            }
-            Subscriptions {
-                id
-                title
-                picture
+                profile_picture
+                age
+                city
+                country
             }
         }
     }
@@ -499,6 +489,30 @@ export const REGISTER = gql`
         ) {
             id
             email
+        }
+    }
+`
+
+export const EDIT_PROFILE = gql`
+    mutation editProfile(
+        $name: String!,
+        $born: Date!,
+        $country: String!,
+        $city: String,
+        $sex: Sex,
+        $interests: String,
+        $about: String
+    ) {
+        editProfile(
+            name: $name,
+            born: $born,
+            country: $country,
+            city: $city,
+            sex: $sex,
+            interests: $interests,
+            about: $about
+        ) {
+            id
         }
     }
 `

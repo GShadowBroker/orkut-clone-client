@@ -159,14 +159,14 @@ const ProfileLeft = ({ user, loggedUser, handleSendRequest, handleUnfriend }) =>
                                 <FakeLink>{user.id === loggedUser.id ? '0 vibes' : 'vibes? 0'}</FakeLink>
                                 <Badge><BsStar style={{ fontSize: '1.2em', marginRight: '.2rem' }} />0</Badge>
                             </li>
-                            <Link to={ `/perfil/${user.id}/atualizacoes` }>
+                            {/* <Link to={ `/perfil/${user.id}/atualizacoes` }>
                                 <li className={ location.pathname === `/perfil/${user.id}/atualizacoes` ? 'active' : '' }>
                                     <span>
                                         {user.id === loggedUser.id ? 'minhas atualizações' : 'atualizações'}
                                     </span>
                                     <Badge>{ user.Posts.length > 0 && user.Posts.length }</Badge>
                                 </li>
-                            </Link>
+                            </Link> */}
                             <Link to={ `/perfil/${user.id}` }>
                                 <li className={ location.pathname === `/perfil/${user.id}` ? 'active' : '' }>
                                     <span>perfil</span>

@@ -31,7 +31,7 @@ import trunc from '../../utils/truncate'
 import Breadcrumbs from '../utils/Breadcrumbs'
 
 import Spinner from 'react-loading'
-import TopicMainSkeleton from '../skeletons/TopicMainSkeleton'
+import SearchSkeleton from '../skeletons/SearchSkeleton'
 import { BsSearch } from 'react-icons/bs'
 
 const MembersMain = ({ user, community, topics }) => {
@@ -50,7 +50,7 @@ const MembersMain = ({ user, community, topics }) => {
     const [fetchMembers, { loading: loadingMembers, data: dataMembers }] = useLazyQuery(FETCH_MEMBERS)
 
     if (error) return <Notification />
-    if (loading) return <TopicMainSkeleton />
+    if (loading) return <SearchSkeleton />
 
     let members = data && data.findCommunityMembers.rows
     const memberCount = data && data.findCommunityMembers.count

@@ -101,7 +101,7 @@ export const NavMenu = styled.div`
     }
 `
 
-export const NavInputContainer = styled.div`
+export const NavInputContainer = styled.form`
     display: flex;
     align-items: center;
     justify-content: flex-end;

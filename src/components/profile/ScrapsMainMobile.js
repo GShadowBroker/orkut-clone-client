@@ -31,6 +31,7 @@ import ProfileMainSkeleton from '../skeletons/ProfileMainSkeleton'
 import ProfileRightSkeleton from '../skeletons/ProfileRightSkeleton'
 import ScrapsSkeleton from '../skeletons/ScrapsSkeleton'
 import trunc from '../../utils/truncate'
+import GoBack from './GoBack'
 
 const ScrapsMain = ({ loggedUser, mobile }) => {
     const { userId } = useParams()
@@ -207,6 +208,7 @@ const ScrapsMain = ({ loggedUser, mobile }) => {
 
     return (
         <MainColumn stretched>
+            <GoBack user={user} />
             <Card>
                 <ProfileInfo>
                     <ScrapForm user={ user } loggedUser={ loggedUser } limit={ limit } offset={ offset } />

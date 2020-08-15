@@ -35,10 +35,11 @@ import Spinner from 'react-loading'
 
 import RawModal from '../utils/RawModal'
 import styled from 'styled-components'
+import GoBack from './GoBack'
 
 const PreviewImageGrid = styled.div`
     display: grid;
-    grid-template-columns: 80px 80px 80px 80px;
+    grid-template-columns: ${props => props.mobile ? '80px 80px 80px' : '80px 80px 80px 80px'};
     grid-gap: .5rem;
 
     div {
@@ -48,7 +49,7 @@ const PreviewImageGrid = styled.div`
     }
 `
 
-const PhotosMain = ({ user, loggedUser, albuns }) => {
+const PhotosMain = ({ user, loggedUser, albuns, mobile }) => {
     const { userId, folderId } = useParams()
     const match = useRouteMatch()
     const history = useHistory()
@@ -144,7 +145,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
     return (
         <MainColumn stretched>
             { errors && <Notification message={errors} /> }
-
+            { mobile && <GoBack user={user} /> }
             <RawModal
                 title="Adicionar fotos"
                 isModalOpen={ isModalOpen }
@@ -156,7 +157,7 @@ const PhotosMain = ({ user, loggedUser, albuns }) => {
                         <FakeLink onClick={ () => setPreview([]) }>limpar</FakeLink>
                     </InlineHeader>
                 )}
-                <PreviewImageGrid>
+                <PreviewImageGrid mobile={ mobile }>
                     { preview.length > 0
                         ? preview.map((i, index) => <Image key={index} url={i} size={80} />)
                             .concat(Array.from(Array((8 - preview.length) || 1).keys()).map((i, index) => <div key={index}></div>))

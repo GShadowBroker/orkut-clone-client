@@ -129,7 +129,11 @@ const CommunityMain = ({
                 setModalOpen={ setNewTopicFormOpen }
                 minWidth={ mobile ? "auto" : 400 }
             >
-                <form onSubmit={ handleTopicSubmit }>
+                <form onSubmit={ handleTopicSubmit } style={{
+                    overflowY: 'auto',
+                    maxHeight: '90vh',
+                    paddingRight: '1rem'
+                }}>
                     <div style={{ padding: '.5rem 0' }}>
                         <Label><strong>Comunidade: </strong></Label>
                         <Link to={`/comunidades/${community.id}`}>{ community.title }</Link>

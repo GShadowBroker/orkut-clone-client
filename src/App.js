@@ -6,13 +6,16 @@ import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 
 import PrivateRoutes from './PrivateRoutes'
 import Login from './components/auth/Login'
+import LoginMobile from './components/auth/LoginMobile'
 import Register from './components/auth/Register'
+import RegisterMobile from './components/auth/RegisterMobile'
 import Notification from './components/utils/Notification'
 
 import { useApolloClient, useLazyQuery } from '@apollo/client'
 import { FIND_USER } from './services/queries'
 
 import LoginLoading from './components/utils/LoginLoading'
+import ResponsiveLayout from './components/ResponsiveLayout'
 
 const App = () => {
     const location = useLocation()
@@ -79,18 +82,39 @@ const App = () => {
             <Switch>
                 <Route exact path="/login">
                     { !(token && data)
-                        ? (<Login 
-                            setToken={ setToken } 
-                            findUser={ findUser } 
-                            loading={ loading } 
-                            accountCreated={ accountCreated }
+                        ? (<ResponsiveLayout
+                                breakpoint={ 776 }
+                                renderDesktop={ () => (
+                                    <Login 
+                                        setToken={ setToken } 
+                                        findUser={ findUser } 
+                                        loading={ loading } 
+                                        accountCreated={ accountCreated }
+                                    />
+                                ) }
+                                renderMobile={ () => (
+                                    <LoginMobile
+                                        setToken={ setToken } 
+                                        findUser={ findUser } 
+                                        loading={ loading } 
+                                        accountCreated={ accountCreated }
+                                    />
+                                ) }
                         />)
                         : <Redirect to={ redirectRoute } />
                     }
                 </Route>
                 <Route exact path="/registro">
                     { !(token && data)
-                        ? <Register setAccountCreated={setAccountCreated} />
+                        ? (<ResponsiveLayout
+                                breakpoint={ 776 }
+                                renderDesktop={ () => (
+                                    <Register setAccountCreated={setAccountCreated} />
+                                ) }
+                                renderMobile={ () => (
+                                    <RegisterMobile setAccountCreated={setAccountCreated} />
+                                ) }
+                        />)
                         : <Redirect to="/login" />
                     }
                 </Route>

@@ -21,7 +21,7 @@ import {
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../../services/queries'
 
-const Login = ({ setToken }) => {
+const Login = ({ setToken, mobile }) => {
     const history = useHistory()
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
@@ -84,7 +84,8 @@ const Login = ({ setToken }) => {
                             name="email" 
                             value={ email }
                             type="text"
-                            onChange={ ({ target }) => setEmail(target.value) }    
+                            onChange={ ({ target }) => setEmail(target.value) }
+                            style={ mobile && { width: '100%' } }
                         />
                         <InputNote nopad>ex: pat@exemplo.com</InputNote>
                     </LoginInputGroup>
@@ -95,7 +96,8 @@ const Login = ({ setToken }) => {
                             name="password" 
                             value={ password }
                             type="password"
-                            onChange={ ({ target }) => setPassword(target.value) }    
+                            onChange={ ({ target }) => setPassword(target.value) }
+                            style={ mobile && { width: '100%' } } 
                         />
                     </LoginInputGroup>
                     <LoginInputGroup>
@@ -110,7 +112,13 @@ const Login = ({ setToken }) => {
                         <LoginInputNote>Não use em computadores públicos [?]</LoginInputNote>
                     </LoginInputGroup>
                     <LoginInputGroup>
-                        <Button type="submit" disabled={ loading }>{ loading ? 'entrando...' : 'entrar'}</Button>
+                        <Button
+                            type="submit"
+                            disabled={ loading }
+                            style={ mobile && { width: '100%' } }
+                        >
+                            { loading ? 'entrando...' : 'entrar'}
+                        </Button>
                     </LoginInputGroup>
                     <LoginInputNote style={{ textAlign: 'center', padding: '.8rem 0' }}>
                         <FakeLinkLogin>Não consegue acessar sua conta?</FakeLinkLogin>

@@ -12,7 +12,7 @@ import FoldersMain from '../components/profile/FoldersMain'
 import PhotosMain from '../components/profile/PhotosMain'
 import PhotoDetail from '../components/profile/PhotoDetail'
 
-const ProfilePhotos = ({ loggedUser }) => {
+const ProfilePhotos = ({ loggedUser, mobile }) => {
     const { userId } = useParams()
     const match = useRouteMatch()
     const history = useHistory()
@@ -67,6 +67,7 @@ const ProfilePhotos = ({ loggedUser }) => {
                     user={ user }
                     loggedUser={ loggedUser }
                     albuns={ albuns }
+                    mobile={ mobile }
                 />
             </Route>
 
@@ -75,6 +76,7 @@ const ProfilePhotos = ({ loggedUser }) => {
                     user={ user }
                     loggedUser={ loggedUser }
                     albuns={ albuns }
+                    mobile={ mobile }
                 />
             </Route>
 
@@ -88,6 +90,7 @@ const ProfilePhotos = ({ loggedUser }) => {
                     loadingAlbumCreation={loadingAlbumCreation}
                     isModalOpen={isModalOpen}
                     handleModal={handleModal}
+                    mobile={ true }
                 />
             </Route>
         </Switch>

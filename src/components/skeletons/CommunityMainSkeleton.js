@@ -28,7 +28,6 @@ const CommunityMainSkeleton = () => {
                         alignItems: 'center'
                     }}>
                         <Subtitle><Skeleton width={ 250 } /></Subtitle>
-                        <Skeleton width={100} height={25} />
                     </div>
                     <ProfileSection  border style={{ paddingBottom: '.5rem' }}>
                         <div style={{

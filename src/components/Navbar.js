@@ -1,23 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Button, SearchInputContainer, SearchInputIcon, Input, ProfileImage } from '../styles/layout'
 import { Nav, MobileNav, FooterNav, UpperNav, MainNav, Logo, NavMenu, NavInputContainer } from '../styles/nav'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useHistory } from 'react-router-dom'
 import { TiArrowSortedDown, TiThMenu } from 'react-icons/ti'
 import { IoMdHome } from 'react-icons/io'
 import { BsSearch, BsPeopleCircle, BsPeopleFill } from 'react-icons/bs'
 
-const Navbar = ({ loggedUser, logout }) => {
+const Navbar = ({ loggedUser, logout, toggleConfig }) => {
     return (
         <Nav>
             <MobileNavbar loggedUser={loggedUser} />
-            <UpperNavbar logout={ logout } loggedUser={ loggedUser } />
+            <UpperNavbar logout={ logout } loggedUser={ loggedUser } toggleConfig={ toggleConfig } />
             <MainNavbar loggedUser={ loggedUser } />
             <FooterNavbar loggedUser={loggedUser} />
         </Nav>
     )
 }
 
-const UpperNavbar = ({ loggedUser, logout }) => {
+const UpperNavbar = ({ loggedUser, logout, toggleConfig }) => {
 
     return (
         <UpperNav>
@@ -35,7 +35,7 @@ const UpperNavbar = ({ loggedUser, logout }) => {
                 </ul>
                 <ul>
                     <li className="email-menu">{ loggedUser.email }</li>
-                    <li className="left-menu">configurações</li>
+                    <li className="left-menu" onClick={ toggleConfig }>configurações</li>
                     <li className="left-menu" onClick={ () => logout() } >sair</li>
                 </ul>
             </Container>
@@ -54,6 +54,18 @@ const searchIconStyle = {
 
 const MainNavbar = ({ loggedUser }) => {
     const location = useLocation()
+    const history = useHistory()
+
+    const [searchTerm, setSearchTerm] = useState('')
+
+    const handleSearch = e => {
+        e.preventDefault()
+        if (!searchTerm) return
+        setSearchTerm('')
+        const encodedString = encodeURI(searchTerm)
+        history.push(`/perfil/${loggedUser.id}/pesquisar?q=${encodedString}`)
+    }
+
     return (
         <MainNav>
             <Container nav>
@@ -68,14 +80,14 @@ const MainNavbar = ({ loggedUser }) => {
                     <Link to="/">Aplicativos <TiArrowSortedDown className="icenter" /></Link>
                     <Link to="/">Temas <TiArrowSortedDown className="icenter" /></Link>
                 </NavMenu>
-                <NavInputContainer>
+                <NavInputContainer onSubmit={ handleSearch }>
                     <SearchInputContainer noborderleft>
                         <SearchInputIcon noborderright>
                             <BsSearch style={ searchIconStyle } />
                         </SearchInputIcon>
-                        <Input placeholder="buscar" />
+                        <Input placeholder="buscar" value={ searchTerm } onChange={ ({ target }) => setSearchTerm(target.value) } />
                     </SearchInputContainer>
-                    <Button><strong>buscar</strong></Button>
+                    <Button type="submit"><strong>buscar</strong></Button>
                 </NavInputContainer>
             </Container>
         </MainNav>
@@ -126,7 +138,7 @@ const FooterNavbar = ({ loggedUser }) => {
             <Link to="/">
                 <IoMdHome style={ iconStyle } />
             </Link>
-            <Link to={`/buscar`}>
+            <Link to={`/perfil/${loggedUser.id}/pesquisar`}>
                 <BsSearch style={ iconStyle } />
             </Link>
             <Link to={`/perfil/${loggedUser.id}`}>

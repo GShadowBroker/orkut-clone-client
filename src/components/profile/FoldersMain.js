@@ -21,6 +21,7 @@ import { RiErrorWarningLine } from 'react-icons/ri'
 import Breadcrumbs from '../utils/Breadcrumbs'
 import RawModal from '../utils/RawModal'
 import { useForm } from 'react-hook-form'
+import GoBack from './GoBack'
 
 import styled from 'styled-components'
 
@@ -79,7 +80,8 @@ const FoldersMain = ({
     createNewAlbum, 
     loadingAlbumCreation, 
     isModalOpen, 
-    handleModal
+    handleModal,
+    mobile
 }) => {
     const { userId } = useParams()
     const match = useRouteMatch()
@@ -104,7 +106,7 @@ const FoldersMain = ({
     
     return (
         <MainColumn stretched>
-
+            { mobile && <GoBack user={user} /> }
             <RawModal
                 title="Criar novo álbum de fotos"
                 isModalOpen={ isModalOpen }
@@ -192,26 +194,28 @@ const FoldersMain = ({
                     }
                 </ProfileInfo>
 
-                { albuns.length > 0
-                    ? (<AlbumGrid>
-                        { albuns.map(a => {
-                            if (a.visible_to_all || (!a.visible_to_all && meOrFriend)) return (
+                <ProfileInfo>
+                    { albuns.length > 0
+                        ? (<AlbumGrid>
+                            { albuns.map(a => {
+                                if (a.visible_to_all || (!a.visible_to_all && meOrFriend)) return (
+                                    
+                                        <AlbumContainer key={a.id}>
+                                            <Link to={`${match.url}/${a.id}/fotos`} style={{textAlign: 'center'}}>
+                                                <AlbumItem url={ (a.Photos[0] && a.Photos[0].url) } />
+                                                <span>{ a.title } ({ a.Photos.length })</span>
+                                            </Link>
+                                        </AlbumContainer>
+                                    
+                                )
+                                return null
+                            }
                                 
-                                    <AlbumContainer key={a.id}>
-                                        <Link to={`${match.url}/${a.id}/fotos`} style={{textAlign: 'center'}}>
-                                            <AlbumItem url={ (a.Photos[0] && a.Photos[0].url) } />
-                                            <span>{ a.title } ({ a.Photos.length })</span>
-                                        </Link>
-                                    </AlbumContainer>
-                                
-                            )
-                            return null
-                        }
-                            
-                        )}
-                    </AlbumGrid>)
-                    : <AlbumGrid><p style={{color: '#afafaf'}}>Nenhum álbum</p></AlbumGrid>
-                }
+                            )}
+                        </AlbumGrid>)
+                        : <AlbumGrid><p style={{color: '#afafaf'}}>Nenhum álbum</p></AlbumGrid>
+                    }
+                </ProfileInfo>
             </Card>
         </MainColumn>
     )

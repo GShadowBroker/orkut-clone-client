@@ -12,6 +12,8 @@ import CommunitiesMain from '../components/profile/CommunitiesMain'
 import ProfilePhotos from './ProfilePhotos'
 import ProfileVideosMain from '../components/profile/ProfileVideosMain'
 import ScrapsMain from '../components/profile/ScrapsMain'
+import TestimonialsMain from '../components/profile/TestimonialsMain'
+import Search from '../components/profile/Search'
 
 import Notification from '../components/utils/Notification'
 import ProfileSkeleton from '../components/skeletons/ProfileSkeleton'
@@ -79,9 +81,9 @@ const ProfileRoute = ({ loggedUser }) => {
             />
             
             <Switch>
-                <Route path={`${match.path}/atualizacoes`}>
-                    <h1>Updates</h1>
-                </Route>
+                {/* <Route path={`${match.path}/atualizacoes`}>
+                    <UpdatesMain user={ user } loggedUser={ loggedUser } />
+                </Route> */}
 
                 <Route path={`${match.path}/scraps`}>
                     <ScrapsMain loggedUser={ loggedUser } />
@@ -96,7 +98,10 @@ const ProfileRoute = ({ loggedUser }) => {
                 </Route>
 
                 <Route path={`${match.path}/depoimentos`}>
-                    <h1>Testimonials</h1>
+                    <TestimonialsMain 
+                        user={ user } 
+                        loggedUser={ loggedUser }
+                    />
                 </Route>
 
                 <Route path={`${match.path}/comunidades`}>
@@ -107,6 +112,10 @@ const ProfileRoute = ({ loggedUser }) => {
                         user={ user } 
                         loggedUser={ loggedUser }
                     />
+                </Route>
+
+                <Route path={`${match.path}/pesquisar`}>
+                    <Search loggedUser={data.findUser} />
                 </Route>
 
                 <Route path={`${match.path}`}>

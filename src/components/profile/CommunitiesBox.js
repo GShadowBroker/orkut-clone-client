@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Card,
     Input,
@@ -16,13 +16,22 @@ import { BsSearch } from 'react-icons/bs'
 import trunc from '../../utils/truncate'
 
 const CommunitiesBox = ({ user }) => {
+    const [communities, setCommunities] = useState(user.Subscriptions.slice(0, 9))
+    const onChange = ({ target }) => {
+        if (target.value === '') {
+            setCommunities(user.Subscriptions.slice(0, 9))
+            return
+        }
+        let searchedComms = user.Subscriptions.filter(c => c.title.toLowerCase().includes(target.value.toLowerCase()))
+        setCommunities(searchedComms.slice(0, 9))
+    }
     return (
         <Card>
             <ProfileFriends>
                 <div style={{paddingBottom: '1rem'}}>
                     <Subtitle2>Comunidades ({ user.Subscriptions.length })</Subtitle2>
                     <SearchInputContainer noborderright>
-                        <Input placeholder="buscar comunidades" />
+                        <Input placeholder="buscar comunidades" onChange={ onChange } />
                         <SearchInputIcon noborderleft>
                             <BsSearch />
                         </SearchInputIcon>
@@ -30,7 +39,7 @@ const CommunitiesBox = ({ user }) => {
                 </div>  
                 <FriendsList style={{paddingBottom: '1rem'}}>
                     {
-                        user.Subscriptions.map(c => (
+                        communities.map(c => (
                             <Link to={ `/comunidades/${c.id}` } key={ c.id }>
                                 <div>
                                     <Image size="70" url={ c.picture } />

@@ -24,6 +24,7 @@ import { RiErrorWarningLine } from 'react-icons/ri'
 
 import { useMutation } from '@apollo/client'
 import { SEND_VIDEO, FIND_USER } from '../../services/queries'
+import GoBack from './GoBack'
 
 import styled from 'styled-components'
 
@@ -37,7 +38,7 @@ const VideoGrid = styled.div`
     }
 `
 
-const ProfileVideosMain = ({ loggedUser, user }) => {
+const ProfileVideosMain = ({ loggedUser, user, mobile }) => {
     const { userId } = useParams()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -78,6 +79,8 @@ const ProfileVideosMain = ({ loggedUser, user }) => {
 
     return (
         <MainColumn stretched>
+            {mobile && <GoBack user={user} />}
+
             <RawModal
                 title="Adicionar vídeo"
                 isModalOpen={ isModalOpen }
