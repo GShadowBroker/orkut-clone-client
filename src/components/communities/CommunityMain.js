@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   FakeLink,
@@ -89,6 +89,10 @@ const CommunityMain = ({
     ],
     onCompleted: () => handleSubmitCompleted(),
   });
+
+  useEffect(() => {
+    document.title = `orkut - ${community.title}`;
+  }, [community]);
 
   const handleTopicSubmit = (e) => {
     e.preventDefault();

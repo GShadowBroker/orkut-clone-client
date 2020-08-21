@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   FakeLink,
@@ -30,6 +30,10 @@ const ProfileMain = ({
   mobile,
 }) => {
   const [viewFullProfile, setViewFullProfile] = useState(false);
+
+  useEffect(() => {
+    document.title = `orkut - perfil de ${user.name}`;
+  }, [user]);
 
   const timeOptions = {
     month: "long",

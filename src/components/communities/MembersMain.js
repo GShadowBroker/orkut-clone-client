@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Card,
@@ -40,6 +40,10 @@ const MembersMain = ({ user, community, topics }) => {
   const [memberSearch, setMemberSearch] = useState("");
 
   const [timeoutState, setTimeoutState] = useState(null);
+
+  useEffect(() => {
+    document.title = `orkut - ${community.title}`;
+  }, [community]);
 
   const { error, loading, data, fetchMore } = useQuery(FETCH_MEMBERS, {
     variables: { communityId: communityId, random: false, limit, offset },

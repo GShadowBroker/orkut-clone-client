@@ -12,8 +12,8 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// const httpLink = new HttpLink({ uri: "https://orkutnostalgia.herokuapp.com" });
-const httpLink = new HttpLink({ uri: "http://127.0.0.1:4000" });
+const httpLink = new HttpLink({ uri: "https://orkutnostalgia.herokuapp.com" });
+// const httpLink = new HttpLink({ uri: "http://127.0.0.1:4000" });
 
 const memoryCache = new InMemoryCache({
   typePolicies: {

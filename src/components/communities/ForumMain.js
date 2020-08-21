@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import moment from "moment";
 import {
@@ -43,6 +43,10 @@ const ForumMain = ({ user, community }) => {
 
   const [search, setSearch] = useState("");
   const [timeoutState, setTimeoutState] = useState(null);
+
+  useEffect(() => {
+    document.title = `orkut - ${community.title}`;
+  }, [community]);
 
   const { error, loading, data, fetchMore } = useQuery(FETCH_TOPICS, {
     variables: { communityId, limit, offset, limitComment: 1 },

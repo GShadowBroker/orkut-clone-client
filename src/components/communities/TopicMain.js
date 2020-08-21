@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/pt-br";
@@ -58,6 +58,10 @@ const TopicMain = ({ user, community, topics, mobile }) => {
   const [limit] = useState(10);
 
   const [comment, setComment] = useState(EditorState.createEmpty());
+
+  useEffect(() => {
+    document.title = `orkut - ${community.title}`;
+  }, [community]);
 
   const { error, loading, data, fetchMore } = useQuery(FETCH_COMMENTS, {
     variables: {
