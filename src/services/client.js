@@ -12,7 +12,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const httpLink = new HttpLink({ uri: "/" });
+const httpLink = new HttpLink({ uri: "https://orkutnostalgia.herokuapp.com" });
 
 const memoryCache = new InMemoryCache({
   typePolicies: {
