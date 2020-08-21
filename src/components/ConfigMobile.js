@@ -21,6 +21,7 @@ import errorHandler from "../utils/errorHandler";
 import Notification from "./utils/Notification";
 
 import { useHistory } from "react-router-dom";
+import { useWindowDimensions } from "./ResponsiveLayout/WindowDimensionsProvider";
 
 const ConfigForm = styled.form`
   overflow-y: auto;
@@ -51,6 +52,8 @@ const TextArea = styled.textarea`
 
 const Config = ({ configOpen, setConfigOpen, toggleConfig, loggedUser }) => {
   const history = useHistory();
+  const windowDimensions = useWindowDimensions();
+
   const [errorMessage, setErrorMessage] = useState("");
   const { register, handleSubmit, errors } = useForm();
 
@@ -102,7 +105,7 @@ const Config = ({ configOpen, setConfigOpen, toggleConfig, loggedUser }) => {
       title="Configurações do orkut"
       isModalOpen={configOpen}
       setModalOpen={setConfigOpen}
-      minWidth={600}
+      minWidth={windowDimensions.width * 0.95}
     >
       <ConfigForm onSubmit={handleSubmit(onSubmit)}>
         {errorMessage && (
@@ -178,7 +181,7 @@ const Config = ({ configOpen, setConfigOpen, toggleConfig, loggedUser }) => {
         )}
 
         <ConfigBlock>
-          <ProfileImage url={loggedUser.profile_picture} size={70} />
+          <ProfileImage url={loggedUser.profile_picture} size={50} />
           <InputControl style={{ marginLeft: "2rem" }}>
             <label htmlFor="name">nome:</label>
             <Input

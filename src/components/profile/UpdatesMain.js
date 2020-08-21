@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const UpdatesMain = () => {
-    return (
-        <></>
-    )
-}
+  return <></>;
+};
 
-export default UpdatesMain
+export default UpdatesMain;
