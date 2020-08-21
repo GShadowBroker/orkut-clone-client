@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   DrawerMenu,
   ProfileImage,
   Subtitle,
   Badge,
   FakeLink,
+  Image,
+  ButtonGroup,
+  Button,
+  SpinnerButtonContainer,
 } from "../styles/layout";
 import { ProfileMenu } from "../styles/profile";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { BsStar } from "react-icons/bs";
+import RawModal from "./utils/RawModal";
+import Spinner from "react-loading";
+import { useMutation } from "@apollo/client";
+import {
+  UPDATE_PROFILE_PICTURE,
+  FIND_USER,
+  FETCH_FEED,
+} from "../services/queries";
 
 const DrawerContainer = styled.div`
   position: relative;
@@ -29,6 +41,85 @@ const DrawerHeader = styled.div`
 const Drawer = ({ loggedUser, logout, toggleConfig }) => {
   const location = useLocation();
   const user = loggedUser;
+
+  //Image Upload
+  const uploadForm = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState("");
+  const [fileInputState] = useState("");
+  const [previewSource, setPreviewSource] = useState("");
+
+  const [updateProfilePicture, { loading }] = useMutation(
+    UPDATE_PROFILE_PICTURE,
+    {
+      onError: (error) => console.log(error),
+      refetchQueries: [
+        { query: FIND_USER, variables: { userId: loggedUser.id } },
+        { query: FETCH_FEED, variables: { limit: 10 } },
+      ],
+      onCompleted: () => handleModal(false),
+    }
+  );
+
+  const handleImageClick = (e) => {
+    e.preventDefault();
+    uploadForm.current.click();
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    previewFile(file);
+  };
+
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewSource(reader.result);
+      handleModal(true);
+    };
+  };
+
+  const uploadImage = (base64EncodedImage) => {
+    updateProfilePicture({
+      variables: {
+        newPhoto: base64EncodedImage,
+      },
+    });
+  };
+
+  const handleModal = (bool) => {
+    if (bool) {
+      document.querySelector("body").style.overflowY = "hidden";
+    } else {
+      document.querySelector("body").style.overflowY = "";
+    }
+    setIsModalOpen(bool);
+  };
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    handleModal(false);
+  };
+
+  const handleSubmitFile = (e) => {
+    e.preventDefault();
+
+    if (selectedFile.type.slice(0, 5) !== "image") {
+      alert("A foto de perfil deve ser um arquivo de imagem.");
+      return;
+    }
+    if (Number(selectedFile.size) > 10000000) {
+      alert("A foto selecionada é grande demais.");
+      return;
+    }
+    if (!previewSource) return;
+
+    uploadImage(previewSource);
+  };
+
+  // End Image Upload
 
   const handleLogout = () => {
     document.querySelector("body").style.overflow = "";
@@ -51,9 +142,74 @@ const Drawer = ({ loggedUser, logout, toggleConfig }) => {
 
   return (
     <DrawerMenu id="menu-drawer">
+      <form style={{ display: "none" }} onSubmit={handleSubmitFile}>
+        <input
+          ref={uploadForm}
+          type="file"
+          accept="image/*"
+          name="image"
+          value={fileInputState}
+          onChange={handleFileUpload}
+        />
+      </form>
+
+      <RawModal
+        title="Pré-visualização"
+        isModalOpen={isModalOpen}
+        setModalOpen={(bool) => handleModal(bool)}
+        loading={loading}
+        minWidth={300} //// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      >
+        <form onSubmit={handleSubmitFile}>
+          <div style={{ display: "flex" }}>
+            <Image
+              size={150}
+              url={previewSource}
+              style={{ marginRight: "1rem" }}
+            />
+            <div>
+              <p>
+                <strong>tamanho: </strong>
+                {selectedFile.size} bytes
+              </p>
+              <p>
+                <strong>tipo: </strong>
+                {selectedFile.type}
+              </p>
+            </div>
+          </div>
+
+          <ButtonGroup>
+            <Button type="submit" disabled={loading}>
+              <strong>
+                {loading ? (
+                  <SpinnerButtonContainer>
+                    <Spinner
+                      type="spokes"
+                      color="#34495e"
+                      height="15px"
+                      width="15px"
+                    />
+                  </SpinnerButtonContainer>
+                ) : (
+                  "salvar"
+                )}
+              </strong>
+            </Button>
+            <Button onClick={handleCancel} disabled={loading}>
+              cancelar
+            </Button>
+          </ButtonGroup>
+        </form>
+      </RawModal>
+
       <DrawerContainer>
         <DrawerHeader>
-          <ProfileImage url={loggedUser.profile_picture} size={100} />
+          <ProfileImage
+            url={loggedUser.profile_picture}
+            size={100}
+            onClick={handleImageClick}
+          />
           <Subtitle>{loggedUser.name}</Subtitle>
         </DrawerHeader>
 

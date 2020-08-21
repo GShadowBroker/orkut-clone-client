@@ -16,7 +16,6 @@ const Modal = ({
   children,
   minWidth,
   minHeight,
-  maxWidth,
 }) => {
   const handleClose = () => {
     setModalOpen(false);
