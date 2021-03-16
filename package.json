@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "apollo-link-context": "^1.0.20",
-    "draft-js": "^0.11.6",
+    "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "graphql": "^15.3.0",
     "html-to-draftjs": "^1.5.0",
@@ -27,6 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "SET NODE_ENV=development && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
